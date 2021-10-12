@@ -1,2 +1,2 @@
 # Colossus
-A high-level, robust, customizable framework for the JDA discord library.
+A high-level, robust, customizable framework making Discord bot development easy using the JDA library
