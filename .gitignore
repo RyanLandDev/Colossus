@@ -1,0 +1,7 @@
+# Gradle
+build
+/.gradle
+
+# Custom Files
+config.json
+webhooks.json

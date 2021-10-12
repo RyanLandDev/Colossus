@@ -1,0 +1,34 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'com.github.johnrengelman.shadow' version '6.0.0'
+}
+mainClassName = 'net.ryanland.colossus.Colossus'
+
+group 'net.ryanland'
+version '1.0'
+
+repositories {
+    mavenCentral()
+    jcenter()
+    maven {
+        name 'm2-dv8tion'
+        url 'https://m2.dv8tion.net/releases'
+    }
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    // log
+    implementation 'ch.qos.logback:logback-classic:1.2.6'
+
+    // jda
+    implementation 'net.dv8tion:JDA:4.3.0_334'
+    implementation group: 'club.minnced', name: 'discord-webhooks', version: '0.7.2'
+
+    // json
+    implementation 'org.json:json:20210307'
+    implementation 'com.google.code.gson:gson:2.8.8'
+}
+
+compileJava.options.encoding = 'UTF-8'
