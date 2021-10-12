@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.nio.file.InvalidPathException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * A helper class for making a {@link Colossus} bot ready for startup
@@ -23,7 +24,7 @@ import java.util.List;
  */
 public class ColossusBuilder {
 
-    private final JDABuilder jdaBuilder;
+    private JDABuilder jdaBuilder;
     private final Config config;
     private final List<Command> commands = new ArrayList<>();
     private final List<LocalFile> localFiles = new ArrayList<>();
@@ -99,6 +100,16 @@ public class ColossusBuilder {
      */
     public ColossusBuilder disableHelp() {
         disableHelp = true;
+        return this;
+    }
+
+    /**
+     * Modify the {@link JDABuilder} implementation used for this bot
+     * @param modifier The function to use, with the currently defined {@link JDABuilder} given
+     * @return This {@link ColossusBuilder}
+     */
+    public ColossusBuilder setJDABuilder(Function<JDABuilder, JDABuilder> modifier) {
+        jdaBuilder = modifier.apply(jdaBuilder);
         return this;
     }
 
