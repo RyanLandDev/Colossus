@@ -5,7 +5,7 @@ import net.ryanland.colossus.bot.command.executor.cooldown.manager.CooldownManag
 import net.ryanland.colossus.bot.command.executor.cooldown.manager.MemoryCooldownManager;
 import net.ryanland.colossus.bot.command.impl.Command;
 import net.ryanland.colossus.bot.events.CommandEvent;
-import net.ryanland.colossus.sys.file.StorageType;
+import net.ryanland.colossus.util.file.StorageType;
 
 import java.util.Date;
 import java.util.List;

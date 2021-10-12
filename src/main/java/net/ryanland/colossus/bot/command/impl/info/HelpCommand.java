@@ -1,6 +1,5 @@
 package net.ryanland.colossus.bot.command.impl.info;
 
-import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.bot.command.arguments.ArgumentSet;
 import net.ryanland.colossus.bot.command.arguments.types.impl.CommandArgument;
 import net.ryanland.colossus.bot.command.executor.CommandHandler;
@@ -9,8 +8,8 @@ import net.ryanland.colossus.bot.command.info.Category;
 import net.ryanland.colossus.bot.command.info.CommandInfo;
 import net.ryanland.colossus.bot.command.info.HelpMaker;
 import net.ryanland.colossus.bot.events.CommandEvent;
-import net.ryanland.colossus.sys.message.builders.PresetBuilder;
-import net.ryanland.colossus.sys.message.interactions.menu.tab.TabMenuBuilder;
+import net.ryanland.colossus.util.message.builders.PresetBuilder;
+import net.ryanland.colossus.util.message.interactions.menu.tab.TabMenuBuilder;
 
 import java.util.Comparator;
 import java.util.List;

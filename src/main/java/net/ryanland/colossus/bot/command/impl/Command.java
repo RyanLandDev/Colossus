@@ -8,7 +8,7 @@ import net.ryanland.colossus.bot.command.info.Category;
 import net.ryanland.colossus.bot.command.info.CommandInfo;
 import net.ryanland.colossus.bot.command.permissions.Permission;
 import net.ryanland.colossus.bot.events.CommandEvent;
-import net.ryanland.colossus.sys.file.StorageType;
+import net.ryanland.colossus.util.file.StorageType;
 
 import java.util.List;
 

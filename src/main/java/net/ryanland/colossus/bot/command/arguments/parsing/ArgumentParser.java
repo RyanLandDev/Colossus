@@ -6,8 +6,8 @@ import net.ryanland.colossus.bot.command.arguments.parsing.exceptions.ArgumentEx
 import net.ryanland.colossus.bot.command.arguments.parsing.exceptions.MalformedArgumentException;
 import net.ryanland.colossus.bot.command.impl.Command;
 import net.ryanland.colossus.bot.events.CommandEvent;
-import net.ryanland.colossus.sys.message.builders.PresetBuilder;
-import net.ryanland.colossus.sys.message.builders.PresetType;
+import net.ryanland.colossus.util.message.builders.PresetBuilder;
+import net.ryanland.colossus.util.message.builders.PresetType;
 
 import java.util.ArrayDeque;
 import java.util.Deque;

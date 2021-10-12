@@ -6,7 +6,7 @@ import net.ryanland.colossus.bot.command.impl.Command;
 import net.ryanland.colossus.bot.command.impl.SubCommand;
 import net.ryanland.colossus.bot.command.permissions.Permission;
 import net.ryanland.colossus.bot.events.CommandEvent;
-import net.ryanland.colossus.sys.message.builders.PresetBuilder;
+import net.ryanland.colossus.util.message.builders.PresetBuilder;
 
 import java.util.ArrayList;
 import java.util.List;

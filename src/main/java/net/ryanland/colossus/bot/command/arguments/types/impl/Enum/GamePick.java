@@ -1,7 +1,7 @@
 package net.ryanland.colossus.bot.command.arguments.types.impl.Enum;
 
-import net.ryanland.colossus.sys.game.Game;
-import net.ryanland.colossus.sys.game.GuessTheNumberGame;
+import net.ryanland.colossus.util.game.Game;
+import net.ryanland.colossus.util.game.GuessTheNumberGame;
 
 import java.lang.reflect.InvocationTargetException;
 

@@ -2,8 +2,8 @@ package net.ryanland.colossus.bot.command.executor.checks.impl;
 
 import net.ryanland.colossus.bot.command.executor.checks.CommandCheck;
 import net.ryanland.colossus.bot.events.CommandEvent;
-import net.ryanland.colossus.sys.message.builders.PresetBuilder;
-import net.ryanland.colossus.sys.message.builders.PresetType;
+import net.ryanland.colossus.util.message.builders.PresetBuilder;
+import net.ryanland.colossus.util.message.builders.PresetType;
 
 public class DisabledCheck extends CommandCheck {
 

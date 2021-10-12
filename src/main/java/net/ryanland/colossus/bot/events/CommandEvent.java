@@ -10,14 +10,16 @@ import net.dv8tion.jda.api.requests.restaction.interactions.ReplyAction;
 import net.ryanland.colossus.bot.command.arguments.parsing.ParsedArgumentMap;
 import net.ryanland.colossus.bot.command.executor.exceptions.CommandException;
 import net.ryanland.colossus.bot.command.impl.Command;
-import net.ryanland.colossus.sys.file.database.DocumentCache;
-import net.ryanland.colossus.sys.file.database.documents.impl.GlobalDocument;
-import net.ryanland.colossus.sys.file.database.documents.impl.GuildDocument;
-import net.ryanland.colossus.sys.file.database.documents.impl.UserDocument;
-import net.ryanland.colossus.sys.message.builders.PresetBuilder;
-import net.ryanland.colossus.sys.message.interactions.menu.InteractionMenu;
-import net.ryanland.colossus.sys.message.interactions.menu.InteractionMenuBuilder;
-import net.ryanland.colossus.util.StringUtil;
+import net.ryanland.colossus.util.file.database.old.DocumentCache;
+import net.ryanland.colossus.util.file.database.documents.old.GlobalDocument;
+import net.ryanland.colossus.util.file.database.documents.old.GuildDocument;
+import net.ryanland.colossus.util.file.database.documents.old.UserDocument;
+import net.ryanland.colossus.util.file.database.old.GlobalDocument;
+import net.ryanland.colossus.util.file.database.old.GuildDocument;
+import net.ryanland.colossus.util.file.database.old.UserDocument;
+import net.ryanland.colossus.util.message.builders.PresetBuilder;
+import net.ryanland.colossus.util.message.interactions.menu.InteractionMenu;
+import net.ryanland.colossus.util.message.interactions.menu.InteractionMenuBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.OffsetDateTime;
@@ -265,22 +267,6 @@ public class CommandEvent {
 
     public SlashCommandEvent getEvent() {
         return event;
-    }
-
-    public boolean isSelf(User user) {
-        return user.equals(getUser());
-    }
-
-    public String getPossessiveAdjective(User user) {
-        if (user.equals(getUser())) {
-            return "your";
-        } else {
-            return "their";
-        }
-    }
-
-    public String getCapitalizedPossessiveAdjective(User user) {
-        return StringUtil.capitalize(getPossessiveAdjective(user));
     }
 
 }

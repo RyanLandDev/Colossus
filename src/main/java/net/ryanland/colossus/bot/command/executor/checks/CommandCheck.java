@@ -4,7 +4,7 @@ import net.ryanland.colossus.bot.command.executor.checks.impl.CooldownCheck;
 import net.ryanland.colossus.bot.command.executor.checks.impl.DisabledCheck;
 import net.ryanland.colossus.bot.command.executor.checks.impl.PermissionCheck;
 import net.ryanland.colossus.bot.events.CommandEvent;
-import net.ryanland.colossus.sys.message.builders.PresetBuilder;
+import net.ryanland.colossus.util.message.builders.PresetBuilder;
 
 public abstract class CommandCheck {
 

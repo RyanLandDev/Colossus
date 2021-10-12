@@ -5,10 +5,10 @@ import net.ryanland.colossus.bot.command.impl.Command;
 import net.ryanland.colossus.bot.command.impl.info.HelpCommand;
 import net.ryanland.colossus.bot.events.ButtonEvent;
 import net.ryanland.colossus.bot.events.OnSlashCommandEvent;
-import net.ryanland.colossus.sys.file.Config;
-import net.ryanland.colossus.sys.file.local.LocalFile;
-import net.ryanland.colossus.sys.file.local.LocalFileBuilder;
-import net.ryanland.colossus.sys.file.local.LocalFileType;
+import net.ryanland.colossus.util.file.Config;
+import net.ryanland.colossus.util.file.local.LocalFile;
+import net.ryanland.colossus.util.file.local.LocalFileBuilder;
+import net.ryanland.colossus.util.file.local.LocalFileType;
 
 import java.io.IOException;
 import java.nio.file.InvalidPathException;

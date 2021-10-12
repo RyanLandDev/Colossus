@@ -3,7 +3,7 @@ package net.ryanland.colossus.bot.command.info;
 import net.ryanland.colossus.bot.command.executor.data.Flag;
 import net.ryanland.colossus.bot.command.impl.SubCommand;
 import net.ryanland.colossus.bot.command.permissions.Permission;
-import net.ryanland.colossus.sys.file.StorageType;
+import net.ryanland.colossus.util.file.StorageType;
 
 import java.util.ArrayList;
 import java.util.Arrays;

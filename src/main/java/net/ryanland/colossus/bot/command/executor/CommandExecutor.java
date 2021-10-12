@@ -8,8 +8,8 @@ import net.ryanland.colossus.bot.command.executor.exceptions.CommandException;
 import net.ryanland.colossus.bot.command.executor.finalizers.CommandFinalizer;
 import net.ryanland.colossus.bot.command.impl.Command;
 import net.ryanland.colossus.bot.events.CommandEvent;
-import net.ryanland.colossus.sys.message.builders.PresetBuilder;
-import net.ryanland.colossus.sys.message.builders.PresetType;
+import net.ryanland.colossus.util.message.builders.PresetBuilder;
+import net.ryanland.colossus.util.message.builders.PresetType;
 
 import java.util.List;
 

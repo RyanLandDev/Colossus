@@ -5,10 +5,11 @@ import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.SelfUser;
 import net.ryanland.colossus.bot.command.executor.CommandHandler;
 import net.ryanland.colossus.bot.command.impl.Command;
-import net.ryanland.colossus.sys.file.Config;
-import net.ryanland.colossus.sys.file.database.DocumentCache;
-import net.ryanland.colossus.sys.file.database.documents.impl.GlobalDocument;
-import net.ryanland.colossus.sys.file.local.LocalFile;
+import net.ryanland.colossus.util.file.Config;
+import net.ryanland.colossus.util.file.database.old.DocumentCache;
+import net.ryanland.colossus.util.file.database.documents.old.GlobalDocument;
+import net.ryanland.colossus.util.file.database.old.GlobalDocument;
+import net.ryanland.colossus.util.file.local.LocalFile;
 
 import javax.security.auth.login.LoginException;
 import java.nio.file.InvalidPathException;
