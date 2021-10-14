@@ -5,3 +5,6 @@ build
 # Custom Files
 config.json
 webhooks.json
+
+# Testing
+/colossus/Testing.java

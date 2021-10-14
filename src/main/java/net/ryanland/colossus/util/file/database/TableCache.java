@@ -1,15 +1,15 @@
 package net.ryanland.colossus.util.file.database;
 
+import net.dv8tion.jda.api.entities.ISnowflake;
 import net.dv8tion.jda.api.entities.User;
 
-import java.util.LinkedHashMap;
 import java.util.WeakHashMap;
 
 /**
  * A cache holder for {@link Table}s from the database. Uses {@link WeakHashMap}.
  * @param <T> The type of entity this table is for, for example {@link User}
  */
-public class TableCache<T> {
+public class TableCache<T extends ISnowflake> {
 
     private final WeakHashMap<String, Table<T>> CACHE = new WeakHashMap<>();
 
