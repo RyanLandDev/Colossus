@@ -7,19 +7,15 @@ import net.dv8tion.jda.api.interactions.Interaction;
 import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.requests.restaction.interactions.ReplyAction;
+import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.bot.command.arguments.parsing.ParsedArgumentMap;
-import net.ryanland.colossus.bot.command.executor.exceptions.CommandException;
-import net.ryanland.colossus.bot.command.impl.Command;
-import net.ryanland.colossus.util.file.database.old.DocumentCache;
-import net.ryanland.colossus.util.file.database.documents.old.GlobalDocument;
-import net.ryanland.colossus.util.file.database.documents.old.GuildDocument;
-import net.ryanland.colossus.util.file.database.documents.old.UserDocument;
-import net.ryanland.colossus.util.file.database.old.GlobalDocument;
-import net.ryanland.colossus.util.file.database.old.GuildDocument;
-import net.ryanland.colossus.util.file.database.old.UserDocument;
-import net.ryanland.colossus.util.message.builders.PresetBuilder;
-import net.ryanland.colossus.util.message.interactions.menu.InteractionMenu;
-import net.ryanland.colossus.util.message.interactions.menu.InteractionMenuBuilder;
+import net.ryanland.colossus.bot.command.CommandException;
+import net.ryanland.colossus.bot.command.Command;
+import net.ryanland.colossus.sys.file.DatabaseDriver;
+import net.ryanland.colossus.sys.file.Table;
+import net.ryanland.colossus.sys.message.PresetBuilder;
+import net.ryanland.colossus.sys.interactions.menu.InteractionMenu;
+import net.ryanland.colossus.sys.interactions.menu.InteractionMenuBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.OffsetDateTime;
@@ -157,20 +153,27 @@ public class CommandEvent {
         return event.getUser();
     }
 
-    public UserDocument getUserDocument(User user) {
-        return DocumentCache.get(user, UserDocument.class);
+    /**
+     * Get the {@link Table} of the user who executed this command.
+     * <br>Note: This method may produce an error if the {@link DatabaseDriver} is not properly configured.
+     * @see Table
+     * @see DatabaseDriver
+     */
+    public Table<User> getUserTable() {
+        return Colossus.getDatabaseDriver().get(getUser());
     }
 
-    public UserDocument getUserDocument() {
-        return getUserDocument(getUser());
-    }
-
-    public GuildDocument getGuildDocument() {
-        return DocumentCache.get(getUser(), GuildDocument.class);
-    }
-
-    public GlobalDocument getGlobalDocument() {
-        return DocumentCache.getGlobal();
+    /**
+     * Get the {@link Table} of the guild this command was executed in.
+     * This will be {@code null} if the command was executed in DMs.
+     * <br>Note: This method may produce an error if the {@link DatabaseDriver} is not properly configured.
+     * @see Table
+     * @see DatabaseDriver
+     */
+    public Table<Guild> getGuildTable() {
+        if (getGuild() == null)
+            return null;
+        return Colossus.getDatabaseDriver().get(getGuild());
     }
 
     public List<OptionMapping> getOptions() {

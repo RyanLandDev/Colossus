@@ -5,7 +5,7 @@ import net.ryanland.colossus.bot.command.arguments.parsing.exceptions.ArgumentEx
 import net.ryanland.colossus.bot.command.arguments.parsing.exceptions.MalformedArgumentException;
 import net.ryanland.colossus.bot.command.arguments.types.SingleArgument;
 import net.ryanland.colossus.bot.command.executor.CommandHandler;
-import net.ryanland.colossus.bot.command.impl.Command;
+import net.ryanland.colossus.bot.command.Command;
 import net.ryanland.colossus.bot.events.CommandEvent;
 
 public class CommandArgument extends SingleArgument<Command> {

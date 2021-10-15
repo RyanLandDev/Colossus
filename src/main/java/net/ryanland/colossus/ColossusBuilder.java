@@ -2,16 +2,38 @@ package net.ryanland.colossus;
 
 import com.google.gson.JsonObject;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.entities.SelfUser;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.ryanland.colossus.bot.command.impl.Command;
-import net.ryanland.colossus.bot.command.impl.info.HelpCommand;
+import net.ryanland.colossus.bot.command.CommandExecutionType;
+import net.ryanland.colossus.bot.command.arguments.parsing.exceptions.MalformedArgumentException;
+import net.ryanland.colossus.bot.command.cooldown.Cooldown;
+import net.ryanland.colossus.bot.command.cooldown.CooldownHandler;
+import net.ryanland.colossus.bot.command.cooldown.CooldownManager;
+import net.ryanland.colossus.bot.command.CommandException;
+import net.ryanland.colossus.bot.command.executor.DisabledCommandHandler;
+import net.ryanland.colossus.bot.command.finalizers.CooldownFinalizer;
+import net.ryanland.colossus.bot.command.finalizers.Finalizer;
+import net.ryanland.colossus.bot.command.Command;
+import net.ryanland.colossus.bot.command.impl.DisableCommand;
+import net.ryanland.colossus.bot.command.impl.EnableCommand;
+import net.ryanland.colossus.bot.command.impl.HelpCommand;
+import net.ryanland.colossus.bot.command.inhibitors.CooldownInhibitor;
+import net.ryanland.colossus.bot.command.inhibitors.DisabledInhibitor;
+import net.ryanland.colossus.bot.command.inhibitors.Inhibitor;
+import net.ryanland.colossus.bot.command.inhibitors.PermissionInhibitor;
 import net.ryanland.colossus.bot.events.ButtonEvent;
 import net.ryanland.colossus.bot.events.OnSlashCommandEvent;
-import net.ryanland.colossus.util.file.Config;
-import net.ryanland.colossus.util.file.database.DatabaseDriver;
-import net.ryanland.colossus.util.file.local.LocalFile;
-import net.ryanland.colossus.util.file.local.LocalFileBuilder;
-import net.ryanland.colossus.util.file.local.LocalFileType;
+import net.ryanland.colossus.sys.file.Config;
+import net.ryanland.colossus.sys.file.DatabaseDriver;
+import net.ryanland.colossus.sys.file.LocalFile;
+import net.ryanland.colossus.sys.file.LocalFileBuilder;
+import net.ryanland.colossus.sys.file.LocalFileType;
+import net.ryanland.colossus.sys.file.serializer.CooldownsSerializer;
+import net.ryanland.colossus.sys.file.serializer.DisabledCommandsSerializer;
+import net.ryanland.colossus.sys.file.serializer.Serializer;
+import net.ryanland.colossus.sys.message.DefaultPresetType;
+import net.ryanland.colossus.sys.message.PresetBuilder;
+import net.ryanland.colossus.sys.message.PresetType;
 
 import java.io.IOException;
 import java.nio.file.InvalidPathException;
@@ -21,23 +43,38 @@ import java.util.function.Function;
 
 /**
  * A helper class for making a {@link Colossus} bot ready for startup
- *
- * @since 1.0
- * @author RyanLandDev
  */
 public class ColossusBuilder {
 
-    private static final Object[] INTERNAL_EVENTS = new ListenerAdapter[]{
+    private static final Object[] CORE_EVENTS = new ListenerAdapter[]{
         new ButtonEvent(), new OnSlashCommandEvent()
+    };
+
+    private static final Inhibitor[] CORE_INHIBITORS = new Inhibitor[]{
+        new DisabledInhibitor(),
+        new PermissionInhibitor(),
+        new CooldownInhibitor()
+    };
+
+    private static final Finalizer[] CORE_FINALIZERS = new Finalizer[]{
+        new CooldownFinalizer()
     };
 
     private JDABuilder jdaBuilder;
     private final Config config;
+    private final CommandExecutionType commandExecutionType;
     private final List<Command> commands = new ArrayList<>();
     private final List<LocalFile> localFiles = new ArrayList<>();
 
-    private boolean disableHelp = false;
+    private boolean disableHelpCommand = false;
+    private boolean disableToggleCommands = false;
     private DatabaseDriver databaseDriver = null;
+    private PresetType defaultPresetType = DefaultPresetType.DEFAULT;
+    private PresetType errorPresetType = DefaultPresetType.ERROR;
+    private Serializer<?, List<Cooldown>> cooldownsSerializer = CooldownsSerializer.getInstance();
+    private Serializer<?, List<Command>> disabledCommandsSerializer = DisabledCommandsSerializer.getInstance();
+    private List<Inhibitor> inhibitors = new ArrayList<>();
+    private List<Finalizer> finalizers = new ArrayList<>();
 
     /**
      * Helper class to build a new instance of {@link Colossus}.<br>
@@ -48,8 +85,12 @@ public class ColossusBuilder {
      *
      *                        <strong>WARNING:</strong> It is recommended to {@code .gitignore} your config.json to prevent
      *                        your bot token getting in hands of the wrong people.
+     * @param commandExecutionType The way commands should be executed by the end user. See {@link CommandExecutionType} for
+     *                             more information.
+     * @see Colossus
+     * @see CommandExecutionType
      */
-    public ColossusBuilder(String configDirectory) {
+    public ColossusBuilder(String configDirectory, CommandExecutionType commandExecutionType) {
         LocalFile dir = new LocalFile(configDirectory);
         if (!dir.exists())
             throw new InvalidPathException(configDirectory, "This path is invalid or does not exist.");
@@ -80,15 +121,19 @@ public class ColossusBuilder {
 
         config = new Config(configJson);
         jdaBuilder = JDABuilder.createDefault(config.getToken())
-            .addEventListeners(INTERNAL_EVENTS);
+            .addEventListeners(CORE_EVENTS);
+        this.commandExecutionType = commandExecutionType;
     }
 
     /**
      * Helper class to build a new instance of {@link Colossus}.
      * <br>Note: using this constructor will let the bot ignore your {@code config.json} file.
-     * <br>To use the config file instead, take advantage of the {@link ColossusBuilder#ColossusBuilder(String)} constructor.
+     * <br>To use the config file instead, take advantage of the
+     * {@link ColossusBuilder#ColossusBuilder(String, CommandExecutionType)} constructor.
      * <br>This constructor is mainly intended for quick setup. It is recommended to use a proper config file instead.
      * <br><br>
+     * @param commandExecutionType The way commands should be executed by the end user. See {@link CommandExecutionType} for
+     *                             more information.
      * @param token The token of the bot. If you use this constructor, please make sure your bot files are not public,
      *              as this can lead anyone to being able to steal your bot token.<br><br>
      *
@@ -114,28 +159,40 @@ public class ColossusBuilder {
      *                  - Enable Developer Mode (User settings > Advanced > Developer Mode)<br>
      *                  - Right-click your server and click {@code Copy ID}<br>
      *                  - Paste it here<br>
+     * @see Colossus
+     * @see CommandExecutionType
      */
-    public ColossusBuilder(String token, String clientId, String testGuild) {
+    public ColossusBuilder(CommandExecutionType commandExecutionType, String token, String clientId, String testGuild) {
         config = new Config(token, clientId, testGuild);
         jdaBuilder = JDABuilder.createDefault(config.getToken())
-            .addEventListeners(INTERNAL_EVENTS);
+            .addEventListeners(CORE_EVENTS);
+        this.commandExecutionType = commandExecutionType;
     }
 
     /**
      * Build the {@link Colossus} bot.
-     * Note: to initialize the bot, use {@link Colossus#initialize()} after building
+     * <br>To initialize the bot, use {@link Colossus#initialize()} after building
      * @return The built {@link Colossus} instance
+     * @see Colossus
      */
     public Colossus build() {
-        if (!disableHelp) commands.add(new HelpCommand());
+        if (!disableHelpCommand) commands.add(new HelpCommand());
+        if (!disableToggleCommands) commands.addAll(List.of(new DisableCommand(), new EnableCommand()));
 
-        return new Colossus(jdaBuilder, config, commands, localFiles, databaseDriver);
+        inhibitors.addAll(List.of(CORE_INHIBITORS));
+        finalizers.addAll(List.of(CORE_FINALIZERS));
+
+        return new Colossus(jdaBuilder, config, commandExecutionType,
+            commands, localFiles, databaseDriver, defaultPresetType,
+            errorPresetType, cooldownsSerializer, disabledCommandsSerializer,
+            inhibitors, finalizers);
     }
 
     /**
      * Register {@link LocalFile}s
      * @param localFiles The file(s) to register
      * @return The builder
+     * @see LocalFile
      * @see Colossus#getLocalFile(String)
      */
     public ColossusBuilder registerLocalFiles(LocalFile... localFiles) {
@@ -147,6 +204,7 @@ public class ColossusBuilder {
      * Register {@link Command}s
      * @param commands The command(s) to register
      * @return The builder
+     * @see Command
      */
     public ColossusBuilder registerCommands(Command... commands) {
         this.commands.addAll(List.of(commands));
@@ -154,11 +212,26 @@ public class ColossusBuilder {
     }
 
     /**
-     * Disables the default help command, allowing you to create your own. This command is enabled by default.
+     * Disables the default help command, optionally allowing you to create your own. This command is enabled by default.
      * @return The builder
+     * @see HelpCommand
      */
-    public ColossusBuilder disableHelp() {
-        disableHelp = true;
+    public ColossusBuilder disableHelpCommand() {
+        disableHelpCommand = true;
+        return this;
+    }
+
+    /**
+     * Disables the default disable and enable commands, optionally allowing you to create your own.
+     * These commands are enabled by default.
+     * <br>Note: A {@link SelfUser} (global) type must be present in the defined {@link DatabaseDriver}.
+     * @return The builder
+     * @see DisableCommand
+     * @see EnableCommand
+     * @see DisabledCommandHandler
+     */
+    public ColossusBuilder disableToggleCommands() {
+        disableToggleCommands = true;
         return this;
     }
 
@@ -166,6 +239,7 @@ public class ColossusBuilder {
      * Modify the {@link JDABuilder} implementation used for this bot
      * @param modifier The function to use, with the currently defined {@link JDABuilder} given
      * @return This {@link ColossusBuilder}
+     * @see JDABuilder
      */
     public ColossusBuilder setJDABuilder(Function<JDABuilder, JDABuilder> modifier) {
         jdaBuilder = modifier.apply(jdaBuilder);
@@ -181,6 +255,91 @@ public class ColossusBuilder {
      */
     public ColossusBuilder setDatabaseDriver(DatabaseDriver driver) {
         databaseDriver = driver;
+        return this;
+    }
+
+    /**
+     * Sets the default {@link PresetType} used in {@link PresetBuilder} when no type is specified.
+     * <br>When this is not defined, {@link DefaultPresetType#DEFAULT} is used.
+     * @param presetType The {@link PresetType} to set to
+     * @return The builder
+     * @see PresetType
+     * @see PresetBuilder
+     * @see DefaultPresetType
+     */
+    public ColossusBuilder setDefaultPresetType(PresetType presetType) {
+        defaultPresetType = presetType;
+        return this;
+    }
+
+    /**
+     * Sets the default {@link PresetType} used when there is an internal error,
+     * e.g. a command being on cooldown, {@link MalformedArgumentException}, {@link CommandException}, etc.
+     * <br>When this is not defined, {@link DefaultPresetType#ERROR} is used.
+     * @param presetType The {@link PresetType} to set to
+     * @return The builder
+     * @see PresetType
+     * @see PresetBuilder
+     * @see DefaultPresetType
+     */
+    public ColossusBuilder setErrorPresetType(PresetType presetType) {
+        errorPresetType = presetType;
+        return this;
+    }
+
+    /**
+     * Sets the {@link Serializer} used for cooldowns, when pushed/pulled to/from the database.
+     * <br>When this is not defined, {@link CooldownsSerializer} is used.
+     * @param serializer The serializer to set to
+     * @return The builder
+     * @see Serializer
+     * @see CooldownsSerializer
+     * @see Cooldown
+     * @see CooldownHandler
+     * @see CooldownManager
+     */
+    public ColossusBuilder setCooldownsSerializer(Serializer<?, List<Cooldown>> serializer) {
+        cooldownsSerializer = serializer;
+        return this;
+    }
+
+    /**
+     * Sets the {@link Serializer} used for disabled commands, when pushed/pulled to/from the database.
+     * <br>When this is not defined, {@link DisabledCommandsSerializer} is used.
+     * @param serializer The serializer to set to
+     * @return The builder
+     * @see Serializer
+     * @see DisabledCommandsSerializer
+     * @see DisabledCommandHandler
+     */
+    public ColossusBuilder setDisabledCommandsSerializer(Serializer<?, List<Command>> serializer) {
+        disabledCommandsSerializer = serializer;
+        return this;
+    }
+
+    /**
+     * Register {@link Inhibitor}s
+     * <br>Core inhibitors will be executed before custom ones. These are:<br>
+     * {@link DisabledInhibitor}, {@link PermissionInhibitor}, {@link CooldownInhibitor}
+     * @param inhibitors The inhibitors to register
+     * @return The builder
+     * @see Inhibitor
+     */
+    public ColossusBuilder registerInhibitors(Inhibitor... inhibitors) {
+        this.inhibitors.addAll(List.of(inhibitors));
+        return this;
+    }
+
+    /**
+     * Register {@link Finalizer}s
+     * <br>Core finalizers will be executed before custom ones. These are:<br>
+     * {@link CooldownFinalizer}
+     * @param finalizers The finalizers to register
+     * @return The builder
+     * @see Finalizer
+     */
+    public ColossusBuilder registerFinalizers(Finalizer... finalizers) {
+        this.finalizers.addAll(List.of(finalizers));
         return this;
     }
 

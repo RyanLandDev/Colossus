@@ -3,7 +3,6 @@ plugins {
     id 'application'
     id 'com.github.johnrengelman.shadow' version '6.0.0'
 }
-mainClassName = 'net.ryanland.colossus.Colossus'
 
 group 'net.ryanland'
 version '1.0'
@@ -24,7 +23,6 @@ dependencies {
 
     // jda
     implementation 'net.dv8tion:JDA:4.3.0_334'
-    implementation group: 'club.minnced', name: 'discord-webhooks', version: '0.7.2'
 
     // json
     implementation 'org.json:json:20210307'

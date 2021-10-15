@@ -1,12 +1,12 @@
 package net.ryanland.colossus.bot.command.info;
 
+import net.dv8tion.jda.api.Permission;
 import net.ryanland.colossus.bot.command.arguments.Argument;
 import net.ryanland.colossus.bot.command.arguments.ArgumentSet;
-import net.ryanland.colossus.bot.command.impl.Command;
-import net.ryanland.colossus.bot.command.impl.SubCommand;
-import net.ryanland.colossus.bot.command.permissions.Permission;
+import net.ryanland.colossus.bot.command.Command;
+import net.ryanland.colossus.bot.command.SubCommand;
 import net.ryanland.colossus.bot.events.CommandEvent;
-import net.ryanland.colossus.util.message.builders.PresetBuilder;
+import net.ryanland.colossus.sys.message.PresetBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +16,6 @@ public class HelpMaker {
     public static List<String> formattedUsageElements(CommandEvent event, Argument<?> highlighted) {
         Command command = event.getCommand();
         List<String> elements = new ArrayList<>();
-
         elements.add("/" + event.getName());
 
         if (command instanceof SubCommand) {
@@ -24,16 +23,16 @@ public class HelpMaker {
         }
 
         ArgumentSet arguments = command.getArguments();
-
         for (Argument<?> argument : arguments) {
             String usage = argument.getName();
-            if (argument.isOptional()) usage = String.format("[%s]", usage);
-            else usage = String.format("<%s>", usage);
+            if (argument.isOptional())
+                usage = String.format("[%s]", usage);
+            else
+                usage = String.format("<%s>", usage);
 
             // highlight check
-            if (highlighted != null && highlighted.getId().equals(argument.getId())) {
+            if (highlighted != null && highlighted.getId().equals(argument.getId()))
                 usage = String.format("**%s**", usage);
-            }
 
             elements.add(usage);
         }
@@ -59,21 +58,15 @@ public class HelpMaker {
 
     public static String formattedSubCommands(SubCommand[] subcommands) {
         List<String> names = new ArrayList<>();
-
-        for (SubCommand subcommand : subcommands) {
+        for (SubCommand subcommand : subcommands)
             names.add(subcommand.getName());
-        }
-
         return "`" + String.join("`, `", names) + "`";
     }
 
     public static String formattedSubCommandsUsage(SubCommand[] subcommands) {
         List<String> names = new ArrayList<>();
-
-        for (SubCommand subcommand : subcommands) {
+        for (SubCommand subcommand : subcommands)
             names.add(subcommand.getName());
-        }
-
         return String.join("/", names);
     }
 
@@ -86,22 +79,19 @@ public class HelpMaker {
             .addField("Category", command.getCategory().getName())
             .addField("Usage", String.format("```html\n%s\n```", formattedUsage(event)));
 
-        if (command.getPermission() != Permission.USER) {
+        if (command.getPermission() != Permission.MESSAGE_WRITE)
             embed.addField("Permission", command.getPermission().getName());
-        }
 
         return embed;
     }
 
     public static String formattedQuickCommandList(List<Command> commands) {
         List<String> commandNames = new ArrayList<>();
-
         for (Command command : commands) {
             if (!command.isDisabled()) {
                 commandNames.add(command.getName());
             }
         }
-
         return "`" + String.join("` `", commandNames) + "`";
     }
 }

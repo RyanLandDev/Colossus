@@ -4,10 +4,10 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.ryanland.colossus.bot.command.arguments.Argument;
 import net.ryanland.colossus.bot.command.arguments.parsing.exceptions.ArgumentException;
 import net.ryanland.colossus.bot.command.arguments.parsing.exceptions.MalformedArgumentException;
-import net.ryanland.colossus.bot.command.impl.Command;
+import net.ryanland.colossus.bot.command.Command;
 import net.ryanland.colossus.bot.events.CommandEvent;
-import net.ryanland.colossus.util.message.builders.PresetBuilder;
-import net.ryanland.colossus.util.message.builders.PresetType;
+import net.ryanland.colossus.sys.message.PresetBuilder;
+import net.ryanland.colossus.sys.message.DefaultPresetType;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -33,7 +33,7 @@ public class ArgumentParser {
         ParsedArgumentMap parsedArgs = new ParsedArgumentMap();
 
         Command command = event.getCommand();
-        PresetBuilder embed = new PresetBuilder(PresetType.ERROR);
+        PresetBuilder embed = new PresetBuilder(DefaultPresetType.ERROR);
 
         for (Argument<?> arg : command.getArguments()) {
 

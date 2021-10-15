@@ -1,15 +1,15 @@
 package net.ryanland.colossus.bot.command.executor;
 
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
+import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.bot.command.arguments.parsing.ArgumentParser;
-import net.ryanland.colossus.bot.command.executor.checks.CommandCheck;
-import net.ryanland.colossus.bot.command.executor.checks.CommandCheckException;
-import net.ryanland.colossus.bot.command.executor.exceptions.CommandException;
-import net.ryanland.colossus.bot.command.executor.finalizers.CommandFinalizer;
-import net.ryanland.colossus.bot.command.impl.Command;
+import net.ryanland.colossus.bot.command.finalizers.Finalizer;
+import net.ryanland.colossus.bot.command.inhibitors.Inhibitor;
+import net.ryanland.colossus.bot.command.inhibitors.InhibitorException;
+import net.ryanland.colossus.bot.command.CommandException;
+import net.ryanland.colossus.bot.command.Command;
 import net.ryanland.colossus.bot.events.CommandEvent;
-import net.ryanland.colossus.util.message.builders.PresetBuilder;
-import net.ryanland.colossus.util.message.builders.PresetType;
+import net.ryanland.colossus.sys.message.PresetBuilder;
 
 import java.util.List;
 
@@ -37,34 +37,36 @@ public class CommandExecutor {
         event.setCommand(command);
 
         try {
-            for (CommandCheck check : CommandCheck.getChecks()) {
-                if (check.check(event)) {
-                    event.performReply(check.buildMessage(event), true).queue();
-                    throw new CommandCheckException();
+            for (Inhibitor inhibitor : Colossus.getInhibitors()) {
+                if (inhibitor.check(event)) {
+                    event.performReply(inhibitor.buildMessage(event), true).queue();
+                    throw new InhibitorException();
                 }
             }
 
             ArgumentParser argumentParser = new ArgumentParser(event, args);
 
             if (argumentParser.parseArguments()) {
-                for (CommandFinalizer finalizer : CommandFinalizer.getFinalizers()) {
-                    finalizer.finalize(event);
-                }
-
                 try {
                     command.run(event);
                 } catch (Exception e) {
-                    if (!(e instanceof CommandException)) e.printStackTrace();
+                    if (!(e instanceof CommandException))
+                        e.printStackTrace();
                     event.performReply(
-                        new PresetBuilder(PresetType.ERROR,
+                        new PresetBuilder(Colossus.getErrorPresetType(),
                             e instanceof CommandException ?
                                 e.getMessage() :
                                 "Unknown error, please report it to a developer."
                         )).queue();
+                    return;
+                }
+
+                for (Finalizer finalizer : Colossus.getFinalizers()) {
+                    finalizer.finalize(event);
                 }
             }
 
-        } catch (CommandCheckException ignored) {
+        } catch (InhibitorException ignored) {
         }
     }
 }

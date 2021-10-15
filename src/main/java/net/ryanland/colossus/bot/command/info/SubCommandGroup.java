@@ -1,6 +1,6 @@
 package net.ryanland.colossus.bot.command.info;
 
-import net.ryanland.colossus.bot.command.impl.SubCommand;
+import net.ryanland.colossus.bot.command.SubCommand;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;

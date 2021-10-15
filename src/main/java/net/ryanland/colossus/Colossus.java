@@ -4,15 +4,19 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.SelfUser;
 import net.dv8tion.jda.internal.utils.JDALogger;
+import net.ryanland.colossus.bot.command.CommandExecutionType;
+import net.ryanland.colossus.bot.command.cooldown.Cooldown;
 import net.ryanland.colossus.bot.command.executor.CommandHandler;
-import net.ryanland.colossus.bot.command.impl.Command;
-import net.ryanland.colossus.util.file.Config;
-import net.ryanland.colossus.util.file.database.DatabaseDriver;
-import net.ryanland.colossus.util.file.database.old.DocumentCache;
-import net.ryanland.colossus.util.file.database.old.GlobalDocument;
-import net.ryanland.colossus.util.file.local.LocalFile;
+import net.ryanland.colossus.bot.command.finalizers.Finalizer;
+import net.ryanland.colossus.bot.command.Command;
+import net.ryanland.colossus.bot.command.inhibitors.Inhibitor;
+import net.ryanland.colossus.sys.file.Config;
+import net.ryanland.colossus.sys.file.DatabaseDriver;
+import net.ryanland.colossus.sys.file.LocalFile;
+import net.ryanland.colossus.sys.file.Table;
+import net.ryanland.colossus.sys.file.serializer.Serializer;
+import net.ryanland.colossus.sys.message.PresetType;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.security.auth.login.LoginException;
 import java.nio.file.InvalidPathException;
@@ -21,31 +25,50 @@ import java.util.stream.Collectors;
 
 /**
  * Main class for initializing Colossus
- *
- * @since 1.0
  * @author RyanLandDev
  */
 public class Colossus {
+
+    public static final long TIMEZONE_OFFSET = -3600000;
+    // TODO
 
     private static final Logger LOGGER =
         JDALogger.getLog(StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).getCallerClass());
 
     private static JDA jda;
     private static Config config;
+    private static CommandExecutionType commandExecutionType;
     private static List<Command> commands;
     private static List<LocalFile> localFiles;
     private static DatabaseDriver databaseDriver;
+    private static PresetType defaultPresetType;
+    private static PresetType errorPresetType;
+    private static Serializer<?, List<Cooldown>> cooldownsSerializer;
+    private static Serializer<?, List<Command>> disabledCommandsSerializer;
+    private static List<Inhibitor> inhibitors;
+    private static List<Finalizer> finalizers;
 
     private final JDABuilder builder;
 
-    public Colossus(JDABuilder builder, Config config,
-                    List<Command> commands, List<LocalFile> localFiles,
-                    DatabaseDriver databaseDriver) {
+    public Colossus(JDABuilder builder, Config config, CommandExecutionType commandExecutionType,
+                    List<Command> commands, List<LocalFile> localFiles, DatabaseDriver databaseDriver,
+                    PresetType defaultPresetType, PresetType errorPresetType,
+                    Serializer<?, List<Cooldown>> cooldownsSerializer,
+                    Serializer<?, List<Command>> disabledCommandsSerializer, List<Inhibitor> inhibitors,
+                    List<Finalizer> finalizers) {
         this.builder = builder;
+
         Colossus.config = config;
+        Colossus.commandExecutionType = commandExecutionType;
         Colossus.commands = commands;
         Colossus.localFiles = localFiles;
         Colossus.databaseDriver = databaseDriver;
+        Colossus.defaultPresetType = defaultPresetType;
+        Colossus.errorPresetType = errorPresetType;
+        Colossus.cooldownsSerializer = cooldownsSerializer;
+        Colossus.disabledCommandsSerializer = disabledCommandsSerializer;
+        Colossus.inhibitors = inhibitors;
+        Colossus.finalizers = finalizers;
     }
 
     /**
@@ -92,6 +115,10 @@ public class Colossus {
         return config;
     }
 
+    public static CommandExecutionType getCommandExecutionType() {
+        return commandExecutionType;
+    }
+
     /**
      * Get a list of all registered {@link LocalFile}s
      * @see ColossusBuilder#registerLocalFiles(LocalFile...)
@@ -120,13 +147,47 @@ public class Colossus {
     }
 
     /**
-     * Get the configured {@link DatabaseDriver}.
+     * Get the configured {@link DatabaseDriver}
      * @see ColossusBuilder#setDatabaseDriver(DatabaseDriver)
-     * @see Colossus#Colossus(JDABuilder, Config, List, List, DatabaseDriver)
+     * @see DatabaseDriver
      */
     public static DatabaseDriver getDatabaseDriver() {
         if (databaseDriver == null)
             throw new IllegalStateException("A database driver has not been defined.");
         return databaseDriver;
+    }
+
+    /**
+     * Get the {@link SelfUser} (global) table from the database
+     * @see Table
+     * @see DatabaseDriver
+     * @see SelfUser
+     */
+    public static Table<SelfUser> getGlobalTable() {
+        return getDatabaseDriver().get(getSelfUser());
+    }
+
+    public static PresetType getDefaultPresetType() {
+        return defaultPresetType;
+    }
+
+    public static PresetType getErrorPresetType() {
+        return errorPresetType;
+    }
+
+    public static Serializer<?, List<Cooldown>> getCooldownsSerializer() {
+        return cooldownsSerializer;
+    }
+
+    public static Serializer<?, List<Command>> getDisabledCommandsSerializer() {
+        return disabledCommandsSerializer;
+    }
+
+    public static List<Inhibitor> getInhibitors() {
+        return inhibitors;
+    }
+
+    public static List<Finalizer> getFinalizers() {
+        return finalizers;
     }
 }

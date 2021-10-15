@@ -1,24 +1,25 @@
 package net.ryanland.colossus.bot.command.info;
 
-import net.ryanland.colossus.bot.command.executor.data.Flag;
-import net.ryanland.colossus.bot.command.impl.SubCommand;
-import net.ryanland.colossus.bot.command.permissions.Permission;
-import net.ryanland.colossus.util.file.StorageType;
+import net.dv8tion.jda.api.Permission;
+import net.ryanland.colossus.bot.command.cooldown.CooldownManager;
+import net.ryanland.colossus.bot.command.cooldown.MemoryCooldownManager;
+import net.ryanland.colossus.bot.command.SubCommand;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+@Deprecated
 public class CommandInfo {
 
+    //TODO remove this class and replace it completely with the CommandBuilder annotation
     private String name;
     private String description;
     private Category category;
-    private Permission permission = Permission.USER;
-    private Flag[] flags = new Flag[0];
+    private Permission permission = Permission.MESSAGE_WRITE;
     private int cooldown;
-    private StorageType cooldownStorageType = StorageType.MEMORY;
+    private CooldownManager cooldownManager = MemoryCooldownManager.getInstance();
 
     private List<SubCommand> subCommands = new ArrayList<>();
     private List<SubCommandGroup> subCommandGroups = new ArrayList<>();
@@ -45,25 +46,19 @@ public class CommandInfo {
         return this;
     }
 
-    public CommandInfo flags(Flag... flags) {
-        this.flags = flags;
-        return this;
-    }
-
     /**
      * The cooldown set for this command.
-     *
      * @param cooldown Cooldown in seconds.
      * @return The {@link CommandInfo} for chaining.
-     * @see #cooldownStorage(StorageType)
+     * @see #cooldownManager(CooldownManager)
      */
     public CommandInfo cooldown(int cooldown) {
         this.cooldown = cooldown;
         return this;
     }
 
-    public CommandInfo cooldownStorage(StorageType cooldownStorageType) {
-        this.cooldownStorageType = cooldownStorageType;
+    public CommandInfo cooldownManager(CooldownManager cooldownStorageType) {
+        this.cooldownManager = cooldownStorageType;
         return this;
     }
 
@@ -101,24 +96,12 @@ public class CommandInfo {
         return permission;
     }
 
-    public Flag[] getFlags() {
-        return flags;
-    }
-
-    public List<Flag> getFlagsAsList() {
-        return Arrays.asList(getFlags());
-    }
-
-    public boolean flagsContain(Flag flag) {
-        return getFlagsAsList().contains(flag);
-    }
-
     public int getCooldown() {
         return cooldown;
     }
 
-    public StorageType getCooldownStorageType() {
-        return cooldownStorageType;
+    public CooldownManager getCooldownManager() {
+        return cooldownManager;
     }
 
     public List<SubCommand> getSubCommands() {

@@ -1,7 +1,7 @@
 package net.ryanland.colossus.bot.command.arguments.parsing.exceptions;
 
 import net.ryanland.colossus.bot.command.arguments.Argument;
-import net.ryanland.colossus.bot.command.executor.exceptions.CommandException;
+import net.ryanland.colossus.bot.command.CommandException;
 import net.ryanland.colossus.bot.command.info.HelpMaker;
 import net.ryanland.colossus.bot.events.CommandEvent;
 
