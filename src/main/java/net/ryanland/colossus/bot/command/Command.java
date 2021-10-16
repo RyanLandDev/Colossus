@@ -13,7 +13,15 @@ import java.util.List;
 
 public abstract class Command {
 
-    public abstract CommandInfo getInfo();
+    private CommandInfo info;
+
+    public CommandInfo getInfo() {
+        return info;
+    }
+
+    public void setInfo(CommandInfo info) {
+        this.info = info;
+    }
 
     // CommandData getters --------------------
 
