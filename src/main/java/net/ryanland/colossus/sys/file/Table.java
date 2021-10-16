@@ -2,8 +2,6 @@ package net.ryanland.colossus.sys.file;
 
 import net.dv8tion.jda.api.entities.ISnowflake;
 import net.dv8tion.jda.api.entities.User;
-import net.ryanland.colossus.bot.command.CommandException;
-import net.ryanland.colossus.bot.command.executor.functional_interface.CommandFunction;
 import org.jetbrains.annotations.Contract;
 
 import java.util.LinkedHashMap;

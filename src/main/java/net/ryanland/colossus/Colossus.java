@@ -4,12 +4,11 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.SelfUser;
 import net.dv8tion.jda.internal.utils.JDALogger;
-import net.ryanland.colossus.bot.command.CommandExecutionType;
-import net.ryanland.colossus.bot.command.cooldown.Cooldown;
-import net.ryanland.colossus.bot.command.executor.CommandHandler;
-import net.ryanland.colossus.bot.command.finalizers.Finalizer;
-import net.ryanland.colossus.bot.command.Command;
-import net.ryanland.colossus.bot.command.inhibitors.Inhibitor;
+import net.ryanland.colossus.command.cooldown.Cooldown;
+import net.ryanland.colossus.command.executor.CommandHandler;
+import net.ryanland.colossus.command.finalizers.Finalizer;
+import net.ryanland.colossus.command.Command;
+import net.ryanland.colossus.command.inhibitors.Inhibitor;
 import net.ryanland.colossus.sys.file.Config;
 import net.ryanland.colossus.sys.file.DatabaseDriver;
 import net.ryanland.colossus.sys.file.LocalFile;
@@ -37,7 +36,6 @@ public class Colossus {
 
     private static JDA jda;
     private static Config config;
-    private static CommandExecutionType commandExecutionType;
     private static List<Command> commands;
     private static List<LocalFile> localFiles;
     private static DatabaseDriver databaseDriver;
@@ -50,16 +48,14 @@ public class Colossus {
 
     private final JDABuilder builder;
 
-    public Colossus(JDABuilder builder, Config config, CommandExecutionType commandExecutionType,
-                    List<Command> commands, List<LocalFile> localFiles, DatabaseDriver databaseDriver,
-                    PresetType defaultPresetType, PresetType errorPresetType,
+    public Colossus(JDABuilder builder, Config config, List<Command> commands, List<LocalFile> localFiles,
+                    DatabaseDriver databaseDriver, PresetType defaultPresetType, PresetType errorPresetType,
                     Serializer<?, List<Cooldown>> cooldownsSerializer,
                     Serializer<?, List<Command>> disabledCommandsSerializer, List<Inhibitor> inhibitors,
                     List<Finalizer> finalizers) {
         this.builder = builder;
 
         Colossus.config = config;
-        Colossus.commandExecutionType = commandExecutionType;
         Colossus.commands = commands;
         Colossus.localFiles = localFiles;
         Colossus.databaseDriver = databaseDriver;
@@ -113,10 +109,6 @@ public class Colossus {
 
     public static Config getConfig() {
         return config;
-    }
-
-    public static CommandExecutionType getCommandExecutionType() {
-        return commandExecutionType;
     }
 
     /**

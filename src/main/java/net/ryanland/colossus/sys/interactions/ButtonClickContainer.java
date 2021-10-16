@@ -1,8 +1,8 @@
 package net.ryanland.colossus.sys.interactions;
 
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
-import net.ryanland.colossus.bot.command.executor.functional_interface.CommandBiConsumer;
-import net.ryanland.colossus.bot.command.executor.functional_interface.CommandConsumer;
+import net.ryanland.colossus.command.executor.functional_interface.CommandBiConsumer;
+import net.ryanland.colossus.command.executor.functional_interface.CommandConsumer;
 
 import java.util.function.Function;
 

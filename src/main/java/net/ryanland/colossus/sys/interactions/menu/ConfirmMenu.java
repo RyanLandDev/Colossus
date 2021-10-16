@@ -4,7 +4,7 @@ import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.interactions.Interaction;
 import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.components.Button;
-import net.ryanland.colossus.bot.command.executor.functional_interface.CommandRunnable;
+import net.ryanland.colossus.command.executor.functional_interface.CommandRunnable;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 import net.ryanland.colossus.sys.interactions.ButtonClickContainer;
 import net.ryanland.colossus.sys.interactions.ButtonHandler;

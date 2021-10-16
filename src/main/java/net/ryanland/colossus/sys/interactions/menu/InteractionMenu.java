@@ -1,7 +1,7 @@
 package net.ryanland.colossus.sys.interactions.menu;
 
 import net.dv8tion.jda.api.interactions.Interaction;
-import net.ryanland.colossus.bot.command.CommandException;
+import net.ryanland.colossus.command.CommandException;
 
 public interface InteractionMenu {
 

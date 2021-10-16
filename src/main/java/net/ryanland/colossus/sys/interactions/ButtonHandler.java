@@ -2,7 +2,7 @@ package net.ryanland.colossus.sys.interactions;
 
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.interactions.InteractionHook;
-import net.ryanland.colossus.bot.command.CommandException;
+import net.ryanland.colossus.command.CommandException;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 import net.ryanland.colossus.sys.message.DefaultPresetType;
 import net.ryanland.colossus.sys.ExecutorUtil;
