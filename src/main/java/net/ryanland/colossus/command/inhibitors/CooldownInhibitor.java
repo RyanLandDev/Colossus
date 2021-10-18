@@ -2,7 +2,7 @@ package net.ryanland.colossus.command.inhibitors;
 
 import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.command.cooldown.CooldownHandler;
-import net.ryanland.colossus.events.ContentCommandEvent;
+import net.ryanland.colossus.events.CommandEvent;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 
 import java.text.SimpleDateFormat;
@@ -10,15 +10,15 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class CooldownInhibitor extends Inhibitor {
+public class CooldownInhibitor implements Inhibitor {
 
     @Override
-    public boolean check(ContentCommandEvent event) {
+    public boolean check(CommandEvent event) {
         return event.getCommand().hasCooldown() && CooldownHandler.isCooldownActive(event);
     }
 
     @Override
-    public PresetBuilder buildMessage(ContentCommandEvent event) {
+    public PresetBuilder buildMessage(CommandEvent event) {
         return new PresetBuilder(
             Colossus.getErrorPresetType(),
             "This command is currently on cooldown.\nTime left: " +
@@ -30,7 +30,7 @@ public class CooldownInhibitor extends Inhibitor {
 
     private static String formatRelative(Date date) {
         String formatted = new SimpleDateFormat("D'd' H'h' m'm' s's'")
-            .format(new Date(date.getTime() + Colossus.TIMEZONE_OFFSET));
+            .format(date);
 
         // Get the first number (the day) and decrease it by 1
         Matcher matcher = Pattern.compile("^\\d+").matcher(formatted);

@@ -5,7 +5,7 @@ import net.ryanland.colossus.command.arguments.Argument;
 import net.ryanland.colossus.command.arguments.ArgumentSet;
 import net.ryanland.colossus.command.Command;
 import net.ryanland.colossus.command.SubCommand;
-import net.ryanland.colossus.events.SlashEvent;
+import net.ryanland.colossus.events.CommandEvent;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 
 import java.util.ArrayList;
@@ -13,10 +13,10 @@ import java.util.List;
 
 public class HelpMaker {
 
-    public static List<String> formattedUsageElements(SlashEvent event, Argument<?> highlighted) {
+    public static List<String> formattedUsageElements(CommandEvent event, Argument<?> highlighted) {
         Command command = event.getCommand();
         List<String> elements = new ArrayList<>();
-        elements.add("/" + event.getName());
+        elements.add("/" + command.getName());
 
         if (command instanceof SubCommand) {
             elements.add(event.getSubCommandName());
@@ -40,19 +40,19 @@ public class HelpMaker {
         return elements;
     }
 
-    public static List<String> formattedUsageElements(SlashEvent event) {
+    public static List<String> formattedUsageElements(CommandEvent event) {
         return formattedUsageElements(event, null);
     }
 
-    public static String formattedUsage(SlashEvent event, Argument<?> highlighted) {
+    public static String formattedUsage(CommandEvent event, Argument<?> highlighted) {
         return String.join(" ", formattedUsageElements(event, highlighted));
     }
 
-    public static String formattedUsage(SlashEvent event) {
+    public static String formattedUsage(CommandEvent event) {
         return formattedUsage(event, null);
     }
 
-    public static String formattedUsageCode(SlashEvent event) {
+    public static String formattedUsageCode(CommandEvent event) {
         return "`" + formattedUsage(event) + "`";
     }
 
@@ -70,7 +70,7 @@ public class HelpMaker {
         return String.join("/", names);
     }
 
-    public static PresetBuilder commandEmbed(SlashEvent event, Command command) {
+    public static PresetBuilder commandEmbed(CommandEvent event, Command command) {
         PresetBuilder embed = new PresetBuilder()
             .setTitle(command.getUppercaseName() + " Command" +
                 (command.isDisabled() ? " [Disabled]" : ""))

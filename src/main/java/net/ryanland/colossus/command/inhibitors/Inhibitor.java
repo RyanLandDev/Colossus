@@ -1,6 +1,6 @@
 package net.ryanland.colossus.command.inhibitors;
 
-import net.ryanland.colossus.events.ContentCommandEvent;
+import net.ryanland.colossus.events.CommandEvent;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 
 /**
@@ -9,7 +9,7 @@ import net.ryanland.colossus.sys.message.PresetBuilder;
  */
 public interface Inhibitor {
 
-    boolean check(ContentCommandEvent event);
+    boolean check(CommandEvent event);
 
-    PresetBuilder buildMessage(ContentCommandEvent event);
+    PresetBuilder buildMessage(CommandEvent event);
 }

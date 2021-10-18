@@ -1,6 +1,7 @@
 package net.ryanland.colossus.command.impl;
 
 import net.dv8tion.jda.api.Permission;
+import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.command.Command;
 import net.ryanland.colossus.command.CommandException;
 import net.ryanland.colossus.command.MessageCommand;
@@ -52,7 +53,7 @@ public class DisableCommand extends Command implements SlashCommand, MessageComm
         DisabledCommandHandler.getInstance().disable(command);
 
         event.reply(
-            new PresetBuilder(DefaultPresetType.SUCCESS,//TODO success presettype setting
+            new PresetBuilder(Colossus.getSuccessPresetType(),
                 "Disabled the `" + command.getName() + "` command.")
         );
     }

@@ -18,18 +18,22 @@ public class MessageCommandEvent extends CommandEvent {
         this.event = event;
     }
 
+    @Override
     public Command getCommand() {
         return command;
     }
 
+    @Override
     public void setCommand(Command command) {
         this.command = command;
     }
 
+    @Override
     public ParsedArgumentMap getParsedArgs() {
         return parsedArgs;
     }
 
+    @Override
     public void setParsedArgs(ParsedArgumentMap parsedArgs) {
         this.parsedArgs = parsedArgs;
     }

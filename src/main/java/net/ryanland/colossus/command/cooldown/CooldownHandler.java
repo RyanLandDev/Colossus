@@ -2,7 +2,7 @@ package net.ryanland.colossus.command.cooldown;
 
 import net.dv8tion.jda.api.entities.User;
 import net.ryanland.colossus.command.Command;
-import net.ryanland.colossus.events.ContentCommandEvent;
+import net.ryanland.colossus.events.CommandEvent;
 
 import java.util.Date;
 import java.util.List;
@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 public class CooldownHandler {
 
-    public static boolean isCooldownActive(ContentCommandEvent event) {
+    public static boolean isCooldownActive(CommandEvent event) {
         return isCooldownActive(event.getCommand().getCooldownManager(), event.getUser(), event.getCommand());
     }
 
@@ -20,7 +20,7 @@ public class CooldownHandler {
             .anyMatch(cooldown -> cooldown.command().getName().equals(command.getName()));
     }
 
-    public static Cooldown getActiveCooldown(ContentCommandEvent event) {
+    public static Cooldown getActiveCooldown(CommandEvent event) {
         return getActiveCooldown(event.getCommand().getCooldownManager(), event.getUser(), event.getCommand());
     }
 
@@ -33,7 +33,7 @@ public class CooldownHandler {
             .get(0);
     }
 
-    public static void newCooldown(ContentCommandEvent event) {
+    public static void newCooldown(CommandEvent event) {
         newCooldown(event.getCommand().getCooldownManager(), event.getUser(), event.getCommand());
     }
 

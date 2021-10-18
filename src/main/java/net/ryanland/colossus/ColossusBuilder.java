@@ -69,6 +69,7 @@ public class ColossusBuilder {
     private DatabaseDriver databaseDriver = null;
     private PresetType defaultPresetType = DefaultPresetType.DEFAULT;
     private PresetType errorPresetType = DefaultPresetType.ERROR;
+    private PresetType successPresetType = DefaultPresetType.SUCCESS;
     private Serializer<?, List<Cooldown>> cooldownsSerializer = CooldownsSerializer.getInstance();
     private Serializer<?, List<Command>> disabledCommandsSerializer = DisabledCommandsSerializer.getInstance();
     private List<Inhibitor> inhibitors = new ArrayList<>();
@@ -174,8 +175,8 @@ public class ColossusBuilder {
 
         return new Colossus(jdaBuilder, config, commands, localFiles,
             databaseDriver, defaultPresetType, errorPresetType,
-            cooldownsSerializer, disabledCommandsSerializer, inhibitors,
-            finalizers);
+            successPresetType, cooldownsSerializer, disabledCommandsSerializer,
+            inhibitors, finalizers);
     }
 
     /**
@@ -271,9 +272,24 @@ public class ColossusBuilder {
      * @see PresetType
      * @see PresetBuilder
      * @see DefaultPresetType
+     * @see CommandException
      */
     public ColossusBuilder setErrorPresetType(PresetType presetType) {
         errorPresetType = presetType;
+        return this;
+    }
+
+    /**
+     * Sets the default {@link PresetType} used when there was a successful action.
+     * <br>When this is not defined, {@link DefaultPresetType#SUCCESS} is used.
+     * @param presetType The {@link PresetType} to set to
+     * @return The builder
+     * @see PresetType
+     * @see PresetBuilder
+     * @see DefaultPresetType
+     */
+    public ColossusBuilder setSuccessPresetType(PresetType presetType) {
+        successPresetType = presetType;
         return this;
     }
 

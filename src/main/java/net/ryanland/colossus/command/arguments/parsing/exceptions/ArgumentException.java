@@ -3,7 +3,7 @@ package net.ryanland.colossus.command.arguments.parsing.exceptions;
 import net.ryanland.colossus.command.arguments.Argument;
 import net.ryanland.colossus.command.CommandException;
 import net.ryanland.colossus.command.info.HelpMaker;
-import net.ryanland.colossus.events.ContentCommandEvent;
+import net.ryanland.colossus.events.CommandEvent;
 
 public class ArgumentException extends CommandException {
 
@@ -18,7 +18,7 @@ public class ArgumentException extends CommandException {
         return message;
     }
 
-    public String getMessage(ContentCommandEvent event, Argument<?> argument) {
+    public String getMessage(CommandEvent event, Argument<?> argument) {
         return HelpMaker.formattedUsage(event, argument)
             + "\n\n" + message;
     }

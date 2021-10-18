@@ -10,7 +10,6 @@ import net.ryanland.colossus.command.Command;
 import net.ryanland.colossus.command.info.Category;
 import net.ryanland.colossus.command.info.HelpMaker;
 import net.ryanland.colossus.command.annotations.CommandBuilder;
-import net.ryanland.colossus.events.CommandEvent;
 import net.ryanland.colossus.events.MessageCommandEvent;
 import net.ryanland.colossus.events.SlashEvent;
 import net.ryanland.colossus.sys.message.PresetBuilder;

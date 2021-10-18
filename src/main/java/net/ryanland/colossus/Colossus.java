@@ -28,9 +28,6 @@ import java.util.stream.Collectors;
  */
 public class Colossus {
 
-    public static final long TIMEZONE_OFFSET = -3600000;
-    // TODO
-
     private static final Logger LOGGER =
         JDALogger.getLog(StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).getCallerClass());
 
@@ -41,6 +38,7 @@ public class Colossus {
     private static DatabaseDriver databaseDriver;
     private static PresetType defaultPresetType;
     private static PresetType errorPresetType;
+    private static PresetType successPresetType;
     private static Serializer<?, List<Cooldown>> cooldownsSerializer;
     private static Serializer<?, List<Command>> disabledCommandsSerializer;
     private static List<Inhibitor> inhibitors;
@@ -50,7 +48,7 @@ public class Colossus {
 
     public Colossus(JDABuilder builder, Config config, List<Command> commands, List<LocalFile> localFiles,
                     DatabaseDriver databaseDriver, PresetType defaultPresetType, PresetType errorPresetType,
-                    Serializer<?, List<Cooldown>> cooldownsSerializer,
+                    PresetType successPresetType, Serializer<?, List<Cooldown>> cooldownsSerializer,
                     Serializer<?, List<Command>> disabledCommandsSerializer, List<Inhibitor> inhibitors,
                     List<Finalizer> finalizers) {
         this.builder = builder;
@@ -61,6 +59,7 @@ public class Colossus {
         Colossus.databaseDriver = databaseDriver;
         Colossus.defaultPresetType = defaultPresetType;
         Colossus.errorPresetType = errorPresetType;
+        Colossus.successPresetType = successPresetType;
         Colossus.cooldownsSerializer = cooldownsSerializer;
         Colossus.disabledCommandsSerializer = disabledCommandsSerializer;
         Colossus.inhibitors = inhibitors;
@@ -165,6 +164,10 @@ public class Colossus {
 
     public static PresetType getErrorPresetType() {
         return errorPresetType;
+    }
+
+    public static PresetType getSuccessPresetType() {
+        return successPresetType;
     }
 
     public static Serializer<?, List<Cooldown>> getCooldownsSerializer() {

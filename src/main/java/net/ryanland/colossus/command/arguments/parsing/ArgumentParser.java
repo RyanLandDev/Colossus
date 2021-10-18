@@ -5,7 +5,7 @@ import net.ryanland.colossus.command.arguments.Argument;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.ArgumentException;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.MalformedArgumentException;
 import net.ryanland.colossus.command.Command;
-import net.ryanland.colossus.events.ContentCommandEvent;
+import net.ryanland.colossus.events.CommandEvent;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 import net.ryanland.colossus.sys.message.DefaultPresetType;
 
@@ -15,15 +15,15 @@ import java.util.List;
 
 public class ArgumentParser {
 
-    private final ContentCommandEvent event;
+    private final CommandEvent event;
     private final List<OptionMapping> args;
 
-    public ArgumentParser(ContentCommandEvent event) {
+    public ArgumentParser(CommandEvent event) {
         this.event = event;
         this.args = event.getOptions();
     }
 
-    public ArgumentParser(ContentCommandEvent event, List<OptionMapping> args) {
+    public ArgumentParser(CommandEvent event, List<OptionMapping> args) {
         this.event = event;
         this.args = args;
     }
@@ -48,10 +48,11 @@ public class ArgumentParser {
                 parsedArgs.put(arg.getId(), parsedArg);
 
             } catch (MalformedArgumentException e) {
-                event.performReply(embed
+                event.reply(embed
                         .setDescription(e.getMessage(event, arg))
                         .setTitle("Invalid Argument")
-                    , true).queue();
+                        .setEphemeral(true)
+                );
                 return false;
 
             } catch (ArgumentException ignored) {

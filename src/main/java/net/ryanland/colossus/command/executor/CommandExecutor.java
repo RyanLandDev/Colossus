@@ -8,6 +8,7 @@ import net.ryanland.colossus.command.inhibitors.Inhibitor;
 import net.ryanland.colossus.command.inhibitors.InhibitorException;
 import net.ryanland.colossus.command.CommandException;
 import net.ryanland.colossus.command.Command;
+import net.ryanland.colossus.events.CommandEvent;
 import net.ryanland.colossus.events.ContentCommandEvent;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 
@@ -15,7 +16,7 @@ import java.util.List;
 
 public class CommandExecutor {
 
-    public void run(ContentCommandEvent event) {
+    public void run(CommandEvent event) {
         List<OptionMapping> args = event.getOptions();
 
         Command command = CommandHandler.getCommand(event.getName());
@@ -25,7 +26,7 @@ public class CommandExecutor {
         execute(event, args);
     }
 
-    public void execute(ContentCommandEvent event, List<OptionMapping> args) {
+    public void execute(CommandEvent event, List<OptionMapping> args) {
         Command command = event.getCommand();
 
         if (event.getSubCommandGroup() != null) {
@@ -39,7 +40,7 @@ public class CommandExecutor {
         try {
             for (Inhibitor inhibitor : Colossus.getInhibitors()) {
                 if (inhibitor.check(event)) {
-                    event.performReply(inhibitor.buildMessage(event), true).queue();
+                    event.reply(inhibitor.buildMessage(event));
                     throw new InhibitorException();
                 }
             }
