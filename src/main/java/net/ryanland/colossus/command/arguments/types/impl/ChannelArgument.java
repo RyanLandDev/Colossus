@@ -5,7 +5,7 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.ArgumentException;
 import net.ryanland.colossus.command.arguments.types.SingleArgument;
-import net.ryanland.colossus.events.ContentCommandEvent;
+import net.ryanland.colossus.events.MessageCommandEvent;
 
 public class ChannelArgument extends SingleArgument<MessageChannel> {
 
@@ -15,7 +15,7 @@ public class ChannelArgument extends SingleArgument<MessageChannel> {
     }
 
     @Override
-    public MessageChannel parsed(OptionMapping argument, ContentCommandEvent event) throws ArgumentException {
+    public MessageChannel parsed(OptionMapping argument, MessageCommandEvent event) throws ArgumentException {
         return argument.getAsMessageChannel();
     }
 }

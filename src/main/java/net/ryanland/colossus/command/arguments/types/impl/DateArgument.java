@@ -4,7 +4,7 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.ArgumentException;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.MalformedArgumentException;
 import net.ryanland.colossus.command.arguments.types.SingleArgument;
-import net.ryanland.colossus.events.ContentCommandEvent;
+import net.ryanland.colossus.events.MessageCommandEvent;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -23,7 +23,7 @@ public class DateArgument extends SingleArgument<Date> {
     }
 
     @Override
-    public Date parsed(OptionMapping argument, ContentCommandEvent event) throws ArgumentException {
+    public Date parsed(OptionMapping argument, MessageCommandEvent event) throws ArgumentException {
         try {
             return format.parse(argument.getAsString());
         } catch (ParseException e) {

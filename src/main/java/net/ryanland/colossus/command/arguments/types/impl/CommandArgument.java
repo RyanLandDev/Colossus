@@ -6,12 +6,12 @@ import net.ryanland.colossus.command.arguments.parsing.exceptions.MalformedArgum
 import net.ryanland.colossus.command.arguments.types.SingleArgument;
 import net.ryanland.colossus.command.executor.CommandHandler;
 import net.ryanland.colossus.command.Command;
-import net.ryanland.colossus.events.ContentCommandEvent;
+import net.ryanland.colossus.events.MessageCommandEvent;
 
 public class CommandArgument extends SingleArgument<Command> {
 
     @Override
-    public Command parsed(OptionMapping argument, ContentCommandEvent event) throws ArgumentException {
+    public Command parsed(OptionMapping argument, MessageCommandEvent event) throws ArgumentException {
         Command command = CommandHandler.getCommand(argument.getAsString());
 
         if (command == null) {

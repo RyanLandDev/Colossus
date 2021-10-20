@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 )
 public class HelpCommand extends Command implements SlashCommand, MessageCommand {
 
+    /*
     @Override
     public ArgumentSet getArguments() {
         return new ArgumentSet().addArguments(
@@ -34,7 +35,7 @@ public class HelpCommand extends Command implements SlashCommand, MessageCommand
                 .optional()
                 .description("Command to get information of")
         );
-    }
+    }*/
 
     // Slash command implementation -------------------
 

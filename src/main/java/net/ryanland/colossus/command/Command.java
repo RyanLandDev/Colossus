@@ -22,6 +22,8 @@ public abstract class Command {
         this.info = info;
     }
 
+    public Command() {}
+
     // CommandData getters --------------------
 
     public final String getName() {

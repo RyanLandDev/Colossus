@@ -6,12 +6,12 @@ import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.ArgumentException;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.MalformedArgumentException;
 import net.ryanland.colossus.command.arguments.types.SingleArgument;
-import net.ryanland.colossus.events.ContentCommandEvent;
+import net.ryanland.colossus.events.MessageCommandEvent;
 
 public class GuildArgument extends SingleArgument<Guild> {
 
     @Override
-    public Guild parsed(OptionMapping argument, ContentCommandEvent event) throws ArgumentException {
+    public Guild parsed(OptionMapping argument, MessageCommandEvent event) throws ArgumentException {
         try {
             Guild guild = Colossus.getJda().getGuildById(argument.getAsString());
             if (guild != null) return guild;

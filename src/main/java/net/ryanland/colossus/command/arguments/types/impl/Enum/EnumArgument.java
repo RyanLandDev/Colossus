@@ -5,7 +5,7 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.ArgumentException;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.MalformedArgumentException;
 import net.ryanland.colossus.command.arguments.types.SingleArgument;
-import net.ryanland.colossus.events.ContentCommandEvent;
+import net.ryanland.colossus.events.MessageCommandEvent;
 
 import java.util.EnumSet;
 import java.util.stream.Collectors;
@@ -27,7 +27,7 @@ public class EnumArgument<E extends Enum<E> & EnumArgument.InputEnum> extends Si
     }
 
     @Override
-    public E parsed(OptionMapping argument, ContentCommandEvent event) throws ArgumentException {
+    public E parsed(OptionMapping argument, MessageCommandEvent event) throws ArgumentException {
         for (E e : associatedEnum) {
             if (argument.getAsString().equals(e.getTitle())) {
                 return e;
