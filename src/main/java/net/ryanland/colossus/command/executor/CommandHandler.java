@@ -6,7 +6,6 @@ import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandGroupData;
 import net.ryanland.colossus.Colossus;
-import net.ryanland.colossus.command.arguments.Argument;
 import net.ryanland.colossus.command.Command;
 import net.ryanland.colossus.command.SubCommand;
 import net.ryanland.colossus.command.SubCommandHolder;

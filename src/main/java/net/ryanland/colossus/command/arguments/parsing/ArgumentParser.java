@@ -1,7 +1,6 @@
 package net.ryanland.colossus.command.arguments.parsing;
 
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
-import net.ryanland.colossus.command.arguments.Argument;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.ArgumentException;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.MalformedArgumentException;
 import net.ryanland.colossus.command.Command;

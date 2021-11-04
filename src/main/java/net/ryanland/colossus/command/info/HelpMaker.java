@@ -1,7 +1,6 @@
 package net.ryanland.colossus.command.info;
 
 import net.dv8tion.jda.api.Permission;
-import net.ryanland.colossus.command.arguments.Argument;
 import net.ryanland.colossus.command.arguments.ArgumentSet;
 import net.ryanland.colossus.command.Command;
 import net.ryanland.colossus.command.SubCommand;

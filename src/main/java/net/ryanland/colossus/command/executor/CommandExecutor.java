@@ -7,7 +7,6 @@ import net.ryanland.colossus.command.arguments.parsing.ArgumentParser;
 import net.ryanland.colossus.command.finalizers.Finalizer;
 import net.ryanland.colossus.command.inhibitors.Inhibitor;
 import net.ryanland.colossus.command.inhibitors.InhibitorException;
-import net.ryanland.colossus.command.CommandException;
 import net.ryanland.colossus.command.Command;
 import net.ryanland.colossus.events.CommandEvent;
 import net.ryanland.colossus.events.MessageCommandEvent;
@@ -16,7 +15,6 @@ import net.ryanland.colossus.sys.message.PresetBuilder;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.HashMap;
 import java.util.List;
 
 public class CommandExecutor {
@@ -35,6 +33,7 @@ public class CommandExecutor {
         Command command = event.getCommand();
         Class<? extends Command> cmdClass = command.getClass(); //Getting the command class
 
+        String paramName;
         Method runMethod = null;
         for (Method method : cmdClass.getMethods()) { //Finding the correct run method
             if (method.getName().equals("run")) {
@@ -57,14 +56,15 @@ public class CommandExecutor {
 
             //Applying different command if subcommand is used
             if (eventAsSlashCommand.getSubCommandGroup() != null) {
-                command = command.getInfo().getSubCommandGroupMap().get(eventAsSlashCommand.getSubCommandGroup()).getSubCommand(eventAsSlashCommand.getSubCommandName());
+                command = command.getInfo().getSubCommandGroupMap()
+                    .get(eventAsSlashCommand.getSubCommandGroup()).getSubCommand(eventAsSlashCommand.getSubCommandName());
             } else if (eventAsSlashCommand.getSubCommandName() != null) {
-                command = command.getInfo().getSubCommandMap().get(eventAsSlashCommand.getSubCommandName());
+                command = command.getInfo().getSubCommandMap()
+                    .get(eventAsSlashCommand.getSubCommandName());
             }
         } else if (event instanceof MessageCommandEvent) {
             eventAsMessageCommand = (MessageCommandEvent) event;
             replyMethod = getReplyMethod(eventAsMessageCommand);
-            
         }
 
         event.setCommand(command);

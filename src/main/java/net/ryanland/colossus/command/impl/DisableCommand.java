@@ -7,14 +7,13 @@ import net.ryanland.colossus.command.CommandException;
 import net.ryanland.colossus.command.MessageCommand;
 import net.ryanland.colossus.command.SlashCommand;
 import net.ryanland.colossus.command.arguments.ArgumentSet;
-import net.ryanland.colossus.command.arguments.types.impl.CommandArgument;
+import net.ryanland.colossus.command.arguments.types.CommandArgument;
 import net.ryanland.colossus.command.executor.DisabledCommandHandler;
 import net.ryanland.colossus.command.info.Category;
 import net.ryanland.colossus.command.info.CommandInfo;
 import net.ryanland.colossus.events.CommandEvent;
 import net.ryanland.colossus.events.MessageCommandEvent;
 import net.ryanland.colossus.events.SlashEvent;
-import net.ryanland.colossus.sys.message.DefaultPresetType;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 
 public class DisableCommand extends Command implements SlashCommand, MessageCommand {

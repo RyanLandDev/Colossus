@@ -7,12 +7,8 @@ import net.dv8tion.jda.api.interactions.Interaction;
 import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.requests.restaction.interactions.ReplyAction;
-import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.command.Command;
 import net.ryanland.colossus.command.CommandException;
-import net.ryanland.colossus.command.arguments.parsing.ParsedArgumentMap;
-import net.ryanland.colossus.sys.file.DatabaseDriver;
-import net.ryanland.colossus.sys.file.Table;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 import net.ryanland.colossus.sys.interactions.menu.InteractionMenu;
 import net.ryanland.colossus.sys.interactions.menu.InteractionMenuBuilder;
@@ -187,6 +183,7 @@ public class SlashEvent extends CommandEvent {
         return event.getHook();
     }
 
+    @Override
     public String getName() {
         return event.getName();
     }

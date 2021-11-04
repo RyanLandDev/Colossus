@@ -1,10 +1,10 @@
-package net.ryanland.colossus.command.arguments.types.impl;
+package net.ryanland.colossus.command.arguments.old.types.impl;
 
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.ArgumentException;
-import net.ryanland.colossus.command.arguments.types.SingleArgument;
+import net.ryanland.colossus.command.arguments.old.types.SingleArgument;
 import net.ryanland.colossus.events.MessageCommandEvent;
 
 public class ChannelArgument extends SingleArgument<MessageChannel> {
