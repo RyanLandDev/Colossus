@@ -2,10 +2,7 @@ package net.ryanland.colossus.command.impl;
 
 import net.dv8tion.jda.api.Permission;
 import net.ryanland.colossus.Colossus;
-import net.ryanland.colossus.command.Command;
-import net.ryanland.colossus.command.CommandException;
-import net.ryanland.colossus.command.MessageCommand;
-import net.ryanland.colossus.command.SlashCommand;
+import net.ryanland.colossus.command.*;
 import net.ryanland.colossus.command.arguments.ArgumentSet;
 import net.ryanland.colossus.command.arguments.types.CommandArgument;
 import net.ryanland.colossus.command.executor.DisabledCommandHandler;
@@ -16,7 +13,7 @@ import net.ryanland.colossus.events.MessageCommandEvent;
 import net.ryanland.colossus.events.SlashEvent;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 
-public class EnableCommand extends Command implements SlashCommand, MessageCommand {
+public class EnableCommand extends Command implements CombinedCommand {
 
     @Override
     public CommandInfo getInfo() {
@@ -38,15 +35,6 @@ public class EnableCommand extends Command implements SlashCommand, MessageComma
     }
 
     @Override
-    public void run(SlashEvent event) throws CommandException {
-        execute(event);
-    }
-
-    @Override
-    public void run(MessageCommandEvent event) throws CommandException {
-        execute(event);
-    }
-
     public void execute(CommandEvent event) throws CommandException {
         Command command = event.getArgument("command");
         DisabledCommandHandler.getInstance().enable(command);

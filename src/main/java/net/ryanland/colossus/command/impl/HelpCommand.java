@@ -3,6 +3,8 @@ package net.ryanland.colossus.command.impl;
 import net.ryanland.colossus.command.CommandException;
 import net.ryanland.colossus.command.MessageCommand;
 import net.ryanland.colossus.command.SlashCommand;
+import net.ryanland.colossus.command.arguments.ArgumentSet;
+import net.ryanland.colossus.command.arguments.types.CommandArgument;
 import net.ryanland.colossus.command.executor.CommandHandler;
 import net.ryanland.colossus.command.Command;
 import net.ryanland.colossus.command.info.Category;
@@ -24,7 +26,6 @@ import java.util.stream.Collectors;
 )
 public class HelpCommand extends Command implements SlashCommand, MessageCommand {
 
-    /*
     @Override
     public ArgumentSet getArguments() {
         return new ArgumentSet().addArguments(
@@ -33,7 +34,7 @@ public class HelpCommand extends Command implements SlashCommand, MessageCommand
                 .optional()
                 .description("Command to get information of")
         );
-    }*/
+    }
 
     // Slash command implementation -------------------
 

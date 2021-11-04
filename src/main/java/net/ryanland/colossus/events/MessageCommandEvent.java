@@ -5,6 +5,7 @@ import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
 import net.ryanland.colossus.command.Command;
+import net.ryanland.colossus.command.arguments.ParsedArgumentMap;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 
 public class MessageCommandEvent extends CommandEvent {
@@ -99,6 +100,10 @@ public class MessageCommandEvent extends CommandEvent {
 
     public ChannelType getChannelType() {
         return event.getChannelType();
+    }
+
+    public Message getMessage() {
+        return event.getMessage();
     }
 
     @Override

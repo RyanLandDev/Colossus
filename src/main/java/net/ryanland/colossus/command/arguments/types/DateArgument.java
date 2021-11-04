@@ -1,31 +1,37 @@
-package net.ryanland.colossus.command.arguments.old.types.impl;
+package net.ryanland.colossus.command.arguments.types;
 
-import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.ArgumentException;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.MalformedArgumentException;
-import net.ryanland.colossus.command.arguments.old.types.SingleArgument;
-import net.ryanland.colossus.events.MessageCommandEvent;
+import net.ryanland.colossus.events.CommandEvent;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class DateArgument extends SingleArgument<Date> {
+public class DateArgument extends ArgumentStringResolver<Date> {
 
     public final SimpleDateFormat format;
 
+    /**
+     * Asks the user for a date in the {@link SimpleDateFormat} {@code dd/MM/yyyy}.
+     * <br>For a custom format, use the {@link #DateArgument(String)} constructor instead.
+     */
     public DateArgument() {
         this.format = new SimpleDateFormat("dd/MM/yyyy");
     }
 
+    /**
+     * Asks the user for a date.
+     * @param format The {@link SimpleDateFormat} the user should provide a date in
+     */
     public DateArgument(String format) {
         this.format = new SimpleDateFormat(format);
     }
 
     @Override
-    public Date parsed(OptionMapping argument, MessageCommandEvent event) throws ArgumentException {
+    public Date resolve(String arg, CommandEvent event) throws ArgumentException {
         try {
-            return format.parse(argument.getAsString());
+            return format.parse(arg);
         } catch (ParseException e) {
             throw new MalformedArgumentException("Invalid date provided. Format: " + format.toPattern() + ".");
         }

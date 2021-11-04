@@ -1,16 +1,19 @@
-package net.ryanland.colossus.command.arguments.old.types.impl;
+package net.ryanland.colossus.command.arguments.types;
 
 import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.ArgumentException;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.MalformedArgumentException;
-import net.ryanland.colossus.command.arguments.old.types.SingleArgument;
+import net.ryanland.colossus.events.CommandEvent;
 import net.ryanland.colossus.events.MessageCommandEvent;
+import net.ryanland.colossus.events.SlashEvent;
 
 import java.util.EnumSet;
 import java.util.stream.Collectors;
 
-public class EnumArgument<E extends Enum<E> & EnumArgument.InputEnum> extends SingleArgument<E> {
+public class EnumArgument<E extends Enum<E> & EnumArgument.InputEnum>
+    extends ArgumentStringResolver<E> implements SlashCommandArgumentChoices {
 
     private final EnumSet<E> associatedEnum;
 
@@ -27,13 +30,17 @@ public class EnumArgument<E extends Enum<E> & EnumArgument.InputEnum> extends Si
     }
 
     @Override
-    public E parsed(OptionMapping argument, MessageCommandEvent event) throws ArgumentException {
-        for (E e : associatedEnum) {
-            if (argument.getAsString().equals(e.getTitle())) {
-                return e;
-            }
+    public E resolve(String arg, CommandEvent event) throws ArgumentException {
+        for (E element : associatedEnum) {
+            if (arg.equals(element.getTitle()))
+                return element;
         }
-        throw new MalformedArgumentException("This is not a valid option! Choose from: " + getFormattedOptions());
+        throw new MalformedArgumentException("This is not a valid option! Choose from: `" +
+            associatedEnum.stream()
+                .filter(e -> !e.isHidden())
+                .map(InputEnum::getTitle)
+                .collect(Collectors.joining("` `"))
+            + "`");
     }
 
     private String getFormattedOptions() {
