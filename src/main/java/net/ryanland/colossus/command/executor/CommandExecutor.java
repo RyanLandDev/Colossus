@@ -33,25 +33,29 @@ public class CommandExecutor {
 
     public void execute(CommandEvent event, List<OptionMapping> args) {
         Command command = event.getCommand();
-        Class<? extends Command> cmdClass = command.getClass();
+        Class<? extends Command> cmdClass = command.getClass(); //Getting the command class
 
-        String paramName = "";
         Method runMethod = null;
-        for (Method method : cmdClass.getMethods()) {
+        for (Method method : cmdClass.getMethods()) { //Finding the correct run method
             if (method.getName().equals("run")) {
-                paramName = method.getParameterTypes()[0].getName();
+                String paramName = method.getParameterTypes()[0].getName();
+
+                //A new else if statement for all types of commands is necessary, no automatisation possible
                 if (event instanceof SlashEvent && paramName.endsWith("SlashEvent")) runMethod = method;
                 else if (event instanceof MessageCommandEvent && paramName.endsWith("MessageCommandEvent")) runMethod = method;
             }
         }
 
+
+        //Getting the event to their original event for possible use later in exception handling
         MessageCommandEvent eventAsMessageCommand;
         SlashEvent eventAsSlashCommand;
         Method replyMethod = null;
         if (event instanceof SlashEvent) {
             eventAsSlashCommand = (SlashEvent) event;
             replyMethod = getReplyMethod(eventAsSlashCommand);
-            
+
+            //Applying different command if subcommand is used
             if (eventAsSlashCommand.getSubCommandGroup() != null) {
                 command = command.getInfo().getSubCommandGroupMap().get(eventAsSlashCommand.getSubCommandGroup()).getSubCommand(eventAsSlashCommand.getSubCommandName());
             } else if (eventAsSlashCommand.getSubCommandName() != null) {
@@ -78,6 +82,7 @@ public class CommandExecutor {
             if (argumentParser.parseArguments()) {
                 try {
 
+                    //Invoking the run method, only the InvocationTargetException can be thrown through the method, if any exception is thrown while executing the code
                     if (runMethod != null) runMethod.invoke(event);
 
                 } catch (InvocationTargetException e) {
