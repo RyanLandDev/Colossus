@@ -12,9 +12,6 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 
-/**
- * Equivalent of {@link StringArgument}, except if a message command is used,
- */
 public class QuoteStringArgument extends Argument<String> {
 
     @Override
