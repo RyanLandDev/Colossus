@@ -10,7 +10,7 @@ import net.ryanland.colossus.command.info.CommandInfo;
 
 import java.util.List;
 
-public abstract class Command {
+public abstract class Command  {
 
     private CommandInfo info;
 

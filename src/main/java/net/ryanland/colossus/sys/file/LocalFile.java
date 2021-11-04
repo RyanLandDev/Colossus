@@ -43,4 +43,10 @@ public class LocalFile extends File {
         }
         return JsonParser.parseString(getContent()).getAsJsonObject();
     }
+
+    public static JsonObject jsonOfKeys(String... keys) {
+        JsonObject json = new JsonObject();
+        for (String key : keys) json.add(key, null);
+        return json;
+    }
 }

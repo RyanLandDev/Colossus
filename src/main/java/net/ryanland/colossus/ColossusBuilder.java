@@ -33,13 +33,11 @@ import net.ryanland.colossus.sys.file.serializer.Serializer;
 import net.ryanland.colossus.sys.message.DefaultPresetType;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 import net.ryanland.colossus.sys.message.PresetType;
-import org.apache.commons.collections4.map.LinkedMap;
 
 import java.io.IOException;
 import java.nio.file.InvalidPathException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Function;
 
 /**
@@ -61,11 +59,21 @@ public class ColossusBuilder {
         new CooldownFinalizer()
     };
 
+    private static final String[] CORE_CONFIG_ENTRIES = new String[]{
+        "token",
+        "client_id",
+
+        "support_guild",
+        "test_guild",
+        "testing"
+    };
+
     private JDABuilder jdaBuilder;
-    private final Config config;
+    private Config config;
+    private String configDirectory;
     private final List<Command> commands = new ArrayList<>();
     private final List<LocalFile> localFiles = new ArrayList<>();
-    private final Map<String, Object> configValues = new LinkedMap<>();
+    private final List<String> configEntries = new ArrayList<>(List.of(CORE_CONFIG_ENTRIES));
     private final List<Inhibitor> inhibitors = new ArrayList<>();
     private final List<Finalizer> finalizers = new ArrayList<>();
 
@@ -90,35 +98,17 @@ public class ColossusBuilder {
      * @see Colossus
      */
     public ColossusBuilder(String configDirectory) {
+        // Get directory and perform checks
+        configDirectory = configDirectory.replaceFirst("^/", "");
         LocalFile dir = new LocalFile(configDirectory);
         if (!dir.exists())
             throw new InvalidPathException(configDirectory, "This path is invalid or does not exist.");
         if (!dir.isDirectory())
             throw new InvalidPathException(configDirectory, "The provided path is not a directory.");
+        this.configDirectory = configDirectory;
 
-        LocalFile configFile = new LocalFileBuilder()
-            .setName("/" + configDirectory + "/config")
-            .setFileType(LocalFileType.JSON)
-            .setDefaultContent("""
-            {
-              "token": "",
-              "client_id": "",
-              "permissions": "",
-              
-              "support_guild": "",
-              "test_guild": "",
-              "testing": true
-            }""")
-            .buildFile();
-
-        JsonObject configJson = new JsonObject();
-        try {
-            configJson = configFile.parseJson();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        config = new Config(configJson);
+        // Prepare the builder
+        buildConfigFile();
         jdaBuilder = JDABuilder.createDefault(config.getToken())
             .addEventListeners(CORE_EVENTS);
     }
@@ -175,6 +165,8 @@ public class ColossusBuilder {
 
         inhibitors.addAll(List.of(CORE_INHIBITORS));
         finalizers.addAll(List.of(CORE_FINALIZERS));
+
+        buildConfigFile();
 
         return new Colossus(jdaBuilder, config, commands, localFiles,
             databaseDriver, defaultPresetType, errorPresetType,
@@ -350,6 +342,58 @@ public class ColossusBuilder {
     public ColossusBuilder registerFinalizers(Finalizer... finalizers) {
         this.finalizers.addAll(List.of(finalizers));
         return this;
+    }
+
+    /**
+     * Register custom entries that will appear in the {@code config.json} file.<br>
+     * These can be retrieved later using the {@link Config} class.
+     * @param keys The keys to register
+     * @return The builder
+     * @see Config
+     * @see Config#get(String)
+     * @see Config#getString(String)
+     * @see Config#getInt(String)
+     * @see Config#getBoolean(String)
+     */
+    public ColossusBuilder registerConfigEntries(String... keys) {
+        configEntries.addAll(List.of(keys));
+        return this;
+    }
+
+    private void buildConfigFile() {
+        // Build the config file
+        LocalFile configFile = new LocalFileBuilder()
+            .setName("/" + configDirectory + "/config")
+            .setFileType(LocalFileType.JSON)
+            .setDefaultContent(LocalFile.jsonOfKeys(configEntries.toArray(new String[0])).getAsString())
+            .buildFile();
+
+        // Parse the config file's JSON
+        JsonObject configJson = new JsonObject();
+        try {
+            configJson = configFile.parseJson();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Check for missing config keys, and if they are found, add them and modify the file
+        boolean changed = false;
+        for (String key : configEntries) {
+            if (!configJson.has(key)) {
+                configJson.add(key, null);
+                changed = true;
+            }
+        }
+        if (changed) {
+            try {
+                configFile.write(configJson);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // Create a new Config and set it
+        config = new Config(configJson);
     }
 
 }

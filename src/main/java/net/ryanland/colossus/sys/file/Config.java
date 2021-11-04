@@ -1,41 +1,39 @@
 package net.ryanland.colossus.sys.file;
 
 import com.google.gson.JsonObject;
+import org.apache.commons.collections4.map.LinkedMap;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Config {
 
     private final JsonObject rawConfig;
 
-    private final String token;
-    private final String clientId;
-    private final String permissions;
+    private final Map<String, Object> values = new LinkedMap<>();
 
-    private final String supportGuild;
-    private final String testGuild;
-    private final boolean testing;
+    private void updateValueMap() {
+        values.putAll(rawConfig.entrySet()
+            .stream()
+            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))
+        );
+    }
 
     public Config(@NotNull JsonObject rawConfig) {
         this.rawConfig = rawConfig;
-
-        token = rawConfig.get("token").getAsString();
-        clientId = rawConfig.get("client_id").getAsString();
-        permissions = rawConfig.get("permissions").getAsString();
-        supportGuild = rawConfig.get("support_guild").getAsString();
-        testGuild = rawConfig.get("test_guild").getAsString();
-        testing = rawConfig.get("testing").getAsBoolean();
+        updateValueMap();
     }
 
-    public Config(final String token, final String clientId, final String permissions,
+    public Config(final String token, final String clientId,
                   String supportGuild, final String testGuild, final boolean testing) {
         rawConfig = new JsonObject();
-
-        this.token = token;
-        this.clientId = clientId;
-        this.permissions = permissions;
-        this.supportGuild = supportGuild;
-        this.testGuild = testGuild;
-        this.testing = testing;
+        rawConfig.addProperty("token", token);
+        rawConfig.addProperty("client_id", clientId);
+        rawConfig.addProperty("support_guild", supportGuild);
+        rawConfig.addProperty("test_guild", testGuild);
+        rawConfig.addProperty("testing", testing);
+        updateValueMap();
     }
 
     public Config(final String token, final String clientId, final String testGuild) {
@@ -44,34 +42,47 @@ public class Config {
 
     public Config(final String token, final String clientId,
                   final String testGuild, final boolean testing) {
-        this(token, clientId, null, null, testGuild, testing);
+        this(token, clientId, null, testGuild, testing);
     }
 
     public JsonObject getRawConfig() {
         return rawConfig;
     }
 
+    @SuppressWarnings("unchecked")
+    public <R> R get(String key) {
+        return (R) values.get(key);
+    }
+
+    public String getString(String key) {
+        return get(key);
+    }
+
+    public int getInt(String key) {
+        return get(key);
+    }
+
+    public boolean getBoolean(String key) {
+        return get(key);
+    }
+
     public String getToken() {
-        return token;
+        return getString("token");
     }
 
     public String getClientId() {
-        return clientId;
-    }
-
-    public String getPermissions() {
-        return permissions;
+        return getString("client_id");
     }
 
     public String getSupportGuildId() {
-        return supportGuild;
+        return getString("support_guild");
     }
 
     public String getTestGuildId() {
-        return testGuild;
+        return getString("test_guild");
     }
 
     public boolean isTesting() {
-        return testing;
+        return getBoolean("testing");
     }
 }
