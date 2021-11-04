@@ -33,11 +33,13 @@ import net.ryanland.colossus.sys.file.serializer.Serializer;
 import net.ryanland.colossus.sys.message.DefaultPresetType;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 import net.ryanland.colossus.sys.message.PresetType;
+import org.apache.commons.collections4.map.LinkedMap;
 
 import java.io.IOException;
 import java.nio.file.InvalidPathException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 /**
@@ -63,6 +65,9 @@ public class ColossusBuilder {
     private final Config config;
     private final List<Command> commands = new ArrayList<>();
     private final List<LocalFile> localFiles = new ArrayList<>();
+    private final Map<String, Object> configValues = new LinkedMap<>();
+    private final List<Inhibitor> inhibitors = new ArrayList<>();
+    private final List<Finalizer> finalizers = new ArrayList<>();
 
     private boolean disableHelpCommand = false;
     private boolean disableToggleCommands = false;
@@ -72,8 +77,6 @@ public class ColossusBuilder {
     private PresetType successPresetType = DefaultPresetType.SUCCESS;
     private Serializer<?, List<Cooldown>> cooldownsSerializer = CooldownsSerializer.getInstance();
     private Serializer<?, List<Command>> disabledCommandsSerializer = DisabledCommandsSerializer.getInstance();
-    private List<Inhibitor> inhibitors = new ArrayList<>();
-    private List<Finalizer> finalizers = new ArrayList<>();
 
     /**
      * Helper class to build a new instance of {@link Colossus}.<br>
