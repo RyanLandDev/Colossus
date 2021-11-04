@@ -5,7 +5,7 @@ import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.ArgumentException;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.MalformedArgumentException;
 import net.ryanland.colossus.command.arguments.types.NumberArgument;
-import net.ryanland.colossus.events.ContentCommandEvent;
+import net.ryanland.colossus.events.MessageCommandEvent;
 
 public class IntegerArgument extends NumberArgument<Integer> {
 
@@ -37,7 +37,7 @@ public class IntegerArgument extends NumberArgument<Integer> {
     }
 
     @Override
-    public Integer parsed(OptionMapping argument, ContentCommandEvent event) throws ArgumentException {
+    public Integer parsed(OptionMapping argument, MessageCommandEvent event) throws ArgumentException {
         Integer parsed = Integer.parseInt(argument.getAsString());
         if (parsed >= min && parsed <= max) {
             return parsed;

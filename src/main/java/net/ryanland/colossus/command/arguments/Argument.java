@@ -6,7 +6,7 @@ import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.ArgumentException;
 import net.ryanland.colossus.command.arguments.parsing.functional_interface.ArgumentBiFunction;
-import net.ryanland.colossus.events.ContentCommandEvent;
+import net.ryanland.colossus.events.MessageCommandEvent;
 
 import java.util.*;
 import java.util.function.Function;
@@ -17,8 +17,8 @@ public abstract class Argument<T> {
     private String id;
     private String description;
     private boolean optional = false;
-    private Function<ContentCommandEvent, T> optionalFunction = event -> null;
-    private List<ArgumentBiFunction<Deque<OptionMapping>, ContentCommandEvent, T>> fallbacks = new ArrayList<>();
+    private Function<MessageCommandEvent, T> optionalFunction = event -> null;
+    private List<ArgumentBiFunction<Deque<OptionMapping>, MessageCommandEvent, T>> fallbacks = new ArrayList<>();
 
     protected OptionType type = OptionType.STRING;
 
@@ -44,7 +44,7 @@ public abstract class Argument<T> {
         return optional;
     }
 
-    public Function<ContentCommandEvent, T> getOptionalFunction() {
+    public Function<MessageCommandEvent, T> getOptionalFunction() {
         return optionalFunction;
     }
 
@@ -53,7 +53,7 @@ public abstract class Argument<T> {
         return this;
     }
 
-    public Argument<T> optional(Function<ContentCommandEvent, T> defaultValue) {
+    public Argument<T> optional(Function<MessageCommandEvent, T> defaultValue) {
         optional = true;
         optionalFunction = defaultValue;
         return this;
@@ -65,12 +65,12 @@ public abstract class Argument<T> {
     }
 
     @SafeVarargs
-    public final Argument<T> fallbacks(ArgumentBiFunction<Deque<OptionMapping>, ContentCommandEvent, T>... fallbacks) {
+    public final Argument<T> fallbacks(ArgumentBiFunction<Deque<OptionMapping>, MessageCommandEvent, T>... fallbacks) {
         this.fallbacks = Arrays.asList(fallbacks);
         return this;
     }
 
-    public Argument<T> fallback(ArgumentBiFunction<Deque<OptionMapping>, ContentCommandEvent, T> fallback) {
+    public Argument<T> fallback(ArgumentBiFunction<Deque<OptionMapping>, MessageCommandEvent, T> fallback) {
         fallbacks.add(fallback);
         return this;
     }
@@ -99,7 +99,7 @@ public abstract class Argument<T> {
         return data;
     }
 
-    public final Object parse(Deque<OptionMapping> arguments, ContentCommandEvent event) throws ArgumentException {
+    public final Object parse(Deque<OptionMapping> arguments, MessageCommandEvent event) throws ArgumentException {
         // Create clone of queue to support queue operations from multiple functions
         Deque<OptionMapping> queueCopy = new ArrayDeque<>(arguments);
 
@@ -113,7 +113,7 @@ public abstract class Argument<T> {
 
         // Run fallbacks
         if (parsed == null) {
-            for (ArgumentBiFunction<Deque<OptionMapping>, ContentCommandEvent, T> fallback : fallbacks) {
+            for (ArgumentBiFunction<Deque<OptionMapping>, MessageCommandEvent, T> fallback : fallbacks) {
                 parsed = fallback.run(new ArrayDeque<>(queueCopy), event);
                 if (parsed != null) return parsed;
             }
@@ -123,5 +123,5 @@ public abstract class Argument<T> {
         return parsed;
     }
 
-    public abstract T parseArg(Deque<OptionMapping> arguments, ContentCommandEvent event) throws ArgumentException;
+    public abstract T parseArg(Deque<OptionMapping> arguments, MessageCommandEvent event) throws ArgumentException;
 }

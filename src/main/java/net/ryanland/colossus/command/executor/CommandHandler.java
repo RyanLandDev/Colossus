@@ -13,6 +13,7 @@ import net.ryanland.colossus.command.SubCommandHolder;
 import net.ryanland.colossus.command.info.CommandInfo;
 import net.ryanland.colossus.command.info.SubCommandGroup;
 import net.ryanland.colossus.events.ContentCommandEvent;
+import net.ryanland.colossus.events.MessageCommandEvent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -103,11 +104,11 @@ public class CommandHandler {
         return COMMAND_MAP.get(alias);
     }
 
-    public static void run(ContentCommandEvent event) {
+    public static void run(MessageCommandEvent event) {
         COMMAND_EXECUTOR.run(event);
     }
 
-    public static void execute(ContentCommandEvent event, List<OptionMapping> args) {
+    public static void execute(MessageCommandEvent event, List<OptionMapping> args) {
         COMMAND_EXECUTOR.execute(event, args);
     }
 }

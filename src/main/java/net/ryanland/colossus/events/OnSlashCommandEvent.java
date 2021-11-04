@@ -9,6 +9,6 @@ public class OnSlashCommandEvent extends ListenerAdapter {
 
     @Override
     public void onSlashCommand(@NotNull SlashCommandEvent event) {
-        CommandHandler.run(new ContentCommandEvent(event));
+        CommandHandler.run(new SlashEvent(event));
     }
 }
