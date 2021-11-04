@@ -12,8 +12,8 @@ import net.ryanland.colossus.command.SubCommand;
 import net.ryanland.colossus.command.SubCommandHolder;
 import net.ryanland.colossus.command.info.CommandInfo;
 import net.ryanland.colossus.command.info.SubCommandGroup;
-import net.ryanland.colossus.events.ContentCommandEvent;
 import net.ryanland.colossus.events.MessageCommandEvent;
+import net.ryanland.colossus.events.SlashEvent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -105,6 +105,10 @@ public class CommandHandler {
     }
 
     public static void run(MessageCommandEvent event) {
+        COMMAND_EXECUTOR.run(event);
+    }
+
+    public static void run(SlashEvent event) {
         COMMAND_EXECUTOR.run(event);
     }
 

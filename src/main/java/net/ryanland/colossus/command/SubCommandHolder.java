@@ -1,7 +1,7 @@
 package net.ryanland.colossus.command;
 
 import net.ryanland.colossus.command.arguments.ArgumentSet;
-import net.ryanland.colossus.events.ContentCommandEvent;
+import net.ryanland.colossus.events.MessageCommandEvent;
 
 public abstract class SubCommandHolder extends Command {
 
@@ -11,7 +11,7 @@ public abstract class SubCommandHolder extends Command {
     }
 
     @Override
-    public final void run(ContentCommandEvent event) {
+    public final void run(MessageCommandEvent event) {
 
     }
 

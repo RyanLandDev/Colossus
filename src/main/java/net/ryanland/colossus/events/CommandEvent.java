@@ -16,6 +16,7 @@ public abstract class CommandEvent {
 
     public abstract ParsedArgumentMap getParsedArgs();
 
+
     public abstract void setParsedArgs(ParsedArgumentMap parsedArgs);
 
     public abstract User getUser();
