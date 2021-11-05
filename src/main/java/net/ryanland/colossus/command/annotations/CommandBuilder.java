@@ -1,8 +1,6 @@
 package net.ryanland.colossus.command.annotations;
 
 import net.dv8tion.jda.api.Permission;
-import net.ryanland.colossus.command.Command;
-import net.ryanland.colossus.command.SubCommand;
 import net.ryanland.colossus.command.info.Category;
 import net.ryanland.colossus.command.info.SubCommandGroup;
 

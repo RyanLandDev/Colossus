@@ -1,4 +1,4 @@
-package net.ryanland.colossus.command.arguments.types;
+package net.ryanland.colossus.command.arguments.types.primitive;
 
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;

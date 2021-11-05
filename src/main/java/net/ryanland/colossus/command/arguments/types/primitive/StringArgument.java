@@ -1,4 +1,4 @@
-package net.ryanland.colossus.command.arguments.types;
+package net.ryanland.colossus.command.arguments.types.primitive;
 
 import net.ryanland.colossus.command.arguments.parsing.exceptions.ArgumentException;
 import net.ryanland.colossus.events.CommandEvent;

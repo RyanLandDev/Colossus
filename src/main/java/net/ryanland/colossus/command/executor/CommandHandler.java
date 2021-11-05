@@ -9,6 +9,7 @@ import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.command.Command;
 import net.ryanland.colossus.command.SubCommand;
 import net.ryanland.colossus.command.SubCommandHolder;
+import net.ryanland.colossus.command.arguments.Argument;
 import net.ryanland.colossus.command.info.CommandInfo;
 import net.ryanland.colossus.command.info.SubCommandGroup;
 import net.ryanland.colossus.events.MessageCommandEvent;
@@ -112,6 +113,6 @@ public class CommandHandler {
     }
 
     public static void execute(MessageCommandEvent event, List<OptionMapping> args) {
-        COMMAND_EXECUTOR.execute(event, args);
+        COMMAND_EXECUTOR.execute(event);
     }
 }

@@ -1,7 +1,7 @@
 package net.ryanland.colossus.sys.file.serializer;
 
-import net.ryanland.colossus.command.cooldown.Cooldown;
 import net.ryanland.colossus.command.Command;
+import net.ryanland.colossus.command.cooldown.Cooldown;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;

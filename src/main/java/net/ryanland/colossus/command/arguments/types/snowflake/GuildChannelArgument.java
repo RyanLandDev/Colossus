@@ -1,4 +1,4 @@
-package net.ryanland.colossus.command.arguments.types;
+package net.ryanland.colossus.command.arguments.types.snowflake;
 
 import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.GuildChannel;
@@ -13,7 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class GuildChannelArgument extends SingleArgument<GuildChannel> {
+public class GuildChannelArgument extends SnowflakeArgument<GuildChannel> {
 
     private final ChannelType[] permittedChannelTypes;
 
@@ -30,14 +30,15 @@ public class GuildChannelArgument extends SingleArgument<GuildChannel> {
     public OptionType getSlashCommandOptionType() {
         return OptionType.CHANNEL;
     }
+
     @Override
     public GuildChannel resolveSlashCommandArgument(OptionMapping arg, SlashEvent event) throws ArgumentException {
         return checkIfChannelTypeIsPermitted(arg.getAsGuildChannel());
     }
 
     @Override
-    public GuildChannel resolveMessageCommandArgument(String arg, MessageCommandEvent event) throws ArgumentException {
-        return checkIfChannelTypeIsPermitted(Colossus.getJda().getGuildChannelById(arg));
+    public GuildChannel resolveMessageCommandArgument(MessageCommandEvent event, String id) throws ArgumentException {
+        return checkIfChannelTypeIsPermitted(Colossus.getJda().getGuildChannelById(id));
     }
 
     private GuildChannel checkIfChannelTypeIsPermitted(GuildChannel channel) throws ArgumentException {

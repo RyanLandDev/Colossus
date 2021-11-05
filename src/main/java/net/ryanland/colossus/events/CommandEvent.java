@@ -20,7 +20,6 @@ public abstract class CommandEvent {
 
     public abstract ParsedArgumentMap getParsedArgs();
 
-
     public abstract void setParsedArgs(ParsedArgumentMap parsedArgs);
 
     public abstract User getUser();
@@ -50,6 +49,14 @@ public abstract class CommandEvent {
         if (getGuild() == null)
             return null;
         return Colossus.getDatabaseDriver().get(getGuild());
+    }
+
+    public String getGuildPrefix() {
+        String prefix = getGuildTable().get("prefix");
+        if (prefix != null)
+            return prefix;
+        else
+            return Colossus.getConfig().getPrefix();
     }
 
     public abstract void reply(Message message);

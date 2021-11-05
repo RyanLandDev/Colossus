@@ -25,24 +25,25 @@ public class Config {
         updateValueMap();
     }
 
-    public Config(final String token, final String clientId,
-                  String supportGuild, final String testGuild, final boolean testing) {
+    public Config(String token, String clientId, String prefix,
+                  String supportGuild, String testGuild, boolean testing) {
         rawConfig = new JsonObject();
         rawConfig.addProperty("token", token);
         rawConfig.addProperty("client_id", clientId);
+        rawConfig.addProperty("prefix", prefix);
         rawConfig.addProperty("support_guild", supportGuild);
         rawConfig.addProperty("test_guild", testGuild);
         rawConfig.addProperty("testing", testing);
         updateValueMap();
     }
 
-    public Config(final String token, final String clientId, final String testGuild) {
-        this(token, clientId, testGuild, true);
+    public Config(String token, String clientId, String prefix, String testGuild) {
+        this(token, clientId, prefix, testGuild, true);
     }
 
-    public Config(final String token, final String clientId,
-                  final String testGuild, final boolean testing) {
-        this(token, clientId, null, testGuild, testing);
+    public Config(String token, String clientId, String prefix,
+                  String testGuild, boolean testing) {
+        this(token, clientId, prefix, null, testGuild, testing);
     }
 
     public JsonObject getRawConfig() {
@@ -73,6 +74,10 @@ public class Config {
     public String getClientId() {
         return getString("client_id");
     }
+
+     public String getPrefix() {
+        return getString("prefix");
+     }
 
     public String getSupportGuildId() {
         return getString("support_guild");

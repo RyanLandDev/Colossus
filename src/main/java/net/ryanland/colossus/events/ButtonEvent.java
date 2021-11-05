@@ -4,8 +4,8 @@ import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.command.CommandException;
-import net.ryanland.colossus.sys.message.PresetBuilder;
 import net.ryanland.colossus.sys.interactions.ButtonHandler;
+import net.ryanland.colossus.sys.message.PresetBuilder;
 import org.jetbrains.annotations.NotNull;
 
 public class ButtonEvent extends ListenerAdapter {

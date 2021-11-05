@@ -27,6 +27,7 @@ public class Table<T extends ISnowflake> {
 
     /**
      * Returns the value associated with the provided key, and performs an unchecked cast to it.
+     * Will be null if the value does not exist.
      */
     @SuppressWarnings("unchecked")
     public final <R> R get(String key) {

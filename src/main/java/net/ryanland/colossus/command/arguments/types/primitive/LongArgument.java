@@ -1,4 +1,4 @@
-package net.ryanland.colossus.command.arguments.types;
+package net.ryanland.colossus.command.arguments.types.primitive;
 
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -6,7 +6,7 @@ import net.ryanland.colossus.command.arguments.parsing.exceptions.ArgumentExcept
 import net.ryanland.colossus.events.MessageCommandEvent;
 import net.ryanland.colossus.events.SlashEvent;
 
-public class IntegerArgument extends NumberArgument<Integer> {
+public class LongArgument extends NumberArgument<Long> {
 
     @Override
     public OptionType getSlashCommandOptionType() {
@@ -14,12 +14,12 @@ public class IntegerArgument extends NumberArgument<Integer> {
     }
 
     @Override
-    public Integer resolveSlashCommandArgument(SlashEvent event, OptionMapping arg) throws ArgumentException {
-        return (int) arg.getAsLong();
+    public Long resolveSlashCommandArgument(SlashEvent event, OptionMapping arg) throws ArgumentException {
+        return arg.getAsLong();
     }
 
     @Override
-    public Integer resolveMessageCommandArgument(MessageCommandEvent event, String arg) throws ArgumentException {
-        return Integer.parseInt(arg);
+    public Long resolveMessageCommandArgument(MessageCommandEvent event, String arg) throws ArgumentException {
+        return Long.parseLong(arg);
     }
 }

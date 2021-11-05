@@ -4,15 +4,15 @@ import com.google.gson.JsonObject;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.SelfUser;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.ryanland.colossus.command.Command;
+import net.ryanland.colossus.command.CommandException;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.MalformedArgumentException;
 import net.ryanland.colossus.command.cooldown.Cooldown;
 import net.ryanland.colossus.command.cooldown.CooldownHandler;
 import net.ryanland.colossus.command.cooldown.CooldownManager;
-import net.ryanland.colossus.command.CommandException;
 import net.ryanland.colossus.command.executor.DisabledCommandHandler;
 import net.ryanland.colossus.command.finalizers.CooldownFinalizer;
 import net.ryanland.colossus.command.finalizers.Finalizer;
-import net.ryanland.colossus.command.Command;
 import net.ryanland.colossus.command.impl.DisableCommand;
 import net.ryanland.colossus.command.impl.EnableCommand;
 import net.ryanland.colossus.command.impl.HelpCommand;
@@ -22,11 +22,7 @@ import net.ryanland.colossus.command.inhibitors.Inhibitor;
 import net.ryanland.colossus.command.inhibitors.PermissionInhibitor;
 import net.ryanland.colossus.events.ButtonEvent;
 import net.ryanland.colossus.events.OnSlashCommandEvent;
-import net.ryanland.colossus.sys.file.Config;
-import net.ryanland.colossus.sys.file.DatabaseDriver;
-import net.ryanland.colossus.sys.file.LocalFile;
-import net.ryanland.colossus.sys.file.LocalFileBuilder;
-import net.ryanland.colossus.sys.file.LocalFileType;
+import net.ryanland.colossus.sys.file.*;
 import net.ryanland.colossus.sys.file.serializer.CooldownsSerializer;
 import net.ryanland.colossus.sys.file.serializer.DisabledCommandsSerializer;
 import net.ryanland.colossus.sys.file.serializer.Serializer;
@@ -62,6 +58,7 @@ public class ColossusBuilder {
     private static final String[] CORE_CONFIG_ENTRIES = new String[]{
         "token",
         "client_id",
+        "prefix",
 
         "support_guild",
         "test_guild",
@@ -138,6 +135,8 @@ public class ColossusBuilder {
      *                 - Under <i>Application ID</i>, click {@code Copy}<br>
      *                 - Paste it here<br><br>
      *
+     * @param prefix The prefix of the bot, used for message commands.
+     *               In addition to this prefix, the bot will also listen for mentions.
      * @param testGuild The ID of the Discord server you are testing your bot in.<br><br>
      *
      *                  Your server's ID can be retrieved by:<br>
@@ -147,8 +146,8 @@ public class ColossusBuilder {
      *                  - Paste it here<br>
      * @see Colossus
      */
-    public ColossusBuilder(String token, String clientId, String testGuild) {
-        config = new Config(token, clientId, testGuild);
+    public ColossusBuilder(String token, String clientId, String prefix, String testGuild) {
+        config = new Config(token, clientId, prefix, testGuild);
         jdaBuilder = JDABuilder.createDefault(config.getToken())
             .addEventListeners(CORE_EVENTS);
     }

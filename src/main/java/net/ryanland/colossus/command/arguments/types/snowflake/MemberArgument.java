@@ -1,4 +1,4 @@
-package net.ryanland.colossus.command.arguments.types;
+package net.ryanland.colossus.command.arguments.types.snowflake;
 
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
@@ -7,7 +7,7 @@ import net.ryanland.colossus.command.arguments.parsing.exceptions.ArgumentExcept
 import net.ryanland.colossus.events.MessageCommandEvent;
 import net.ryanland.colossus.events.SlashEvent;
 
-public class MemberArgument extends SingleArgument<Member> {
+public class MemberArgument extends SnowflakeArgument<Member> {
 
     @Override
     public OptionType getSlashCommandOptionType() {
@@ -23,7 +23,8 @@ public class MemberArgument extends SingleArgument<Member> {
     }
 
     @Override
-    public Member resolveMessageCommandArgument(String arg, MessageCommandEvent event) throws ArgumentException {
-        return event.getGuild().getMemberById(arg.replaceAll("\\D", ""));
+    public Member resolveMessageCommandArgument(MessageCommandEvent event, String id) throws ArgumentException {
+        return event.getGuild().getMemberById(id);
     }
+
 }
