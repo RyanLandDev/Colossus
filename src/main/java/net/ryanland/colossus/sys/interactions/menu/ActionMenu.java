@@ -1,6 +1,7 @@
 package net.ryanland.colossus.sys.interactions.menu;
 
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.interactions.Interaction;
 import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.components.Button;
@@ -31,9 +32,8 @@ public class ActionMenu implements ModifiableInteractionMenu {
 
     @Override
     public void send(Interaction interaction) {
-        // Stream map of action buttons and actual buttons
+        // Get action buttons
         List<ActionButton> actionButtons = layout.getActionButtons();
-        List<Button> buttons = layout.getButtons();
 
         // Create container map
         HashMap<String, ButtonClickContainer> buttonConsumers = new HashMap<>();
@@ -53,9 +53,8 @@ public class ActionMenu implements ModifiableInteractionMenu {
 
     @Override
     public void send(Message message) throws CommandException {
-        // Stream map of action buttons and actual buttons
+        // Get action buttons
         List<ActionButton> actionButtons = layout.getActionButtons();
-        List<Button> buttons = layout.getButtons();
 
         // Create container map
         HashMap<String, ButtonClickContainer> buttonConsumers = new HashMap<>();
@@ -74,10 +73,9 @@ public class ActionMenu implements ModifiableInteractionMenu {
     }
 
     @Override
-    public void edit(Message message) {
-        // Stream map of action buttons and actual buttons
+    public void edit(Message message, User user) {
+        // Get action buttons
         List<ActionButton> actionButtons = layout.getActionButtons();
-        List<Button> buttons = layout.getButtons();
 
         // Create container map
         HashMap<String, ButtonClickContainer> buttonConsumers = new HashMap<>();
@@ -88,7 +86,7 @@ public class ActionMenu implements ModifiableInteractionMenu {
                 .setActionRows(layout.toActionRows())
                 .complete(),
             buttonEvent -> new ButtonHandler.ButtonListener(
-                message.getAuthor().getIdLong(),
+                user.getIdLong(),
                 clickEvent -> buttonConsumers.get(clickEvent.getComponentId())
             ));
     }
