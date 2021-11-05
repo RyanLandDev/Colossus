@@ -44,6 +44,11 @@ public class MessageCommandEvent extends CommandEvent {
         return (T) parsedArgs.get(id);
     }
 
+    @Override
+    public boolean isFromGuild() {
+        return event.isFromGuild();
+    }
+
     public MessageAction performReply(Message message) {
         return event.getChannel().sendMessage(message);
     }

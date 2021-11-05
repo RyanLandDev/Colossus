@@ -3,6 +3,7 @@ package net.ryanland.colossus.command.info;
 import net.dv8tion.jda.api.Permission;
 import net.ryanland.colossus.command.Command;
 import net.ryanland.colossus.command.SubCommand;
+import net.ryanland.colossus.command.annotations.CommandBuilder;
 import net.ryanland.colossus.command.arguments.Argument;
 import net.ryanland.colossus.command.arguments.ArgumentSet;
 import net.ryanland.colossus.events.CommandEvent;
@@ -93,5 +94,9 @@ public class HelpMaker {
             }
         }
         return "`" + String.join("` `", commandNames) + "`";
+    }
+
+    public static CommandBuilder getInfo(Command cmd) {
+        return cmd.getClass().getAnnotation(CommandBuilder.class);
     }
 }

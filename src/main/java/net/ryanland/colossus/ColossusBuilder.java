@@ -16,10 +16,7 @@ import net.ryanland.colossus.command.finalizers.Finalizer;
 import net.ryanland.colossus.command.impl.DisableCommand;
 import net.ryanland.colossus.command.impl.EnableCommand;
 import net.ryanland.colossus.command.impl.HelpCommand;
-import net.ryanland.colossus.command.inhibitors.CooldownInhibitor;
-import net.ryanland.colossus.command.inhibitors.DisabledInhibitor;
-import net.ryanland.colossus.command.inhibitors.Inhibitor;
-import net.ryanland.colossus.command.inhibitors.PermissionInhibitor;
+import net.ryanland.colossus.command.inhibitors.*;
 import net.ryanland.colossus.events.ButtonEvent;
 import net.ryanland.colossus.events.OnSlashCommandEvent;
 import net.ryanland.colossus.sys.file.*;
@@ -48,7 +45,8 @@ public class ColossusBuilder {
     private static final Inhibitor[] CORE_INHIBITORS = new Inhibitor[]{
         new DisabledInhibitor(),
         new PermissionInhibitor(),
-        new CooldownInhibitor()
+        new CooldownInhibitor(),
+        new GuildOnlyInhibitor()
     };
 
     private static final Finalizer[] CORE_FINALIZERS = new Finalizer[]{
