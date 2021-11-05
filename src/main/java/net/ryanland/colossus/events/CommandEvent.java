@@ -28,6 +28,8 @@ public abstract class CommandEvent {
 
     public abstract Guild getGuild();
 
+    public abstract boolean isFromGuild();
+
     /**
      * Get the {@link Table} of the user who executed this command.
      * <br>Note: This method may produce an error if the {@link DatabaseDriver} is not properly configured.

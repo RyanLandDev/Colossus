@@ -205,6 +205,7 @@ public class SlashEvent extends CommandEvent {
         return event.deferReply(ephemeral);
     }
 
+    @Override
     public boolean isFromGuild() {
         return event.isFromGuild();
     }
