@@ -53,10 +53,10 @@ public class CommandExecutor {
 
             //Applying different command if subcommand is used
             if (eventAsSlashCommand.getSubCommandGroup() != null) {
-                command = command.getInfo().getSubCommandGroupMap()
+                command = command.getSubCommandGroupMap()
                     .get(eventAsSlashCommand.getSubCommandGroup()).getSubCommand(eventAsSlashCommand.getSubCommandName());
             } else if (eventAsSlashCommand.getSubCommandName() != null) {
-                command = command.getInfo().getSubCommandMap()
+                command = command.getSubCommandMap()
                     .get(eventAsSlashCommand.getSubCommandName());
             }
         } else if (event instanceof MessageCommandEvent) {

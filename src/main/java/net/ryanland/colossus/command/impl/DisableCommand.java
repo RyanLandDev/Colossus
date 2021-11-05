@@ -5,6 +5,7 @@ import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.command.CombinedCommand;
 import net.ryanland.colossus.command.Command;
 import net.ryanland.colossus.command.CommandException;
+import net.ryanland.colossus.command.annotations.CommandBuilder;
 import net.ryanland.colossus.command.arguments.ArgumentSet;
 import net.ryanland.colossus.command.arguments.types.CommandArgument;
 import net.ryanland.colossus.command.executor.DisabledCommandHandler;
@@ -13,17 +14,14 @@ import net.ryanland.colossus.command.info.CommandInfo;
 import net.ryanland.colossus.events.CommandEvent;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 
-public class DisableCommand extends Command implements CombinedCommand {
+@CommandBuilder(
 
-    @Override
-    public CommandInfo getInfo() {
-        return new CommandInfo()
-            .name("disable")
-            .description("Disables a command globally.")
-            .category(Category.DEVELOPER)
-            .permission(Permission.DEVELOPER)
-            .flags(Flag.NO_DISABLE);
-    }
+        name = "disable",
+        description = "Disables a command globally.",
+        category = Category.DEVELOPER,
+        permission = Permission.DEVELOPER
+)
+public class DisableCommand extends Command implements CombinedCommand {
 
     @Override
     public ArgumentSet getArguments() {

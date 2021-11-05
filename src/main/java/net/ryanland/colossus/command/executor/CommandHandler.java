@@ -9,8 +9,9 @@ import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.command.Command;
 import net.ryanland.colossus.command.SubCommand;
 import net.ryanland.colossus.command.SubCommandHolder;
+import net.ryanland.colossus.command.annotations.CommandBuilder;
 import net.ryanland.colossus.command.arguments.Argument;
-import net.ryanland.colossus.command.info.CommandInfo;
+import net.ryanland.colossus.command.info.HelpMaker;
 import net.ryanland.colossus.command.info.SubCommandGroup;
 import net.ryanland.colossus.events.MessageCommandEvent;
 import net.ryanland.colossus.events.SlashEvent;
@@ -64,20 +65,20 @@ public class CommandHandler {
         }
 
         for (Command command : COMMANDS) {
-            CommandInfo cmdInfo = command.getInfo();
-            CommandData slashCmdData = new CommandData(cmdInfo.getName(), cmdInfo.getDescription());
+            CommandBuilder cmdInfo = HelpMaker.getInfo(command);
+            CommandData slashCmdData = new CommandData(command.getName(), command.getDescription());
 
-            if (cmdInfo.getSubCommands().isEmpty() && cmdInfo.getSubCommandGroups().isEmpty()) {
+            if (command.getSubCommands().isEmpty() && command.getSubCommandGroups().isEmpty()) {
                 for (Argument<?> arg : command.getArguments()) {
                     slashCmdData.addOptions(arg.getOptionData());
                 }
 
-            } else if (cmdInfo.getSubCommandGroups().isEmpty()) {
-                for (SubCommand subCmd : cmdInfo.getSubCommands()) {
+            } else if (command.getSubCommandGroups().isEmpty()) {
+                for (SubCommand subCmd : command.getSubCommands()) {
                     UPSERT_CONSUMER.accept(subCmd, slashCmdData);
                 }
             } else {
-                for (SubCommandGroup group : cmdInfo.getSubCommandGroups()) {
+                for (SubCommandGroup group : command.getSubCommandGroups()) {
                     SubcommandGroupData subCmdGroupData = new SubcommandGroupData(group.getName(), group.getDescription());
 
                     for (SubCommand subCmd : group.getSubCommands()) {

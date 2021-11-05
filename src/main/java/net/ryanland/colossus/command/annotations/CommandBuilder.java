@@ -1,6 +1,7 @@
 package net.ryanland.colossus.command.annotations;
 
 import net.dv8tion.jda.api.Permission;
+import net.ryanland.colossus.command.SubCommand;
 import net.ryanland.colossus.command.info.Category;
 import net.ryanland.colossus.command.info.SubCommandGroup;
 
@@ -17,5 +18,6 @@ public @interface CommandBuilder {
     Category category();
     int cooldown() default 2;
     Permission permission() default Permission.MESSAGE_WRITE;
-    SubCommandGroup sub();
+    Class<? extends SubCommand>[] subcommands() default {};
+    Class<? extends SubCommandGroup>[] subcommandgroups() default {};
 }

@@ -6,7 +6,9 @@ import net.ryanland.colossus.command.arguments.ArgumentSet;
 import net.ryanland.colossus.command.arguments.types.CommandArgument;
 import net.ryanland.colossus.command.executor.CommandHandler;
 import net.ryanland.colossus.command.info.Category;
+import net.ryanland.colossus.command.info.CommandInfo;
 import net.ryanland.colossus.command.info.HelpMaker;
+import net.ryanland.colossus.command.info.SubCommandGroup;
 import net.ryanland.colossus.events.CommandEvent;
 import net.ryanland.colossus.events.MessageCommandEvent;
 import net.ryanland.colossus.events.SlashEvent;
@@ -18,9 +20,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @CommandBuilder(
-    name = "help",
-    description = "Get a list of all commands or information about a specific one.",
-    category = Category.INFORMATION
+        name = "help",
+        description = "Get a list of all commands or information about a specific one.",
+        category = Category.INFORMATION
 )
 public class HelpCommand extends Command implements CombinedCommand {
 
