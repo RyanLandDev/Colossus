@@ -19,6 +19,7 @@ import net.ryanland.colossus.sys.message.PresetBuilder;
         name = "disable",
         description = "Disables a command globally.",
         category = Category.DEVELOPER,
+        guildOnly = true,
         permission = Permission.DEVELOPER
 )
 public class DisableCommand extends Command implements CombinedCommand {

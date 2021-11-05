@@ -20,6 +20,7 @@ import net.ryanland.colossus.sys.message.PresetBuilder;
         name = "enable",
         description = "Re-enables a globally disabled command.",
         category = Category.DEVELOPER,
+        guildOnly = true,
         permission = Permission.DEVELOPER
 )
 public class EnableCommand extends Command implements CombinedCommand {

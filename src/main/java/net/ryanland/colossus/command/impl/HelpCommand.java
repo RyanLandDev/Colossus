@@ -22,7 +22,8 @@ import java.util.stream.Collectors;
 @CommandBuilder(
         name = "help",
         description = "Get a list of all commands or information about a specific one.",
-        category = Category.INFORMATION
+        category = Category.INFORMATION,
+        guildOnly = false
 )
 public class HelpCommand extends Command implements CombinedCommand {
 

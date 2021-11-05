@@ -53,6 +53,10 @@ public abstract class Command  {
         return getCooldown() * 1000;
     }
 
+    public final boolean isGuildOnly() {
+        return getInfo(this).guildOnly();
+    }
+
     public final CooldownManager getCooldownManager() {
         return MemoryCooldownManager.getInstance();
     }

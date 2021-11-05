@@ -17,6 +17,7 @@ public @interface CommandBuilder {
     String description();
     Category category();
     int cooldown() default 2;
+    boolean guildOnly();
     Permission permission() default Permission.MESSAGE_WRITE;
     Class<? extends SubCommand>[] subcommands() default {};
     Class<? extends SubCommandGroup>[] subcommandgroups() default {};
