@@ -10,47 +10,38 @@ import net.ryanland.colossus.sys.interactions.ButtonHandler;
 import net.ryanland.colossus.sys.interactions.InteractionUtil;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ActionMenu implements InteractionMenu {
+public class ActionMenu implements ModifiableInteractionMenu {
 
-    private final ActionButton[] actionButtons;
+    private final ActionButtonLayout layout;
     private final PresetBuilder embed;
 
-    public ActionMenu(List<ActionButton> actionButtons, PresetBuilder embed) {
-        this(actionButtons.toArray(new ActionButton[0]), embed);
-    }
-
-    public ActionMenu(ActionButton[] actionButtons, PresetBuilder embed) {
-        this.actionButtons = actionButtons;
+    public ActionMenu(ActionButtonLayout actionRows, PresetBuilder embed) {
+        this.layout = actionRows;
         this.embed = embed;
     }
 
-    public ActionButton[] getActionButtons() {
-        return actionButtons;
+    public ActionButtonLayout getActionRowLayout() {
+        return layout;
     }
 
     @Override
     public void send(Interaction interaction) {
-        // Stream map of actual buttons
-        List<Button> buttons = Arrays.stream(actionButtons)
-            .map(ActionButton::button)
-            .collect(Collectors.toList());
+        // Stream map of action buttons and actual buttons
+        List<ActionButton> actionButtons = layout.getActionButtons();
+        List<Button> buttons = layout.getButtons();
 
         // Create container map
         HashMap<String, ButtonClickContainer> buttonConsumers = new HashMap<>();
-        Arrays.asList(actionButtons)
-            .forEach(button -> buttonConsumers.put(
-                button.button().getId(), button.onClick()
-            ));
+        actionButtons.forEach(button -> buttonConsumers.put(button.button().getId(), button.onClick()));
 
         // Send the message and set the action rows
         InteractionHook hook = interaction.replyEmbeds(embed.build())
-            .addActionRows(InteractionUtil.of(buttons))
+            .addActionRows(layout.toActionRows())
             .complete();
 
         // Add button listener
@@ -62,21 +53,17 @@ public class ActionMenu implements InteractionMenu {
 
     @Override
     public void send(Message message) throws CommandException {
-        // Stream map of actual buttons
-        List<Button> buttons = Arrays.stream(actionButtons)
-            .map(ActionButton::button)
-            .collect(Collectors.toList());
+        // Stream map of action buttons and actual buttons
+        List<ActionButton> actionButtons = layout.getActionButtons();
+        List<Button> buttons = layout.getButtons();
 
         // Create container map
         HashMap<String, ButtonClickContainer> buttonConsumers = new HashMap<>();
-        Arrays.asList(actionButtons)
-            .forEach(button -> buttonConsumers.put(
-                button.button().getId(), button.onClick()
-            ));
+        actionButtons.forEach(button -> buttonConsumers.put(button.button().getId(), button.onClick()));
 
         // Send the message and set the action rows
         Message msg = message.replyEmbeds(embed.build())
-            .setActionRows(InteractionUtil.of(buttons))
+            .setActionRows(layout.toActionRows())
             .complete();
 
         // Add button listener
@@ -84,5 +71,25 @@ public class ActionMenu implements InteractionMenu {
                 message.getAuthor().getIdLong(),
                 clickEvent -> buttonConsumers.get(clickEvent.getComponentId())
         ));
+    }
+
+    @Override
+    public void edit(Message message) {
+        // Stream map of action buttons and actual buttons
+        List<ActionButton> actionButtons = layout.getActionButtons();
+        List<Button> buttons = layout.getButtons();
+
+        // Create container map
+        HashMap<String, ButtonClickContainer> buttonConsumers = new HashMap<>();
+        actionButtons.forEach(button -> buttonConsumers.put(button.button().getId(), button.onClick()));
+
+        // Add button listener
+        ButtonHandler.addListener(message.editMessageEmbeds(embed.build())
+                .setActionRows(layout.toActionRows())
+                .complete(),
+            buttonEvent -> new ButtonHandler.ButtonListener(
+                message.getAuthor().getIdLong(),
+                clickEvent -> buttonConsumers.get(clickEvent.getComponentId())
+            ));
     }
 }

@@ -8,12 +8,11 @@ import net.ryanland.colossus.sys.interactions.ButtonClickContainer;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class ActionMenuBuilder implements InteractionMenuBuilder<ActionMenu> {
 
-    private final List<ActionButton> actionButtons = new ArrayList<>(25);
+    private final ActionButtonLayout layout = new ActionButtonLayout();
     private PresetBuilder embed;
 
     public ActionMenuBuilder setEmbed(PresetBuilder embed) {
@@ -21,8 +20,8 @@ public class ActionMenuBuilder implements InteractionMenuBuilder<ActionMenu> {
         return this;
     }
 
-    public List<ActionButton> getButtons() {
-        return actionButtons;
+    public ActionButtonLayout getLayout() {
+        return layout;
     }
 
     public PresetBuilder getEmbed() {
@@ -30,7 +29,7 @@ public class ActionMenuBuilder implements InteractionMenuBuilder<ActionMenu> {
     }
 
     public ActionMenuBuilder addButtons(ActionButton... buttons) {
-        this.actionButtons.addAll(Arrays.asList(buttons));
+        layout.add(new ActionButtonRow(buttons));
         return this;
     }
 
@@ -38,18 +37,18 @@ public class ActionMenuBuilder implements InteractionMenuBuilder<ActionMenu> {
         return addButtons(buttons.toArray(new ActionButton[0]));
     }
 
-    public ActionMenuBuilder addButton(ActionButton button) {
-        actionButtons.add(button);
+    public ActionMenuBuilder addRows(ActionButtonRow... actionRows) {
+        layout.add(actionRows);
         return this;
     }
 
-    public ActionMenuBuilder insertButton(int index, ActionButton button) {
-        actionButtons.add(index, button);
+    public ActionMenuBuilder insertButton(int rowIndex, int buttonIndex, ActionButton button) {
+        layout.get(rowIndex).add(buttonIndex, button);
         return this;
     }
 
     public ActionMenuBuilder addButton(Button button, ButtonClickContainer onClick) {
-        return addButton(new ActionButton(button, onClick));
+        return addButtons(new ActionButton(button, onClick));
     }
 
     public <T> ActionMenuBuilder addButton(Button button, CommandBiConsumer<ButtonClickEvent, Object> onClick, T value) {
@@ -65,22 +64,22 @@ public class ActionMenuBuilder implements InteractionMenuBuilder<ActionMenu> {
         });
     }
 
-    public ActionMenuBuilder insertButton(int index, Button button, ButtonClickContainer onClick) {
-        return insertButton(index, new ActionButton(button, onClick));
+    public ActionMenuBuilder insertButton(int rowIndex, int buttonIndex, Button button, ButtonClickContainer onClick) {
+        return insertButton(rowIndex, buttonIndex, new ActionButton(button, onClick));
     }
 
-    public <T> ActionMenuBuilder insertButton(int index, Button button,
+    public <T> ActionMenuBuilder insertButton(int rowIndex, int buttonIndex, Button button,
                                               CommandBiConsumer<ButtonClickEvent, Object> onClick, T value) {
-        return insertButton(index, button, new ButtonClickContainer(onClick, event -> value));
+        return insertButton(rowIndex, buttonIndex, button, new ButtonClickContainer(onClick, event -> value));
     }
 
-    public ActionMenuBuilder insertButton(int index, Button button, CommandConsumer<ButtonClickEvent> onClick) {
-        return insertButton(index, button, new ButtonClickContainer(onClick));
+    public ActionMenuBuilder insertButton(int rowIndex, int buttonIndex, Button button, CommandConsumer<ButtonClickEvent> onClick) {
+        return insertButton(rowIndex, buttonIndex, button, new ButtonClickContainer(onClick));
     }
 
     @Override
     public ActionMenu build() {
-        return new ActionMenu(actionButtons, embed);
+        return new ActionMenu(layout, embed);
     }
 
 }
