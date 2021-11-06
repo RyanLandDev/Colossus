@@ -54,7 +54,7 @@ public abstract class CommandEvent {
     }
 
     public String getGuildPrefix() {
-        String prefix = getGuildTable().get("prefix");
+        String prefix = getGuildTable().get("_prf");
         if (prefix != null)
             return prefix;
         else
