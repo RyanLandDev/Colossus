@@ -46,7 +46,7 @@ public class LocalFile extends File {
 
     public static JsonObject jsonOfKeys(String... keys) {
         JsonObject json = new JsonObject();
-        for (String key : keys) json.add(key, null);
+        for (String key : keys) json.addProperty(key, "");
         return json;
     }
 }

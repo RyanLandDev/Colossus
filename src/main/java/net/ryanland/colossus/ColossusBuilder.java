@@ -1,5 +1,7 @@
 package net.ryanland.colossus;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.SelfUser;
@@ -358,11 +360,13 @@ public class ColossusBuilder {
     }
 
     private void buildConfigFile() {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
         // Build the config file
         LocalFile configFile = new LocalFileBuilder()
-            .setName("/" + configDirectory + "/config")
+            .setName(configDirectory + "/config")
             .setFileType(LocalFileType.JSON)
-            .setDefaultContent(LocalFile.jsonOfKeys(configEntries.toArray(new String[0])).getAsString())
+            .setDefaultContent(gson.toJson(LocalFile.jsonOfKeys(configEntries.toArray(new String[0]))))
             .buildFile();
 
         // Parse the config file's JSON

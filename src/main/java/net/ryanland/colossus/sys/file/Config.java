@@ -1,6 +1,7 @@
 package net.ryanland.colossus.sys.file;
 
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import org.apache.commons.collections4.map.LinkedMap;
 import org.jetbrains.annotations.NotNull;
 
@@ -50,21 +51,20 @@ public class Config {
         return rawConfig;
     }
 
-    @SuppressWarnings("unchecked")
-    public <R> R get(String key) {
-        return (R) values.get(key);
+    public JsonPrimitive get(String key) {
+        return (JsonPrimitive) values.get(key);
     }
 
     public String getString(String key) {
-        return get(key);
+        return get(key).getAsString();
     }
 
     public int getInt(String key) {
-        return get(key);
+        return get(key).getAsInt();
     }
 
     public boolean getBoolean(String key) {
-        return get(key);
+        return get(key).getAsBoolean();
     }
 
     public String getToken() {
