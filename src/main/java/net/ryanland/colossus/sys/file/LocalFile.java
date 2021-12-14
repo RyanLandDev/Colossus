@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.nio.file.StandardOpenOption;
 
 public class LocalFile extends File {
@@ -48,5 +49,15 @@ public class LocalFile extends File {
         JsonObject json = new JsonObject();
         for (String key : keys) json.addProperty(key, "");
         return json;
+    }
+
+    public static LocalFile validateDirectoryPath(String path) {
+        path = path.replaceFirst("^/", "");
+        LocalFile dir = new LocalFile(path);
+        if (!dir.exists())
+            throw new InvalidPathException(path, "This path is invalid or does not exist.");
+        if (!dir.isDirectory())
+            throw new InvalidPathException(path, "The provided path is not a directory.");
+        return dir;
     }
 }

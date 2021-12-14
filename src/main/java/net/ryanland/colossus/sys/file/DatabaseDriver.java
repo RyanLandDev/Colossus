@@ -7,6 +7,7 @@ import net.ryanland.colossus.ColossusBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -22,11 +23,9 @@ public abstract class DatabaseDriver {
      * Get all caches for all used client types.
      * <br>You can also create your own implementation of {@link TableCache} by overriding its methods and using it here.
      * <br>Example code:<br><br>
-     * <code>return new {@link TableCache}&lt;? extends {@link ISnowflake}&gt;[]{
-     * <br>&nbsp;&nbsp;&nbsp;&nbsp;new TableCache&lt;User&gt;
-     * <br>};</code>
+     * <code>return List.of(new TableCache&lt;User&gt;, new TableCache&lt;SelfUser&gt;);</code>
      */
-    protected abstract TableCache<? extends ISnowflake>[] getCaches();
+    protected abstract List<TableCache<? extends ISnowflake>> getCaches();
 
     @SuppressWarnings("unchecked")
     private <T extends ISnowflake> TableCache<T> getCache(T value) {

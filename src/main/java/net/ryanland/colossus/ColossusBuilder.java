@@ -96,12 +96,7 @@ public class ColossusBuilder {
      */
     public ColossusBuilder(String configDirectory) {
         // Get directory and perform checks
-        configDirectory = configDirectory.replaceFirst("^/", "");
-        LocalFile dir = new LocalFile(configDirectory);
-        if (!dir.exists())
-            throw new InvalidPathException(configDirectory, "This path is invalid or does not exist.");
-        if (!dir.isDirectory())
-            throw new InvalidPathException(configDirectory, "The provided path is not a directory.");
+        LocalFile.validateDirectoryPath(configDirectory);
         this.configDirectory = configDirectory;
 
         // Prepare the builder
