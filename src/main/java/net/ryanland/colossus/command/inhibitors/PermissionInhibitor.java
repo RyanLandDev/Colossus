@@ -9,7 +9,7 @@ public class PermissionInhibitor implements Inhibitor {
 
     @Override
     public boolean check(CommandEvent event) {
-        return !event.getMember().hasPermission(event.getCommand().getPermission());
+        return !event.getCommand().memberHasPermission(event.getMember());
     }
 
     @Override

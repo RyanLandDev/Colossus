@@ -11,14 +11,13 @@ import net.ryanland.colossus.command.SubCommand;
 import net.ryanland.colossus.command.SubCommandHolder;
 import net.ryanland.colossus.command.annotations.CommandBuilder;
 import net.ryanland.colossus.command.arguments.Argument;
+import net.ryanland.colossus.command.Category;
 import net.ryanland.colossus.command.info.HelpMaker;
 import net.ryanland.colossus.command.info.SubCommandGroup;
 import net.ryanland.colossus.events.MessageCommandEvent;
 import net.ryanland.colossus.events.SlashEvent;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.function.BiConsumer;
 
 public class CommandHandler {
@@ -26,26 +25,30 @@ public class CommandHandler {
     private static final List<Command> COMMANDS = new ArrayList<>();
     private static final HashMap<String, Command> COMMAND_MAP = new HashMap<>();
     private static final CommandExecutor COMMAND_EXECUTOR = new CommandExecutor();
+    private static final Set<Category> CATEGORIES = new HashSet<>();
 
     public static void register(List<Command> commands) {
         for (Command command : commands) {
+            // Check if the command's data is not null
             if (command.getName() == null || command.getDescription() == null || command.getCategory() == null)
                 throw new IllegalArgumentException(command.getClass().getName() +
                     " - Commands must have at least a name, description and category.");
+            // Check if the command('s name) has already been registered
             if (COMMAND_MAP.containsKey(command.getName()))
                 throw new IllegalArgumentException(
                     command.getName() + " - A command with this name has already been registered.");
             if (COMMAND_MAP.containsValue(command))
                 throw new IllegalArgumentException(command.getName() + " - This command has already been registered.");
 
+            // Add data
             COMMANDS.add(command);
             COMMAND_MAP.put(command.getName(), command);
+            CATEGORIES.add(command.getCategory());
 
-            if (command instanceof SubCommandHolder) {
-                for (SubCommand subcommand : command.getSubCommands()) {
+            // Add subcommands if existent
+            if (command instanceof SubCommandHolder)
+                for (SubCommand subcommand : command.getSubCommands())
                     COMMAND_MAP.put(subcommand.getName(), subcommand);
-                }
-            }
         }
     }
 
@@ -99,6 +102,10 @@ public class CommandHandler {
 
     public static List<Command> getCommands() {
         return COMMANDS;
+    }
+
+    public static Set<Category> getCategories() {
+        return CATEGORIES;
     }
 
     public static Command getCommand(String alias) {

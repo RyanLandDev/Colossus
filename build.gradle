@@ -19,10 +19,10 @@ repositories {
 
 dependencies {
     // log
-    implementation 'ch.qos.logback:logback-classic:1.2.6'
+    implementation 'ch.qos.logback:logback-classic:1.2.7'
 
     // jda
-    implementation 'net.dv8tion:JDA:4.3.0_334'
+    implementation 'net.dv8tion:JDA:4.4.0_351'
 
     // json
     implementation 'org.json:json:20210307'

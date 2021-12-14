@@ -3,11 +3,13 @@ package net.ryanland.colossus;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.SelfUser;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.internal.utils.JDALogger;
 import net.ryanland.colossus.command.Command;
 import net.ryanland.colossus.command.cooldown.Cooldown;
 import net.ryanland.colossus.command.executor.CommandHandler;
 import net.ryanland.colossus.command.finalizers.Finalizer;
+import net.ryanland.colossus.command.Category;
 import net.ryanland.colossus.command.inhibitors.Inhibitor;
 import net.ryanland.colossus.sys.file.Config;
 import net.ryanland.colossus.sys.file.DatabaseDriver;
@@ -20,6 +22,7 @@ import org.slf4j.Logger;
 import javax.security.auth.login.LoginException;
 import java.nio.file.InvalidPathException;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -46,6 +49,9 @@ public class Colossus {
 
     private final JDABuilder builder;
 
+    private static User botOwner;
+    private static Set<Category> categories;
+
     public Colossus(JDABuilder builder, Config config, List<Command> commands, List<LocalFile> localFiles,
                     DatabaseDriver databaseDriver, PresetType defaultPresetType, PresetType errorPresetType,
                     PresetType successPresetType, Serializer<?, List<Cooldown>> cooldownsSerializer,
@@ -64,6 +70,9 @@ public class Colossus {
         Colossus.disabledCommandsSerializer = disabledCommandsSerializer;
         Colossus.inhibitors = inhibitors;
         Colossus.finalizers = finalizers;
+
+        for (Command command : commands)
+            categories.add(command.getCategory());
     }
 
     /**
@@ -88,6 +97,8 @@ public class Colossus {
             e.printStackTrace();
         }
 
+        botOwner = jda.retrieveApplicationInfo().complete().getOwner();
+
         // Upsert the registered slash commands
         CommandHandler.upsertAll();
     }
@@ -104,6 +115,10 @@ public class Colossus {
 
     public static SelfUser getSelfUser() {
         return jda.getSelfUser();
+    }
+
+    public static User getBotOwner() {
+        return botOwner;
     }
 
     public static Config getConfig() {

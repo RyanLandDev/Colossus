@@ -1,17 +1,17 @@
 package net.ryanland.colossus.command.impl;
 
+import net.dv8tion.jda.api.Permission;
 import net.ryanland.colossus.command.*;
 import net.ryanland.colossus.command.annotations.CommandBuilder;
 import net.ryanland.colossus.command.arguments.ArgumentSet;
 import net.ryanland.colossus.command.arguments.types.CommandArgument;
 import net.ryanland.colossus.command.executor.CommandHandler;
-import net.ryanland.colossus.command.info.Category;
-import net.ryanland.colossus.command.info.CommandInfo;
+import net.ryanland.colossus.command.Category;
 import net.ryanland.colossus.command.info.HelpMaker;
-import net.ryanland.colossus.command.info.SubCommandGroup;
+import net.ryanland.colossus.command.permissions.BotOwnerRequirement;
+import net.ryanland.colossus.command.permissions.PermissionBuilder;
+import net.ryanland.colossus.command.permissions.PermissionHolder;
 import net.ryanland.colossus.events.CommandEvent;
-import net.ryanland.colossus.events.MessageCommandEvent;
-import net.ryanland.colossus.events.SlashEvent;
 import net.ryanland.colossus.sys.interactions.menu.TabMenuBuilder;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 
@@ -22,10 +22,9 @@ import java.util.stream.Collectors;
 @CommandBuilder(
         name = "help",
         description = "Get a list of all commands or information about a specific one.",
-        category = Category.INFORMATION,
         guildOnly = false
 )
-public class HelpCommand extends Command implements CombinedCommand {
+public class HelpCommand extends DefaultCommand implements CombinedCommand {
 
     @Override
     public ArgumentSet getArguments() {
@@ -40,12 +39,10 @@ public class HelpCommand extends Command implements CombinedCommand {
     @Override
     public void execute(CommandEvent event) throws CommandException {
         Command command = event.getArgument("command");
-
-        if (command == null) {
+        if (command == null)
             supplyCommandList(event);
-        } else {
+        else
             supplyCommandHelp(event, command);
-        }
     }
 
     private void supplyCommandList(CommandEvent event) throws CommandException {
@@ -61,10 +58,10 @@ public class HelpCommand extends Command implements CombinedCommand {
         menu.addPage("Home", homePage, true);
 
         // Iterate over all command categories
-        for (Category category : Category.getCategories()) {
+        for (Category category : CommandHandler.getCategories()) {
             // Get all commands, and filter by category equal and player has sufficient permissions
             List<Command> commands = CommandHandler.getCommands().stream().filter(c ->
-                c.getCategory() == category && event.getMember().hasPermission(c.getPermission())
+                c.getCategory() == category && c.memberHasPermission(event.getMember())
             ).collect(Collectors.toList());
 
             // If no commands were left after the filter, do not include this category in the menu
@@ -74,9 +71,9 @@ public class HelpCommand extends Command implements CombinedCommand {
             commands.sort(Comparator.comparing(Command::getName));
 
             // Add this category to the menu
-            menu.addPage(category.getName(), new PresetBuilder(category.getDescription() +
+            menu.addPage(category.name(), new PresetBuilder(category.description() +
                 "\n\n" + HelpMaker.formattedQuickCommandList(commands))
-                .addLogo(), category.getEmoji());
+                .addLogo(), category.emoji());
         }
 
         // Build and send the menu

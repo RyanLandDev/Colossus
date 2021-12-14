@@ -1,6 +1,7 @@
 package net.ryanland.colossus.command.info;
 
 import net.dv8tion.jda.api.Permission;
+import net.ryanland.colossus.command.Category;
 import net.ryanland.colossus.command.SubCommand;
 import net.ryanland.colossus.command.cooldown.CooldownManager;
 import net.ryanland.colossus.command.cooldown.MemoryCooldownManager;

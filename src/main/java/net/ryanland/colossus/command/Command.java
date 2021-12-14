@@ -1,13 +1,13 @@
 package net.ryanland.colossus.command;
 
-import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Member;
 import net.ryanland.colossus.command.arguments.ArgumentSet;
 import net.ryanland.colossus.command.cooldown.CooldownManager;
 import net.ryanland.colossus.command.cooldown.MemoryCooldownManager;
 import net.ryanland.colossus.command.executor.CommandHandler;
 import net.ryanland.colossus.command.executor.DisabledCommandHandler;
-import net.ryanland.colossus.command.info.Category;
 import net.ryanland.colossus.command.info.SubCommandGroup;
+import net.ryanland.colossus.command.permissions.PermissionHolder;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,7 +15,7 @@ import java.util.List;
 
 import static net.ryanland.colossus.command.info.HelpMaker.getInfo;
 
-public abstract class Command  {
+public sealed abstract class Command permits DefaultCommand {
 
     public Command() {}
 
@@ -31,14 +31,6 @@ public abstract class Command  {
 
     public final String getDescription() {
         return getInfo(this).description();
-    }
-
-    public final Category getCategory() {
-        return getInfo(this).category();
-    }
-
-    public final Permission getPermission() {
-        return getInfo(this).permission();
     }
 
     public final boolean hasCooldown() {
@@ -74,7 +66,7 @@ public abstract class Command  {
 
     public final List<SubCommandGroup> getSubCommandGroups() {
         List<SubCommandGroup> list = new ArrayList<>();
-        for (Class<? extends SubCommandGroup> c : getInfo(this).subcommandgroups()) {
+        for (Class<? extends SubCommandGroup> c : getInfo(this).subcommandGroups()) {
             try {
                 SubCommandGroup sc = c.getDeclaredConstructor().newInstance();
                 list.add(sc);
@@ -109,5 +101,16 @@ public abstract class Command  {
 
     // ---------------------------------------------------------
 
+    public abstract Category getCategory();
+
+    public abstract PermissionHolder getPermission();
+
     public abstract ArgumentSet getArguments();
+
+    // ---------------------------------------------------------
+
+    public final boolean memberHasPermission(Member member) {
+        return getPermission().check(member);
+    }
+
 }

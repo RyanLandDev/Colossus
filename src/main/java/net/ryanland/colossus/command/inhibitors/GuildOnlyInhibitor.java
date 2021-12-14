@@ -5,10 +5,12 @@ import net.ryanland.colossus.command.info.HelpMaker;
 import net.ryanland.colossus.events.CommandEvent;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 
-public class GuildOnlyInhibitor implements Inhibitor{
+public class GuildOnlyInhibitor implements Inhibitor {
+
     @Override
     public boolean check(CommandEvent event) {
-        if (!HelpMaker.getInfo(event.getCommand()).guildOnly()) return true;
+        if (!HelpMaker.getInfo(event.getCommand()).guildOnly())
+            return true;
         return event.isFromGuild();
     }
 

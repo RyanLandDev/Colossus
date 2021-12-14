@@ -1,30 +1,24 @@
 package net.ryanland.colossus.command.impl;
 
-import net.dv8tion.jda.api.Permission;
 import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.command.CombinedCommand;
 import net.ryanland.colossus.command.Command;
 import net.ryanland.colossus.command.CommandException;
+import net.ryanland.colossus.command.DefaultCommand;
 import net.ryanland.colossus.command.annotations.CommandBuilder;
 import net.ryanland.colossus.command.arguments.ArgumentSet;
 import net.ryanland.colossus.command.arguments.types.CommandArgument;
 import net.ryanland.colossus.command.executor.DisabledCommandHandler;
-import net.ryanland.colossus.command.info.Category;
-import net.ryanland.colossus.command.info.CommandInfo;
 import net.ryanland.colossus.events.CommandEvent;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 
 
 @CommandBuilder(
-
         name = "enable",
         description = "Re-enables a globally disabled command.",
-        category = Category.DEVELOPER,
-        guildOnly = true,
-        permission = Permission.DEVELOPER
+        guildOnly = true
 )
-public class EnableCommand extends Command implements CombinedCommand {
-
+public class EnableCommand extends DefaultCommand implements CombinedCommand {
 
     @Override
     public ArgumentSet getArguments() {

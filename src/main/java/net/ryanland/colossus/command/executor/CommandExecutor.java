@@ -93,9 +93,8 @@ public class CommandExecutor {
                     return;
                 }
 
-                for (Finalizer finalizer : Colossus.getFinalizers()) {
+                for (Finalizer finalizer : Colossus.getFinalizers())
                     finalizer.finalize(event);
-                }
             }
 
         } catch (InhibitorException | IllegalAccessException ignored) {

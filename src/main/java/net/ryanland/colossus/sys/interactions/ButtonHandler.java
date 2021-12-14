@@ -3,6 +3,7 @@ package net.ryanland.colossus.sys.interactions;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.interactions.InteractionHook;
+import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.command.CommandException;
 import net.ryanland.colossus.sys.ExecutorUtil;
 import net.ryanland.colossus.sys.message.DefaultPresetType;
@@ -49,7 +50,7 @@ public class ButtonHandler {
             if (event.getUser().getIdLong() != listener.userId()) {
 
                 event.deferReply(true).addEmbeds(
-                    new PresetBuilder(DefaultPresetType.ERROR, "You can't use this button.").build()
+                    new PresetBuilder(Colossus.getErrorPresetType(), "You can't use this button.").build()
                 ).queue();
 
                 return;
@@ -62,7 +63,6 @@ public class ButtonHandler {
     }
 
     public record ButtonListener(long userId, Function<ButtonClickEvent, ButtonClickContainer> container) {
-
     }
 
 }

@@ -19,9 +19,8 @@ public class HelpMaker {
         List<String> elements = new ArrayList<>();
         elements.add("/" + command.getName());
 
-        if (command instanceof SubCommand) {
+        if (command instanceof SubCommand)
             elements.add(event.getSubCommandName());
-        }
 
         ArgumentSet arguments = command.getArguments();
         for (Argument<?> argument : arguments) {
@@ -77,10 +76,10 @@ public class HelpMaker {
                 (command.isDisabled() ? " [Disabled]" : ""))
             .setDescription(command.getDescription() + "\n\u200b")
             .addLogo()
-            .addField("Category", command.getCategory().getName())
+            .addField("Category", command.getCategory().name())
             .addField("Usage", String.format("```html\n%s\n```", formattedUsage(event)));
 
-        if (command.getPermission() != Permission.MESSAGE_WRITE)
+        if (command.getPermission() != null && !command.getPermission().isEmpty())
             embed.addField("Permission", command.getPermission().getName());
 
         return embed;
