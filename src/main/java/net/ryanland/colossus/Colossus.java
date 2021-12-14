@@ -9,7 +9,6 @@ import net.ryanland.colossus.command.Command;
 import net.ryanland.colossus.command.cooldown.Cooldown;
 import net.ryanland.colossus.command.executor.CommandHandler;
 import net.ryanland.colossus.command.finalizers.Finalizer;
-import net.ryanland.colossus.command.Category;
 import net.ryanland.colossus.command.inhibitors.Inhibitor;
 import net.ryanland.colossus.sys.file.Config;
 import net.ryanland.colossus.sys.file.DatabaseDriver;
@@ -22,7 +21,6 @@ import org.slf4j.Logger;
 import javax.security.auth.login.LoginException;
 import java.nio.file.InvalidPathException;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -50,7 +48,6 @@ public class Colossus {
     private final JDABuilder builder;
 
     private static User botOwner;
-    private static Set<Category> categories;
 
     public Colossus(JDABuilder builder, Config config, List<Command> commands, List<LocalFile> localFiles,
                     DatabaseDriver databaseDriver, PresetType defaultPresetType, PresetType errorPresetType,
@@ -70,9 +67,6 @@ public class Colossus {
         Colossus.disabledCommandsSerializer = disabledCommandsSerializer;
         Colossus.inhibitors = inhibitors;
         Colossus.finalizers = finalizers;
-
-        for (Command command : commands)
-            categories.add(command.getCategory());
     }
 
     /**
