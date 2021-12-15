@@ -6,6 +6,7 @@ import net.ryanland.colossus.command.cooldown.CooldownManager;
 import net.ryanland.colossus.command.cooldown.MemoryCooldownManager;
 import net.ryanland.colossus.command.executor.CommandHandler;
 import net.ryanland.colossus.command.executor.DisabledCommandHandler;
+import net.ryanland.colossus.command.info.GroupInfo;
 import net.ryanland.colossus.command.info.SubCommandGroup;
 import net.ryanland.colossus.command.permissions.PermissionHolder;
 
@@ -15,7 +16,7 @@ import java.util.List;
 
 import static net.ryanland.colossus.command.info.HelpMaker.getInfo;
 
-public sealed abstract class Command permits DefaultCommand {
+public sealed abstract class Command permits DefaultCommand, SubCommand, SubCommandHolder {
 
     public Command() {}
 
@@ -64,13 +65,10 @@ public sealed abstract class Command permits DefaultCommand {
         return list;
     }
 
-    public final List<SubCommandGroup> getSubCommandGroups() {
-        List<SubCommandGroup> list = new ArrayList<>();
-        for (Class<? extends SubCommandGroup> c : getInfo(this).subcommandGroups()) {
-            try {
-                SubCommandGroup sc = c.getDeclaredConstructor().newInstance();
-                list.add(sc);
-            } catch (Exception ignored) {}
+    public final List<GroupInfo> getSubCommandGroups() {
+        List<GroupInfo> list = new ArrayList<>();
+        for (SubCommandGroup group : getInfo(this).subcommandGroups()) {
+            list.add(new GroupInfo(group));
         }
         return list;
     }
@@ -83,9 +81,9 @@ public sealed abstract class Command permits DefaultCommand {
         return map;
     }
 
-    public final HashMap<String, SubCommandGroup> getSubCommandGroupMap() {
-        HashMap<String, SubCommandGroup> map = new HashMap<>();
-        for (SubCommandGroup group : getSubCommandGroups()) {
+    public final HashMap<String, GroupInfo> getSubCommandGroupMap() {
+        HashMap<String, GroupInfo> map = new HashMap<>();
+        for (GroupInfo group : getSubCommandGroups()) {
             map.put(group.getName(), group);
         }
         return map;

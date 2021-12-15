@@ -16,5 +16,5 @@ public @interface CommandBuilder {
     int cooldown() default 2;
     boolean guildOnly();
     Class<? extends SubCommand>[] subcommands() default {};
-    Class<? extends SubCommandGroup>[] subcommandGroups() default {};
+    SubCommandGroup[] subcommandGroups() default {};
 }
