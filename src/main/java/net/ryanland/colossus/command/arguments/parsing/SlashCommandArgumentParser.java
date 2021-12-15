@@ -14,7 +14,7 @@ import net.ryanland.colossus.sys.message.PresetBuilder;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
-public class SlashCommandArgumentParser extends ArgumentParser {
+public non-sealed class SlashCommandArgumentParser extends ArgumentParser {
 
     public SlashCommandArgumentParser(CommandEvent event) {
         super(event);

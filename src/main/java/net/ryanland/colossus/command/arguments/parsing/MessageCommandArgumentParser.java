@@ -16,7 +16,7 @@ import java.util.Deque;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class MessageCommandArgumentParser extends ArgumentParser {
+public non-sealed class MessageCommandArgumentParser extends ArgumentParser {
 
     public MessageCommandArgumentParser(CommandEvent event) {
         super(event);
@@ -39,7 +39,7 @@ public class MessageCommandArgumentParser extends ArgumentParser {
         ParsedArgumentMap parsedArgs = new ParsedArgumentMap();
 
         Command command = event.getCommand();
-        PresetBuilder embed = new PresetBuilder(DefaultPresetType.ERROR);
+        PresetBuilder embed = new PresetBuilder(Colossus.getErrorPresetType());
 
         for (Argument<?> arg : command.getArguments()) {
             try {

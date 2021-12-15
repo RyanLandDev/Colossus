@@ -14,7 +14,6 @@ import net.ryanland.colossus.command.arguments.Argument;
 import net.ryanland.colossus.command.Category;
 import net.ryanland.colossus.command.info.GroupInfo;
 import net.ryanland.colossus.command.info.HelpMaker;
-import net.ryanland.colossus.command.info.SubCommandGroup;
 import net.ryanland.colossus.events.MessageCommandEvent;
 import net.ryanland.colossus.events.SlashEvent;
 

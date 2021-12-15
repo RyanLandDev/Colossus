@@ -76,7 +76,7 @@ public class CommandInfo {
         this.subCommandGroups = Arrays.asList(subCommandGroups);
         subCommandGroupMap = new HashMap<>();
         for (SubCommandGroup group : subCommandGroups) {
-            subCommandGroupMap.put(group.getName(), group);
+            subCommandGroupMap.put(group.name(), group);
         }
         return this;
     }

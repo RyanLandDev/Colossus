@@ -10,7 +10,7 @@ public class JsonDatabaseDriver extends DatabaseDriver {
         LocalFile dir = LocalFile.validateDirectoryPath(databaseDirectory);
 
         LocalFile members = new LocalFileBuilder()
-            .setName(databaseDirectory + "/members")
+            .setName(databaseDirectory + "/members");
 
             //todo User, Guild, SelfUser (global)
     }
