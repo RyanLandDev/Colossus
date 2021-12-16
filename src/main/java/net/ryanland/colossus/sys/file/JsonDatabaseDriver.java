@@ -11,8 +11,20 @@ public class JsonDatabaseDriver extends DatabaseDriver {
 
         LocalFile members = new LocalFileBuilder()
             .setName(databaseDirectory + "/members")
-
-            //todo User, Guild, SelfUser (global)
+            .setFileType(LocalFileType.JSON)
+            .buildFile();
+        LocalFile users = new LocalFileBuilder()
+            .setName(databaseDirectory + "/users")
+            .setFileType(LocalFileType.JSON)
+            .buildFile();
+        LocalFile guilds = new LocalFileBuilder()
+            .setName(databaseDirectory + "/guilds")
+            .setFileType(LocalFileType.JSON)
+            .buildFile();
+        LocalFile global = new LocalFileBuilder()
+            .setName(databaseDirectory + "/global")
+            .setFileType(LocalFileType.JSON)
+            .buildFile();
     }
     
     /**
