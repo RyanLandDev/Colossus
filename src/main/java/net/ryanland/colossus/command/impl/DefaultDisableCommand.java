@@ -9,34 +9,43 @@ import net.ryanland.colossus.command.annotations.CommandBuilder;
 import net.ryanland.colossus.command.arguments.ArgumentSet;
 import net.ryanland.colossus.command.arguments.types.CommandArgument;
 import net.ryanland.colossus.command.executor.DisabledCommandHandler;
+import net.ryanland.colossus.command.permissions.BotOwnerRequirement;
+import net.ryanland.colossus.command.permissions.PermissionBuilder;
+import net.ryanland.colossus.command.permissions.PermissionHolder;
 import net.ryanland.colossus.events.CommandEvent;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 
-
 @CommandBuilder(
-        name = "enable",
-        description = "Re-enables a globally disabled command.",
-        guildOnly = true
+        name = "disable",
+        description = "Disables a command globally.",
+        guildOnly = false
 )
-public class EnableCommand extends DefaultCommand implements CombinedCommand {
+public class DefaultDisableCommand extends DefaultCommand implements CombinedCommand {
+
+    @Override
+    public PermissionHolder getPermission() {
+        return new PermissionBuilder()
+            .addRequirement(new BotOwnerRequirement())
+            .build();
+    }
 
     @Override
     public ArgumentSet getArguments() {
         return new ArgumentSet().addArguments(
             new CommandArgument()
                 .id("command")
-                .description("Command to enable")
+                .description("Command to disable")
         );
     }
 
     @Override
     public void execute(CommandEvent event) throws CommandException {
         Command command = event.getArgument("command");
-        DisabledCommandHandler.getInstance().enable(command);
+        DisabledCommandHandler.getInstance().disable(command);
 
         event.reply(
             new PresetBuilder(Colossus.getSuccessPresetType(),
-                "Re-enabled the `" + command.getName() + "` command.")
+                "Disabled the `" + command.getName() + "` command.")
         );
     }
 }

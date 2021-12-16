@@ -1,16 +1,11 @@
 package net.ryanland.colossus.command.impl;
 
-import net.dv8tion.jda.api.Permission;
 import net.ryanland.colossus.command.*;
 import net.ryanland.colossus.command.annotations.CommandBuilder;
 import net.ryanland.colossus.command.arguments.ArgumentSet;
 import net.ryanland.colossus.command.arguments.types.CommandArgument;
 import net.ryanland.colossus.command.executor.CommandHandler;
-import net.ryanland.colossus.command.Category;
 import net.ryanland.colossus.command.info.HelpMaker;
-import net.ryanland.colossus.command.permissions.BotOwnerRequirement;
-import net.ryanland.colossus.command.permissions.PermissionBuilder;
-import net.ryanland.colossus.command.permissions.PermissionHolder;
 import net.ryanland.colossus.events.CommandEvent;
 import net.ryanland.colossus.sys.interactions.menu.TabMenuBuilder;
 import net.ryanland.colossus.sys.message.PresetBuilder;
@@ -24,7 +19,7 @@ import java.util.stream.Collectors;
         description = "Get a list of all commands or information about a specific one.",
         guildOnly = false
 )
-public class HelpCommand extends DefaultCommand implements CombinedCommand {
+public class DefaultHelpCommand extends DefaultCommand implements CombinedCommand {
 
     @Override
     public ArgumentSet getArguments() {
@@ -61,7 +56,7 @@ public class HelpCommand extends DefaultCommand implements CombinedCommand {
         for (Category category : CommandHandler.getCategories()) {
             // Get all commands, and filter by category equal and player has sufficient permissions
             List<Command> commands = CommandHandler.getCommands().stream().filter(c ->
-                c.getCategory() == category && c.memberHasPermission(event.getMember())
+                c.getCategory().equals(category) && c.memberHasPermission(event.getMember())
             ).collect(Collectors.toList());
 
             // If no commands were left after the filter, do not include this category in the menu
@@ -81,6 +76,6 @@ public class HelpCommand extends DefaultCommand implements CombinedCommand {
     }
 
     private void supplyCommandHelp(CommandEvent event, Command command) {
-        event.reply(HelpMaker.commandEmbed(event, command));
+        event.reply(HelpMaker.commandEmbed(command));
     }
 }

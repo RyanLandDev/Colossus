@@ -6,13 +6,11 @@ import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.command.CommandException;
 import net.ryanland.colossus.sys.ExecutorUtil;
-import net.ryanland.colossus.sys.message.DefaultPresetType;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class ButtonHandler {

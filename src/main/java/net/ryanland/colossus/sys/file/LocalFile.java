@@ -20,17 +20,21 @@ public class LocalFile extends File {
         return new String(Files.readAllBytes(toPath()));
     }
 
-    public void write(byte[] content) throws IOException {
+    public void write(byte[] content) {
         delete();
-        createNewFile();
-        Files.write(toPath(), content, StandardOpenOption.WRITE);
+        try {
+            createNewFile();
+            Files.write(toPath(), content, StandardOpenOption.WRITE);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void write(String content) throws IOException {
+    public void write(String content) {
         write(content.getBytes());
     }
 
-    public void write(JsonObject json) throws IOException {
+    public void write(JsonObject json) {
         write(json.toString());
     }
 

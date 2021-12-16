@@ -7,6 +7,7 @@ import net.ryanland.colossus.command.CommandException;
 import net.ryanland.colossus.sys.file.Table;
 import net.ryanland.colossus.sys.file.serializer.Serializer;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DisabledCommandHandler {
@@ -18,7 +19,7 @@ public class DisabledCommandHandler {
     }
 
     public List<Command> getDisabledCommands() {
-        return Colossus.getDisabledCommandsSerializer().deserialize(Colossus.getGlobalTable().get("_dc"));
+        return Colossus.getDisabledCommandsSerializer().deserialize(Colossus.getGlobalTable().get("_dc", new ArrayList<>()));
     }
 
     public boolean isDisabled(Command command) {
@@ -31,24 +32,23 @@ public class DisabledCommandHandler {
 
     public void enable(Command command) throws CommandException {
         Table<SelfUser> table = Colossus.getGlobalTable();
-        List<Command> disabled = table.get("_dc");
+        List<Command> disabled = getDisabledCommands();
         if (!disabled.contains(command)) {
             throw new CommandException("This command is already enabled.");
         }
         disabled.remove(command);
         table.put("_dc", getSerializer().serialize(disabled));
-        Colossus.getDatabaseDriver().updateTable(table);
+        Colossus.getDatabaseDriver().updateTable(Colossus.getSelfUser(), table);
     }
 
     public void disable(Command command) throws CommandException {
         Table<SelfUser> table = Colossus.getGlobalTable();
-        List<Command> disabled = table.get("_dc");
-        if (disabled.contains(command)) {
+        List<Command> disabled = getDisabledCommands();
+        if (disabled.contains(command))
             throw new CommandException("This command is already disabled.");
-        }
         disabled.add(command);
         table.put("_dc", getSerializer().serialize(disabled));
-        Colossus.getDatabaseDriver().updateTable(table);
+        Colossus.getDatabaseDriver().updateTable(Colossus.getSelfUser(), table);
     }
 
 }

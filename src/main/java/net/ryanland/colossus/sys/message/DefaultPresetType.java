@@ -13,12 +13,12 @@ import java.util.function.Supplier;
 public enum DefaultPresetType implements PresetType {
 
     DEFAULT(() -> null, () -> null, OffsetDateTime::now, () -> 0x2f3136,
-        () -> null, () -> null, null, null,
+        () -> null, () -> null, () -> null, () -> null,
         () -> Colossus.getSelfUser().getName(), () -> Colossus.getSelfUser().getAvatarUrl(),
         () -> null, () -> null, () -> false),
 
     NOTIFICATION(() -> null, () -> null, OffsetDateTime::now, () -> 0x5dadec,
-        () -> Colossus.getSelfUser().getAvatarUrl(), null, () -> null, () -> null,
+        () -> Colossus.getSelfUser().getAvatarUrl(), () -> null, () -> null, () -> null,
         () -> Colossus.getSelfUser().getName(), () -> Colossus.getSelfUser().getAvatarUrl(),
         () -> null, () -> null, () -> false),
 
@@ -141,7 +141,8 @@ public enum DefaultPresetType implements PresetType {
     @Nullable
     @Override
     public MessageEmbed.Field[] getFields() {
-        return fields.get();
+        if (fields.get() == null) return new MessageEmbed.Field[]{};
+        else return fields.get();
     }
 
     @Override

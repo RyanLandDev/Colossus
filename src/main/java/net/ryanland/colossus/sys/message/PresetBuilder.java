@@ -5,6 +5,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.ryanland.colossus.Colossus;
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -56,7 +57,7 @@ public class PresetBuilder {
         this.footerText = type.getFooterText();
         this.footerIconUrl = type.getFooterIconUrl();
         this.image = type.getImage();
-        this.fields = Arrays.asList(type.getFields());
+        this.fields = new ArrayList<>(Arrays.asList(type.getFields()));
         this.ephemeral = type.isEphemeral();
     }
 

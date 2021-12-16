@@ -6,14 +6,12 @@ import net.dv8tion.jda.api.interactions.Interaction;
 import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.components.Button;
 import net.dv8tion.jda.api.interactions.components.ButtonStyle;
-import net.dv8tion.jda.api.requests.RestAction;
 import net.ryanland.colossus.sys.interactions.ButtonClickContainer;
 import net.ryanland.colossus.sys.interactions.ButtonHandler;
 import net.ryanland.colossus.sys.interactions.InteractionUtil;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,9 +34,8 @@ public class TabMenu implements InteractionMenu {
         for (TabMenuPage page : pages) {
             PresetBuilder embed = page.getEmbed();
 
-            if (embed.getTitle() == null) {
+            if (embed.getTitle() == null)
                 embed.setTitle(page.getName());
-            }
         }
 
         // Init vars
@@ -48,15 +45,13 @@ public class TabMenu implements InteractionMenu {
         // Iterate over all pages
         for (TabMenuPage page : pages) {
             // Skip if this page should be hidden
-            if (page.isHidden()) {
+            if (page.isHidden())
                 continue;
-            }
 
             // Create the Button
             Button button = Button.secondary(page.getName(), page.getName());
-            if (page.getEmoji() != null) {
+            if (page.getEmoji() != null)
                 button = button.withEmoji(Emoji.fromMarkdown(page.getEmoji()));
-            }
 
             // Put the page and buttons in their respective data structures
             pageMap.put(button.getId(), page);
@@ -94,9 +89,8 @@ public class TabMenu implements InteractionMenu {
         for (TabMenuPage page : pages) {
             PresetBuilder embed = page.getEmbed();
 
-            if (embed.getTitle() == null) {
+            if (embed.getTitle() == null)
                 embed.setTitle(page.getName());
-            }
         }
 
         // Init vars
@@ -106,15 +100,13 @@ public class TabMenu implements InteractionMenu {
         // Iterate over all pages
         for (TabMenuPage page : pages) {
             // Skip if this page should be hidden
-            if (page.isHidden()) {
+            if (page.isHidden())
                 continue;
-            }
 
             // Create the Button
             Button button = Button.secondary(page.getName(), page.getName());
-            if (page.getEmoji() != null) {
+            if (page.getEmoji() != null)
                 button = button.withEmoji(Emoji.fromMarkdown(page.getEmoji()));
-            }
 
             // Put the page and buttons in their respective data structures
             pageMap.put(button.getId(), page);

@@ -15,11 +15,12 @@ import net.ryanland.colossus.command.cooldown.CooldownManager;
 import net.ryanland.colossus.command.executor.DisabledCommandHandler;
 import net.ryanland.colossus.command.finalizers.CooldownFinalizer;
 import net.ryanland.colossus.command.finalizers.Finalizer;
-import net.ryanland.colossus.command.impl.DisableCommand;
-import net.ryanland.colossus.command.impl.EnableCommand;
-import net.ryanland.colossus.command.impl.HelpCommand;
+import net.ryanland.colossus.command.impl.DefaultDisableCommand;
+import net.ryanland.colossus.command.impl.DefaultEnableCommand;
+import net.ryanland.colossus.command.impl.DefaultHelpCommand;
 import net.ryanland.colossus.command.inhibitors.*;
-import net.ryanland.colossus.events.ButtonEvent;
+import net.ryanland.colossus.events.ColossusButtonEvent;
+import net.ryanland.colossus.events.MessageCommandReceivedEvent;
 import net.ryanland.colossus.events.OnSlashCommandEvent;
 import net.ryanland.colossus.sys.file.*;
 import net.ryanland.colossus.sys.file.serializer.CooldownsSerializer;
@@ -30,7 +31,6 @@ import net.ryanland.colossus.sys.message.PresetBuilder;
 import net.ryanland.colossus.sys.message.PresetType;
 
 import java.io.IOException;
-import java.nio.file.InvalidPathException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
@@ -41,7 +41,7 @@ import java.util.function.Function;
 public class ColossusBuilder {
 
     private static final Object[] CORE_EVENTS = new ListenerAdapter[]{
-        new ButtonEvent(), new OnSlashCommandEvent()
+        new ColossusButtonEvent(), new OnSlashCommandEvent(), new MessageCommandReceivedEvent()
     };
 
     private static final Inhibitor[] CORE_INHIBITORS = new Inhibitor[]{
@@ -75,7 +75,7 @@ public class ColossusBuilder {
     private final List<Finalizer> finalizers = new ArrayList<>();
 
     private boolean disableHelpCommand = false;
-    private boolean disableToggleCommands = false;
+    private boolean disableCommandToggleCommands = false;
     private DatabaseDriver databaseDriver = null;
     private PresetType defaultPresetType = DefaultPresetType.DEFAULT;
     private PresetType errorPresetType = DefaultPresetType.ERROR;
@@ -154,8 +154,8 @@ public class ColossusBuilder {
      * @see Colossus
      */
     public Colossus build() {
-        if (!disableHelpCommand) commands.add(new HelpCommand());
-        if (!disableToggleCommands) commands.addAll(List.of(new DisableCommand(), new EnableCommand()));
+        if (!disableHelpCommand) commands.add(new DefaultHelpCommand());
+        if (!disableCommandToggleCommands) commands.addAll(List.of(new DefaultDisableCommand(), new DefaultEnableCommand()));
 
         inhibitors.addAll(List.of(CORE_INHIBITORS));
         finalizers.addAll(List.of(CORE_FINALIZERS));
@@ -194,7 +194,7 @@ public class ColossusBuilder {
     /**
      * Disables the default help command, optionally allowing you to create your own. This command is enabled by default.
      * @return The builder
-     * @see HelpCommand
+     * @see DefaultHelpCommand
      */
     public ColossusBuilder disableHelpCommand() {
         disableHelpCommand = true;
@@ -206,12 +206,12 @@ public class ColossusBuilder {
      * These commands are enabled by default.
      * <br>Note: A {@link SelfUser} (global) type must be present in the defined {@link DatabaseDriver}.
      * @return The builder
-     * @see DisableCommand
-     * @see EnableCommand
+     * @see DefaultDisableCommand
+     * @see DefaultEnableCommand
      * @see DisabledCommandHandler
      */
-    public ColossusBuilder disableToggleCommands() {
-        disableToggleCommands = true;
+    public ColossusBuilder disableCommandToggleCommands() {
+        disableCommandToggleCommands = true;
         return this;
     }
 
@@ -380,13 +380,8 @@ public class ColossusBuilder {
                 changed = true;
             }
         }
-        if (changed) {
-            try {
-                configFile.write(configJson);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        if (changed)
+            configFile.write(configJson);
 
         // Create a new Config and set it
         config = new Config(configJson);

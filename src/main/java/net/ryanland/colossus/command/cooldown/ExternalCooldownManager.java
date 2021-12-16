@@ -22,7 +22,7 @@ public class ExternalCooldownManager implements CooldownManager {
 
     @Override
     public void purge(User user) {
-        Colossus.getDatabaseDriver().updateTable(Colossus.getDatabaseDriver().get(user).put("_cd", Collections.emptyList()));
+        Colossus.getDatabaseDriver().updateTable(user, Colossus.getDatabaseDriver().get(user).put("_cd", Collections.emptyList()));
     }
 
     @Override
@@ -33,7 +33,7 @@ public class ExternalCooldownManager implements CooldownManager {
         cooldowns.remove(cooldown);
 
         table.put("_cd", Colossus.getCooldownsSerializer().serialize(cooldowns));
-        Colossus.getDatabaseDriver().updateTable(table);
+        Colossus.getDatabaseDriver().updateTable(user, table);
 
         return cooldown;
     }
@@ -46,7 +46,7 @@ public class ExternalCooldownManager implements CooldownManager {
         cooldowns.add(cooldown);
 
         table.put("_cd", Colossus.getCooldownsSerializer().serialize(cooldowns));
-        Colossus.getDatabaseDriver().updateTable(table);
+        Colossus.getDatabaseDriver().updateTable(user, table);
 
         return cooldown;
     }

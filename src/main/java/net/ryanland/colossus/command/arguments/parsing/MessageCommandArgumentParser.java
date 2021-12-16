@@ -8,7 +8,6 @@ import net.ryanland.colossus.command.arguments.parsing.exceptions.ArgumentExcept
 import net.ryanland.colossus.command.arguments.parsing.exceptions.MalformedArgumentException;
 import net.ryanland.colossus.events.CommandEvent;
 import net.ryanland.colossus.events.MessageCommandEvent;
-import net.ryanland.colossus.sys.message.DefaultPresetType;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 
 import java.util.ArrayDeque;
@@ -33,7 +32,7 @@ public non-sealed class MessageCommandArgumentParser extends ArgumentParser {
         String content = getEvent().getMessage().getContentRaw();
         Deque<String> queue = new ArrayDeque<>(List.of(
             content.replaceFirst("(^<@(!|)" + Colossus.getSelfUser().getId() + ">\\s*)|(^" +
-                Pattern.quote(event.getGuildPrefix()), "")
+                Pattern.quote(event.getGuildPrefix()) + ")", "")
                 .split("\\s+")));
         queue.remove();
         ParsedArgumentMap parsedArgs = new ParsedArgumentMap();

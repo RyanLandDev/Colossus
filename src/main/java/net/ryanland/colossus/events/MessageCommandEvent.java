@@ -8,6 +8,8 @@ import net.ryanland.colossus.command.Command;
 import net.ryanland.colossus.command.arguments.ParsedArgumentMap;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 
+import java.util.Arrays;
+
 public class MessageCommandEvent extends CommandEvent {
 
     private Command command;
@@ -21,6 +23,15 @@ public class MessageCommandEvent extends CommandEvent {
     @Override
     public Command getCommand() {
         return command;
+    }
+
+    @Override
+    public String getName() {
+        try {
+            return event.getMessage().getContentRaw().split("\\s+")[0].substring(getGuildPrefix().length());
+        } catch (IndexOutOfBoundsException e) {
+            return null;
+        }
     }
 
     @Override
@@ -50,15 +61,15 @@ public class MessageCommandEvent extends CommandEvent {
     }
 
     public MessageAction performReply(Message message) {
-        return event.getChannel().sendMessage(message);
+        return event.getMessage().reply(message);
     }
 
     public MessageAction performReply(String message) {
-        return event.getChannel().sendMessage(message);
+        return event.getMessage().reply(message);
     }
 
     public MessageAction performReply(MessageEmbed embed) {
-        return event.getChannel().sendMessageEmbeds(embed);
+        return event.getMessage().replyEmbeds(embed);
     }
 
     public MessageAction performReply(PresetBuilder embed) {

@@ -2,7 +2,6 @@ package net.ryanland.colossus.sys.file;
 
 import net.dv8tion.jda.api.entities.ISnowflake;
 import net.dv8tion.jda.api.entities.User;
-import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.ColossusBuilder;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,24 +27,19 @@ public abstract class DatabaseDriver {
     protected abstract List<TableCache<? extends ISnowflake>> getCaches();
 
     @SuppressWarnings("unchecked")
-    private <T extends ISnowflake> TableCache<T> getCache(T value) {
+    private <T extends ISnowflake> TableCache<T> getCache(T client) {
         for (TableCache<? extends ISnowflake> cache : getCaches()) {
-            Colossus.getLogger().debug(cache.getClass().getTypeParameters()[0].getClass().getName() + "\n" +
-                value.getClass().getTypeParameters()[0].getClass().getName());
-
-            if (cache.getClass().getTypeParameters()[0].getClass()
-                .equals(value.getClass().getTypeParameters()[0].getClass()))
+            if (cache.getType().isAssignableFrom(client.getClass()))
                 return (TableCache<T>) cache;
         }
-        throw new IllegalArgumentException("A cache with the type " + value.getClass().getName() + " does not exist.\n" +
+        throw new IllegalArgumentException("A cache with the type " + client.getClass().getName() + " does not exist.\n" +
             "You can add it in the getCaches() method of your DatabaseDriver implementation.");
     }
 
     @SuppressWarnings("unchecked")
     private <T extends ISnowflake> Table<T> getEmptyTable(T client) {
         try {
-            return (Table<T>) Table.class.getDeclaredConstructor().newInstance()
-                .put("_id", client.getId());
+            return (Table<T>) Table.class.getDeclaredConstructor(String.class).newInstance(client.getId());
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             e.printStackTrace();
         }
@@ -131,18 +125,19 @@ public abstract class DatabaseDriver {
      * @see #cache(ISnowflake, Table) 
      */
     public <T extends ISnowflake> Table<T> insert(T client) {
-        Table<T> table = insertTable(getEmptyTable(client));
+        Table<T> table = insertTable(client, getEmptyTable(client));
         cache(client, table);
         return table;
     }
 
     /**
      * Insert a new table in the database.
+     * @param client The client this table is associated with
      * @param table The table to insert
      * @param <T> The type of client, e.g. {@link User}
      * @return The table inserted
      */
-    protected abstract <T extends ISnowflake> Table<T> insertTable(Table<T> table);
+    protected abstract <T extends ISnowflake> Table<T> insertTable(T client, Table<T> table);
 
     /**
      * Deletes the table associated with the provided client from the database, and the local cache for this client.
@@ -168,18 +163,19 @@ public abstract class DatabaseDriver {
      * @param client The client of the table to modify
      * @param tableModifier The table modifier function; providing the old value and returning the new value
      * @param <T> The type of client, e.g. {@link User}
-     * @see #updateTable(Table) 
+     * @see #updateTable(ISnowflake, Table)
      */
     public <T extends ISnowflake> void modifyTable(T client, Function<Table<T>, Table<T>> tableModifier) {
-        updateTable(tableModifier.apply(get(client)));
+        updateTable(client, tableModifier.apply(get(client)));
     }
     
     /**
      * Updates a {@link Table} in the database with modified values.
+     * @param client The client this table is associated with
      * @param table The table to update (with)
      * @param <T> The type of client, e.g. {@link User}
      */
-    public abstract <T extends ISnowflake> void updateTable(Table<T> table);
+    public abstract <T extends ISnowflake> void updateTable(T client, Table<T> table);
 
     /**
      * Adds a {@link Table} to the local cache for this client.

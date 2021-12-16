@@ -12,9 +12,7 @@ public abstract class CommandEvent {
 
     public abstract Command getCommand();
 
-    public String getName() {
-        return getCommand().getName();
-    }
+    public abstract String getName();
 
     public abstract void setCommand(Command command);
 

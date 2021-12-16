@@ -3,6 +3,8 @@ package net.ryanland.colossus.command.executor;
 import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.command.Command;
 import net.ryanland.colossus.command.CommandException;
+import net.ryanland.colossus.command.MessageCommand;
+import net.ryanland.colossus.command.SlashCommand;
 import net.ryanland.colossus.command.arguments.parsing.ArgumentParser;
 import net.ryanland.colossus.command.arguments.parsing.MessageCommandArgumentParser;
 import net.ryanland.colossus.command.arguments.parsing.SlashCommandArgumentParser;
@@ -15,7 +17,6 @@ import net.ryanland.colossus.events.SlashEvent;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 public class CommandExecutor {
 
@@ -31,21 +32,9 @@ public class CommandExecutor {
         Command command = event.getCommand();
         Class<? extends Command> cmdClass = command.getClass(); //Getting the command class
 
-        String paramName;
-        Method runMethod = null;
-        for (Method method : cmdClass.getMethods()) { //Finding the correct run method
-            if (method.getName().equals("run")) {
-                paramName = method.getParameterTypes()[0].getName();
-
-                //A new else if statement for all types of commands is necessary, no automatisation possible
-                if (event instanceof SlashEvent && paramName.endsWith("SlashEvent")) runMethod = method;
-                else if (event instanceof MessageCommandEvent && paramName.endsWith("MessageCommandEvent")) runMethod = method;
-            }
-        }
-
         //Getting the event to their original event for possible use later in exception handling
-        MessageCommandEvent eventAsMessageCommand;
-        SlashEvent eventAsSlashCommand;
+        MessageCommandEvent eventAsMessageCommand = null;
+        SlashEvent eventAsSlashCommand = null;
         ArgumentParser argumentParser = null;
         if (event instanceof SlashEvent) {
             eventAsSlashCommand = (SlashEvent) event;
@@ -78,9 +67,12 @@ public class CommandExecutor {
                 try {
                     //Invoking the run method, only the InvocationTargetException can be thrown through the method,
                     // if any exception is thrown while executing the code
-                    if (runMethod != null) runMethod.invoke(event);
-                } catch (InvocationTargetException exception) {
-                    Throwable e = exception.getTargetException();
+                    //A new else if statement for all types of commands is necessary, no automatisation possible
+                    if (event instanceof SlashEvent)
+                        ((SlashCommand) cmdClass.getDeclaredConstructor().newInstance()).run(eventAsSlashCommand);
+                    else if (event instanceof MessageCommandEvent)
+                        ((MessageCommand) cmdClass.getDeclaredConstructor().newInstance()).run(eventAsMessageCommand);
+                } catch (NoSuchMethodException | CommandException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
                     if (!(e instanceof CommandException))
                         e.printStackTrace();
 
@@ -97,7 +89,7 @@ public class CommandExecutor {
                     finalizer.finalize(event);
             }
 
-        } catch (InhibitorException | IllegalAccessException ignored) {
+        } catch (InhibitorException ignored) {
         }
     }
 }

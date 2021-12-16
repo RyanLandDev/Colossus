@@ -1,6 +1,5 @@
 package net.ryanland.colossus.command.info;
 
-import net.dv8tion.jda.api.Permission;
 import net.ryanland.colossus.command.Command;
 import net.ryanland.colossus.command.SubCommand;
 import net.ryanland.colossus.command.annotations.CommandBuilder;
@@ -14,13 +13,12 @@ import java.util.List;
 
 public class HelpMaker {
 
-    public static List<String> formattedUsageElements(CommandEvent event, Argument<?> highlighted) {
-        Command command = event.getCommand();
+    public static List<String> formattedUsageElements(Command command, Argument<?> highlighted) {
         List<String> elements = new ArrayList<>();
         elements.add("/" + command.getName());
 
-        if (command instanceof SubCommand)
-            elements.add(event.getSubCommandName());
+        if (command instanceof SubCommand) {}
+            //TODO elements.add(event.getSubCommandName());
 
         ArgumentSet arguments = command.getArguments();
         for (Argument<?> argument : arguments) {
@@ -41,19 +39,19 @@ public class HelpMaker {
     }
 
     public static List<String> formattedUsageElements(CommandEvent event) {
-        return formattedUsageElements(event, null);
+        return formattedUsageElements(event.getCommand(), null);
     }
 
-    public static String formattedUsage(CommandEvent event, Argument<?> highlighted) {
-        return String.join(" ", formattedUsageElements(event, highlighted));
+    public static String formattedUsage(Command command, Argument<?> highlighted) {
+        return String.join(" ", formattedUsageElements(command, highlighted));
     }
 
-    public static String formattedUsage(CommandEvent event) {
-        return formattedUsage(event, null);
+    public static String formattedUsage(Command command) {
+        return formattedUsage(command, null);
     }
 
     public static String formattedUsageCode(CommandEvent event) {
-        return "`" + formattedUsage(event) + "`";
+        return "`" + formattedUsage(event.getCommand()) + "`";
     }
 
     public static String formattedSubCommands(SubCommand[] subcommands) {
@@ -70,14 +68,14 @@ public class HelpMaker {
         return String.join("/", names);
     }
 
-    public static PresetBuilder commandEmbed(CommandEvent event, Command command) {
+    public static PresetBuilder commandEmbed(Command command) {
         PresetBuilder embed = new PresetBuilder()
             .setTitle(command.getUppercaseName() + " Command" +
                 (command.isDisabled() ? " [Disabled]" : ""))
             .setDescription(command.getDescription() + "\n\u200b")
             .addLogo()
             .addField("Category", command.getCategory().name())
-            .addField("Usage", String.format("```html\n%s\n```", formattedUsage(event)));
+            .addField("Usage", String.format("```html\n%s\n```", formattedUsage(command)));
 
         if (command.getPermission() != null && !command.getPermission().isEmpty())
             embed.addField("Permission", command.getPermission().getName());

@@ -7,7 +7,6 @@ import net.ryanland.colossus.command.executor.functional_interface.CommandConsum
 import net.ryanland.colossus.sys.interactions.ButtonClickContainer;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ActionMenuBuilder implements InteractionMenuBuilder<ActionMenu> {

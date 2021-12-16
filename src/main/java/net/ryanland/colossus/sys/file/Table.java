@@ -5,6 +5,7 @@ import net.dv8tion.jda.api.entities.User;
 import org.jetbrains.annotations.Contract;
 
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.function.Function;
 
 /**
@@ -18,6 +19,15 @@ public class Table<T extends ISnowflake> {
 
     private final LinkedHashMap<String, Object> DATA = new LinkedHashMap<>();
 
+    public Table(String clientId) {
+        put("_id", clientId);
+    }
+
+    public Table(String clientId, Map<String, Object> data) {
+        put("_id", clientId);
+        DATA.putAll(data);
+    }
+
     /**
      * Get the raw {@link LinkedHashMap} associated with this {@link Table}
      */
@@ -26,12 +36,23 @@ public class Table<T extends ISnowflake> {
     }
 
     /**
-     * Returns the value associated with the provided key, and performs an unchecked cast to it.
+     * Returns the value associated with the provided key, and performs an unchecked cast to it.<br>
      * Will be null if the value does not exist.
      */
     @SuppressWarnings("unchecked")
     public final <R> R get(String key) {
         return (R) DATA.get(key);
+    }
+
+    /**
+     * Returns the value associated with the provided key, and performs an unchecked cast to it.
+     * @param defaultValue If the value is null, this value will be returned instead.
+     */
+    @SuppressWarnings("unchecked")
+    public final <R> R get(String key, Object defaultValue) {
+        R value = (R) DATA.get(key);
+        if (value == null) return (R) defaultValue;
+        else return value;
     }
 
     /**
@@ -47,7 +68,7 @@ public class Table<T extends ISnowflake> {
      * @param key The key to update
      * @param value The value to be associated with the provided key
      * @return {@code this}; the updated table
-     * @see DatabaseDriver#updateTable(Table)
+     * @see DatabaseDriver#updateTable(ISnowflake, Table)
      */
     public final Table<T> put(String key, Object value) {
         DATA.put(key, value);
@@ -60,7 +81,7 @@ public class Table<T extends ISnowflake> {
      * @param key The key to update
      * @param modifier The function; giving the old value and returning the value to be associated with the specified key
      * @return {@code this}; the updated table
-     * @see DatabaseDriver#updateTable(Table)
+     * @see DatabaseDriver#updateTable(ISnowflake, Table)
      */
     @Contract("_, _ -> this")
     public final <V> Table<T> modify(String key, Function<V, V> modifier) {

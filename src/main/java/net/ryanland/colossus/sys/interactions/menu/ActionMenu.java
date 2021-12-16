@@ -4,17 +4,13 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.interactions.Interaction;
 import net.dv8tion.jda.api.interactions.InteractionHook;
-import net.dv8tion.jda.api.interactions.components.Button;
 import net.ryanland.colossus.command.CommandException;
 import net.ryanland.colossus.sys.interactions.ButtonClickContainer;
 import net.ryanland.colossus.sys.interactions.ButtonHandler;
-import net.ryanland.colossus.sys.interactions.InteractionUtil;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ActionMenu implements ModifiableInteractionMenu {
 

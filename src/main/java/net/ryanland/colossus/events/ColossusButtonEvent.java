@@ -8,7 +8,7 @@ import net.ryanland.colossus.sys.interactions.ButtonHandler;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 import org.jetbrains.annotations.NotNull;
 
-public class ButtonEvent extends ListenerAdapter {
+public class ColossusButtonEvent extends ListenerAdapter {
 
     public void onButtonClick(@NotNull ButtonClickEvent event) {
         try {
