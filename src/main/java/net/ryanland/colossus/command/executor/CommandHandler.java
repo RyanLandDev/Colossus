@@ -12,8 +12,8 @@ import net.ryanland.colossus.command.SubCommandHolder;
 import net.ryanland.colossus.command.annotations.CommandBuilder;
 import net.ryanland.colossus.command.arguments.Argument;
 import net.ryanland.colossus.command.Category;
+import net.ryanland.colossus.command.info.GroupInfo;
 import net.ryanland.colossus.command.info.HelpMaker;
-import net.ryanland.colossus.command.info.SubCommandGroup;
 import net.ryanland.colossus.events.MessageCommandEvent;
 import net.ryanland.colossus.events.SlashEvent;
 
@@ -81,7 +81,7 @@ public class CommandHandler {
                     UPSERT_CONSUMER.accept(subCmd, slashCmdData);
                 }
             } else {
-                for (SubCommandGroup group : command.getSubCommandGroups()) {
+                for (GroupInfo group : command.getSubCommandGroups()) {
                     SubcommandGroupData subCmdGroupData = new SubcommandGroupData(group.getName(), group.getDescription());
 
                     for (SubCommand subCmd : group.getSubCommands()) {

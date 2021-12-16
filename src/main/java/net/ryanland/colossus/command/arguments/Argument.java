@@ -2,6 +2,7 @@ package net.ryanland.colossus.command.arguments;
 
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.ArgumentException;
 import net.ryanland.colossus.events.CommandEvent;
 import net.ryanland.colossus.events.MessageCommandEvent;
@@ -37,6 +38,10 @@ public abstract class Argument<T> {
     public Argument<T> description(String description) {
         this.description = description;
         return this;
+    }
+
+    public OptionData getOptionData() {
+        return new OptionData(getSlashCommandOptionType(), name == null ? id : name, description);
     }
 
     public String getName() {

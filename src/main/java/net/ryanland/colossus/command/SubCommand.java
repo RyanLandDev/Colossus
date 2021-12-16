@@ -1,4 +1,4 @@
 package net.ryanland.colossus.command;
 
-public abstract class SubCommand extends Command {
+public abstract non-sealed class SubCommand extends Command {
 }

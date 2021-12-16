@@ -2,19 +2,18 @@ package net.ryanland.colossus.command.info;
 
 import net.ryanland.colossus.command.SubCommand;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-public abstract class SubCommandGroup {
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.LOCAL_VARIABLE})
+public @interface SubCommandGroup {
 
-    public abstract String getName();
+    String name();
 
-    public abstract String getDescription();
+    String description();
 
-    public abstract SubCommand[] getSubCommands();
-
-    public SubCommand getSubCommand(String name) {
-        for (SubCommand c : getSubCommands()) {
-            if (c.getName().equals(name)) return c;
-        }
-        throw new IllegalArgumentException();
-    }
+    Class<? extends SubCommand>[] subcommands();
 }
