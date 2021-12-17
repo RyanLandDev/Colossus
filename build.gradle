@@ -30,4 +30,16 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.9'
 }
 
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId = 'net.ryanland'
+            artifactId = 'Colossus'
+            version = '1.0'
+
+            from components.java
+        }
+    }
+}
+
 compileJava.options.encoding = 'UTF-8'
