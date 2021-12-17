@@ -5,7 +5,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.SelfUser;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.ryanland.colossus.command.Command;
 import net.ryanland.colossus.command.CommandException;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.MalformedArgumentException;
@@ -20,6 +19,7 @@ import net.ryanland.colossus.command.impl.DefaultEnableCommand;
 import net.ryanland.colossus.command.impl.DefaultHelpCommand;
 import net.ryanland.colossus.command.inhibitors.*;
 import net.ryanland.colossus.events.ColossusButtonEvent;
+import net.ryanland.colossus.events.EventWaiterListener;
 import net.ryanland.colossus.events.MessageCommandReceivedEvent;
 import net.ryanland.colossus.events.OnSlashCommandEvent;
 import net.ryanland.colossus.sys.file.*;
@@ -40,8 +40,9 @@ import java.util.function.Function;
  */
 public class ColossusBuilder {
 
-    private static final Object[] CORE_EVENTS = new ListenerAdapter[]{
-        new ColossusButtonEvent(), new OnSlashCommandEvent(), new MessageCommandReceivedEvent()
+    private static final Object[] CORE_EVENTS = new Object[]{
+        new ColossusButtonEvent(), new OnSlashCommandEvent(), new MessageCommandReceivedEvent(),
+        EventWaiterListener.getInstance()
     };
 
     private static final Inhibitor[] CORE_INHIBITORS = new Inhibitor[]{

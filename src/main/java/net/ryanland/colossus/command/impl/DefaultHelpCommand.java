@@ -1,5 +1,6 @@
 package net.ryanland.colossus.command.impl;
 
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.ryanland.colossus.command.*;
 import net.ryanland.colossus.command.annotations.CommandBuilder;
 import net.ryanland.colossus.command.arguments.ArgumentSet;
@@ -7,6 +8,7 @@ import net.ryanland.colossus.command.arguments.types.CommandArgument;
 import net.ryanland.colossus.command.executor.CommandHandler;
 import net.ryanland.colossus.command.info.HelpMaker;
 import net.ryanland.colossus.events.CommandEvent;
+import net.ryanland.colossus.events.EventWaiter;
 import net.ryanland.colossus.sys.interactions.menu.TabMenuBuilder;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 
