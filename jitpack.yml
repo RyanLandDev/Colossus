@@ -3,4 +3,4 @@ before_install:
    - sdk use java 17.0.1-open
 install:
    - echo "Running a custom install command"
-   - ./gradlew build
+   - ./gradlew clean install -xtest
