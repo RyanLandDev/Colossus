@@ -25,7 +25,6 @@ public class EventWaiterListener implements EventListener {
         Event event = (Event) genericEvent;
         List<EventWaiter> waiters = getWaiters(event.getClass());
         for (EventWaiter waiter : waiters) {
-            System.out.println(waiter);
             if (waiter.checkCondition(event))
                 waiter.performAction(event);
         }
