@@ -7,6 +7,7 @@ plugins {
 
 group 'net.ryanland'
 version '1.0'
+mainClassName = 'net.ryanland.colossus.Colossus'
 
 repositories {
     mavenCentral()
