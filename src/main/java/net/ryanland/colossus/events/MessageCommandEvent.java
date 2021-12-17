@@ -27,6 +27,8 @@ public class MessageCommandEvent extends CommandEvent {
 
     @Override
     public String getName() {
+        if (event.getMessage().getContentRaw() == null)
+            throw new IllegalStateException("You must have the Message Content intent enabled to use this feature");
         try {
             return event.getMessage().getContentRaw().split("\\s+")[0].substring(getGuildPrefix().length());
         } catch (IndexOutOfBoundsException e) {
