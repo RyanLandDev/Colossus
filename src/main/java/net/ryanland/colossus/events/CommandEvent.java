@@ -1,5 +1,6 @@
 package net.ryanland.colossus.events;
 
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.*;
 import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.command.Command;
@@ -27,6 +28,10 @@ public abstract class CommandEvent {
     public abstract Guild getGuild();
 
     public abstract boolean isFromGuild();
+
+    public JDA getJDA() {
+        return getUser().getJDA();
+    }
 
     /**
      * Get the {@link Table} of the user who executed this command.
