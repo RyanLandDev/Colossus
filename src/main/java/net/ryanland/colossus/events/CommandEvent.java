@@ -27,11 +27,11 @@ public abstract class CommandEvent {
 
     public abstract Guild getGuild();
 
+    public abstract MessageChannel getChannel();
+
     public abstract boolean isFromGuild();
 
-    public JDA getJDA() {
-        return getUser().getJDA();
-    }
+    public abstract JDA getJDA();
 
     /**
      * Get the {@link Table} of the user who executed this command.

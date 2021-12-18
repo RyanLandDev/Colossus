@@ -210,10 +210,12 @@ public class SlashEvent extends CommandEvent {
         return event.isFromGuild();
     }
 
+    @Override
     public JDA getJDA() {
         return event.getJDA();
     }
 
+    @Override
     public MessageChannel getChannel() {
         return event.getChannel();
     }

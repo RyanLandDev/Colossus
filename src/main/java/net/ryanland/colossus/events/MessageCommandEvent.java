@@ -108,10 +108,12 @@ public class MessageCommandEvent extends CommandEvent {
         return event.getGuild();
     }
 
+    @Override
     public JDA getJDA() {
         return event.getJDA();
     }
 
+    @Override
     public MessageChannel getChannel() {
         return event.getChannel();
     }
