@@ -14,7 +14,7 @@ public @interface CommandBuilder {
     String name();
     String description();
     int cooldown() default 2;
-    boolean guildOnly();
+    boolean guildOnly() default false;
     Class<? extends SubCommand>[] subcommands() default {};
     SubCommandGroup[] subcommandGroups() default {};
 }
