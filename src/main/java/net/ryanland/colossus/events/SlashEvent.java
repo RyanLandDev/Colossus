@@ -155,14 +155,6 @@ public class SlashEvent extends CommandEvent {
         sendReply(embed, ephemeral).queue();
     }
 
-    public void reply(InteractionMenu menu) throws CommandException {
-        menu.send(getInteraction());
-    }
-
-    public void reply(InteractionMenuBuilder<?> menuBuilder) throws CommandException {
-        reply(menuBuilder.build());
-    }
-
     @Override
     public User getUser() {
         return event.getUser();

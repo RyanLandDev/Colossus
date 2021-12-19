@@ -4,9 +4,12 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.*;
 import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.command.Command;
+import net.ryanland.colossus.command.CommandException;
 import net.ryanland.colossus.command.arguments.ParsedArgumentMap;
 import net.ryanland.colossus.sys.file.DatabaseDriver;
 import net.ryanland.colossus.sys.file.Table;
+import net.ryanland.colossus.sys.interactions.menu.InteractionMenu;
+import net.ryanland.colossus.sys.interactions.menu.InteractionMenuBuilder;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 
 public abstract class CommandEvent {
@@ -71,6 +74,14 @@ public abstract class CommandEvent {
     public abstract void reply(MessageEmbed message);
 
     public abstract void reply(PresetBuilder message);
+
+    public void reply(InteractionMenu menu) throws CommandException {
+        menu.send(this);
+    }
+
+    public void reply(InteractionMenuBuilder<?> menuBuilder) {
+        reply(menuBuilder);
+    }
 
     public abstract <T> T getArgument(String id);
 }
