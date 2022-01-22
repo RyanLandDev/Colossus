@@ -22,6 +22,6 @@ public class UserArgument extends SnowflakeArgument<User> {
 
     @Override
     public User resolveMessageCommandArgument(MessageCommandEvent event, String id) throws ArgumentException {
-        return Colossus.getJda().getUserById(id);
+        return Colossus.getJda().retrieveUserById(id).complete();
     }
 }
