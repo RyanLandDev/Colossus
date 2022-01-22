@@ -1,4 +1,4 @@
-package net.ryanland.colossus.sys.file;
+package net.ryanland.colossus.sys.file.database;
 
 import net.dv8tion.jda.api.entities.ISnowflake;
 import net.dv8tion.jda.api.entities.User;

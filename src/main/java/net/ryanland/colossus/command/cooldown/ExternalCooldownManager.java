@@ -2,7 +2,7 @@ package net.ryanland.colossus.command.cooldown;
 
 import net.dv8tion.jda.api.entities.User;
 import net.ryanland.colossus.Colossus;
-import net.ryanland.colossus.sys.file.Table;
+import net.ryanland.colossus.sys.file.database.Table;
 
 import java.util.Collections;
 import java.util.List;

@@ -7,11 +7,13 @@ import net.ryanland.colossus.command.executor.functional_interface.CommandConsum
 import net.ryanland.colossus.sys.interactions.ButtonClickContainer;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ActionMenuBuilder implements InteractionMenuBuilder<ActionMenu> {
 
     private final ActionButtonLayout layout = new ActionButtonLayout();
+    private final List<ActionButton> queuedButtons = new ArrayList<>();
     private PresetBuilder embed;
 
     public ActionMenuBuilder setEmbed(PresetBuilder embed) {
@@ -28,12 +30,20 @@ public class ActionMenuBuilder implements InteractionMenuBuilder<ActionMenu> {
     }
 
     public ActionMenuBuilder addButtons(ActionButton... buttons) {
-        layout.add(new ActionButtonRow(buttons));
+        queuedButtons.addAll(List.of(buttons));
         return this;
     }
 
     public ActionMenuBuilder addButtons(List<ActionButton> buttons) {
         return addButtons(buttons.toArray(new ActionButton[0]));
+    }
+
+    public ActionMenuBuilder putQueuedButtons() {
+        if (!queuedButtons.isEmpty()) {
+            layout.add(new ActionButtonRow(queuedButtons.toArray(new ActionButton[0])));
+            queuedButtons.clear();
+        }
+        return this;
     }
 
     public ActionMenuBuilder addRows(ActionButtonRow... actionRows) {
@@ -78,6 +88,7 @@ public class ActionMenuBuilder implements InteractionMenuBuilder<ActionMenu> {
 
     @Override
     public ActionMenu build() {
+        putQueuedButtons();
         return new ActionMenu(layout, embed);
     }
 

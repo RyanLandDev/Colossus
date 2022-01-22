@@ -1,7 +1,7 @@
 package net.ryanland.colossus.sys.file.serializer;
 
 import com.google.gson.JsonObject;
-import net.ryanland.colossus.sys.file.Table;
+import net.ryanland.colossus.sys.file.database.Table;
 import org.jetbrains.annotations.NotNull;
 
 public class JsonTableSerializer implements Serializer<JsonObject, Table<?>> {

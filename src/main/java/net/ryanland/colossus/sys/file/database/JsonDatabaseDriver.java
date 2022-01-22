@@ -1,8 +1,11 @@
-package net.ryanland.colossus.sys.file;
+package net.ryanland.colossus.sys.file.database;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.dv8tion.jda.api.entities.*;
+import net.ryanland.colossus.sys.file.LocalFile;
+import net.ryanland.colossus.sys.file.LocalFileBuilder;
+import net.ryanland.colossus.sys.file.LocalFileType;
 import net.ryanland.colossus.sys.file.serializer.JsonTableSerializer;
 
 import java.io.IOException;

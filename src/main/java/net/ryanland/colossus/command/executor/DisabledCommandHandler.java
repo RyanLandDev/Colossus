@@ -4,7 +4,7 @@ import net.dv8tion.jda.api.entities.SelfUser;
 import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.command.Command;
 import net.ryanland.colossus.command.CommandException;
-import net.ryanland.colossus.sys.file.Table;
+import net.ryanland.colossus.sys.file.database.Table;
 import net.ryanland.colossus.sys.file.serializer.Serializer;
 
 import java.util.ArrayList;
