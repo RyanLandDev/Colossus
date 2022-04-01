@@ -30,7 +30,7 @@ public class MessageCommandEvent extends CommandEvent {
         if (event.getMessage().getContentRaw() == null)
             throw new IllegalStateException("You must have the Message Content intent enabled to use this feature");
         try {
-            return event.getMessage().getContentRaw().split("\\s+")[0].substring(getGuildPrefix().length());
+            return event.getMessage().getContentRaw().split("\\s+")[0].substring(getGuildPrefix().length()).toLowerCase();
         } catch (IndexOutOfBoundsException e) {
             return null;
         }

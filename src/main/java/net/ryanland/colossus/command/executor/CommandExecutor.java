@@ -1,14 +1,12 @@
 package net.ryanland.colossus.command.executor;
 
 import net.ryanland.colossus.Colossus;
-import net.ryanland.colossus.command.Command;
-import net.ryanland.colossus.command.CommandException;
-import net.ryanland.colossus.command.MessageCommand;
-import net.ryanland.colossus.command.SlashCommand;
+import net.ryanland.colossus.command.*;
 import net.ryanland.colossus.command.arguments.parsing.ArgumentParser;
 import net.ryanland.colossus.command.arguments.parsing.MessageCommandArgumentParser;
 import net.ryanland.colossus.command.arguments.parsing.SlashCommandArgumentParser;
 import net.ryanland.colossus.command.finalizers.Finalizer;
+import net.ryanland.colossus.command.impl.TestSubCommand;
 import net.ryanland.colossus.command.inhibitors.Inhibitor;
 import net.ryanland.colossus.command.inhibitors.InhibitorException;
 import net.ryanland.colossus.events.CommandEvent;
@@ -17,6 +15,9 @@ import net.ryanland.colossus.events.SlashEvent;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Deque;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class CommandExecutor {
 
@@ -28,11 +29,13 @@ public class CommandExecutor {
         execute(event);
     }
 
+    @SuppressWarnings("all")
     public void execute(CommandEvent event) {
-        Command command = event.getCommand();
-        Class<? extends Command> cmdClass = command.getClass(); //Getting the command class
+        Command originalCommand = event.getCommand();
+        Command command = originalCommand;
+        Class<? extends Command> cmdClass = command.getClass();
 
-        //Getting the event to their original event for possible use later in exception handling
+        // Getting the event to their original event for possible use later in exception handling
         MessageCommandEvent eventAsMessageCommand = null;
         SlashEvent eventAsSlashCommand = null;
         ArgumentParser argumentParser = null;
@@ -40,17 +43,24 @@ public class CommandExecutor {
             eventAsSlashCommand = (SlashEvent) event;
             argumentParser = new SlashCommandArgumentParser(event);
 
-            //Applying different command if subcommand is used
-            if (eventAsSlashCommand.getSubCommandGroup() != null) {
-                command = command.getSubCommandGroupMap()
-                    .get(eventAsSlashCommand.getSubCommandGroup()).getSubCommand(eventAsSlashCommand.getSubCommandName());
-            } else if (eventAsSlashCommand.getSubCommandName() != null) {
-                command = command.getSubCommandMap()
-                    .get(eventAsSlashCommand.getSubCommandName());
+            // Applying a different command if a subcommand is used
+            if (eventAsSlashCommand.getSubCommandGroup() != null || eventAsSlashCommand.getSubCommandName() != null) {
+                SlashEvent finalEventAsSlashCommand = eventAsSlashCommand;
+                command = (Command) ((SubCommandHolder) command).getRealSubCommands().stream()
+                    .filter(subCommand -> ((Command) subCommand).getName().equals(finalEventAsSlashCommand.getSubCommandName()))
+                    .findFirst().get();
             }
         } else if (event instanceof MessageCommandEvent) {
             eventAsMessageCommand = (MessageCommandEvent) event;
             argumentParser = new MessageCommandArgumentParser(event);
+
+            // Find the subcommand if one is used
+            if (command instanceof SubCommandHolder) {
+                Deque<String> queue = ((MessageCommandArgumentParser) argumentParser).getRawArgumentQueue();
+                command = (Command) findSubcommand(event, command, queue.remove());
+                if (command instanceof SubCommandHolder)
+                    command = (Command) findSubcommand(event, command, queue.remove());
+            }
         }
 
         event.setCommand(command);
@@ -91,5 +101,17 @@ public class CommandExecutor {
 
         } catch (InhibitorException ignored) {
         }
+    }
+
+    private SubCommand findSubcommand(CommandEvent event, Command command, String parameter) {
+        List<SubCommand> matches = ((SubCommandHolder) command).getSubCommands().stream()
+            .filter(subcommand -> ((Command) subcommand).getName().equalsIgnoreCase(parameter)).collect(Collectors.toList());
+        if (matches.isEmpty()) {
+            event.reply(new PresetBuilder(Colossus.getErrorPresetType(), "Invalid Subcommand",
+                "`" + parameter + "` is not a valid subcommand. Possible subcommands are: " +
+                    ((SubCommandHolder) command).getFormattedSubCommands()));
+            throw new IllegalArgumentException();
+        }
+        return matches.get(0);
     }
 }

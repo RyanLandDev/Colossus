@@ -2,6 +2,8 @@ package net.ryanland.colossus.command.arguments.parsing;
 
 import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.command.Command;
+import net.ryanland.colossus.command.SubCommand;
+import net.ryanland.colossus.command.SubCommandHolder;
 import net.ryanland.colossus.command.arguments.Argument;
 import net.ryanland.colossus.command.arguments.ParsedArgumentMap;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.ArgumentException;
@@ -25,16 +27,33 @@ public non-sealed class MessageCommandArgumentParser extends ArgumentParser {
         return (MessageCommandEvent) event;
     }
 
-    @Override
-    public boolean parseArguments() {
+    public Deque<String> getRawArgumentQueue() {
         // Create a queue of arguments, based on the message content split by spaces,
         // with the prefix and first word (command name) removed
         String content = getEvent().getMessage().getContentRaw();
         Deque<String> queue = new ArrayDeque<>(List.of(
             content.replaceFirst("(^<@(!|)" + Colossus.getSelfUser().getId() + ">\\s*)|(^" +
-                Pattern.quote(event.getGuildPrefix()) + ")", "")
+                    Pattern.quote(event.getGuildPrefix()) + ")", "")
                 .split("\\s+")));
         queue.remove();
+        return queue;
+    }
+
+    public Deque<String> getArgumentQueue() {
+        Deque<String> queue = getRawArgumentQueue();
+        // Remove extra words for subcommands
+        if (event.getCommand() instanceof SubCommandHolder) {
+            queue.remove();
+            if (((SubCommandHolder) event.getCommand()).getSubCommands().stream()
+                .anyMatch(subcommand -> subcommand instanceof SubCommandHolder))
+                queue.remove();
+        }
+        return queue;
+    }
+
+    @Override
+    public boolean parseArguments() {
+        Deque<String> queue = getArgumentQueue();
         ParsedArgumentMap parsedArgs = new ParsedArgumentMap();
 
         Command command = event.getCommand();

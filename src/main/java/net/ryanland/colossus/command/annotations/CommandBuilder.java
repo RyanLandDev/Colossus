@@ -1,8 +1,5 @@
 package net.ryanland.colossus.command.annotations;
 
-import net.ryanland.colossus.command.SubCommand;
-import net.ryanland.colossus.command.info.SubCommandGroup;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -15,6 +12,4 @@ public @interface CommandBuilder {
     String description();
     int cooldown() default 2;
     boolean guildOnly() default true;
-    Class<? extends SubCommand>[] subcommands() default {};
-    SubCommandGroup[] subcommandGroups() default {};
 }

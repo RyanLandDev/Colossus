@@ -2,7 +2,7 @@ package net.ryanland.colossus.command.arguments.parsing;
 
 import net.ryanland.colossus.events.CommandEvent;
 
-public abstract sealed class ArgumentParser permits MessageCommandArgumentParser,  SlashCommandArgumentParser {
+public abstract sealed class ArgumentParser permits MessageCommandArgumentParser, SlashCommandArgumentParser {
 
     final CommandEvent event;
 
