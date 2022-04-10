@@ -5,6 +5,7 @@ import net.ryanland.colossus.command.SubCommand;
 import net.ryanland.colossus.command.annotations.CommandBuilder;
 import net.ryanland.colossus.command.arguments.Argument;
 import net.ryanland.colossus.command.arguments.ArgumentSet;
+import net.ryanland.colossus.command.impl.TestSubCommand;
 import net.ryanland.colossus.events.CommandEvent;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 
@@ -57,14 +58,14 @@ public class HelpMaker {
     public static String formattedSubCommands(SubCommand[] subcommands) {
         List<String> names = new ArrayList<>();
         for (SubCommand subcommand : subcommands)
-            names.add(subcommand.getName());
+            names.add(((Command) subcommand).getName());
         return "`" + String.join("`, `", names) + "`";
     }
 
     public static String formattedSubCommandsUsage(SubCommand[] subcommands) {
         List<String> names = new ArrayList<>();
         for (SubCommand subcommand : subcommands)
-            names.add(subcommand.getName());
+            names.add(((Command) subcommand).getName());
         return String.join("/", names);
     }
 

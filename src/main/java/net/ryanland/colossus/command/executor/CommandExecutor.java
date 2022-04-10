@@ -17,6 +17,8 @@ import net.ryanland.colossus.sys.message.PresetBuilder;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Deque;
 import java.util.List;
+import java.util.Locale;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 public class CommandExecutor {
@@ -54,16 +56,25 @@ public class CommandExecutor {
             eventAsMessageCommand = (MessageCommandEvent) event;
             argumentParser = new MessageCommandArgumentParser(event);
 
+            System.out.println("0");
             // Find the subcommand if one is used
             if (command instanceof SubCommandHolder) {
+                System.out.println("1");
                 Deque<String> queue = ((MessageCommandArgumentParser) argumentParser).getRawArgumentQueue();
-                command = (Command) findSubcommand(event, command, queue.remove());
-                if (command instanceof SubCommandHolder)
-                    command = (Command) findSubcommand(event, command, queue.remove());
+                System.out.println(queue);
+                try {
+                    command = (Command) findSubcommand(event, command, queue);
+                    System.out.println(command.getName());
+                    if (command instanceof SubCommandHolder)
+                        command = (Command) findSubcommand(event, command, queue);
+                } catch (IllegalArgumentException e) {
+                    return;
+                }
             }
         }
 
         event.setCommand(command);
+        cmdClass = command.getClass();
 
         try {
             for (Inhibitor inhibitor : Colossus.getInhibitors()) {
@@ -73,6 +84,7 @@ public class CommandExecutor {
                 }
             }
 
+            System.out.println(argumentParser.event().getCommand().getName());
             if (argumentParser.parseArguments()) {
                 try {
                     //Invoking the run method, only the InvocationTargetException can be thrown through the method,
@@ -103,9 +115,25 @@ public class CommandExecutor {
         }
     }
 
-    private SubCommand findSubcommand(CommandEvent event, Command command, String parameter) {
+    private SubCommand findSubcommand(CommandEvent event, Command command, Deque<String> parameterQueue) {
+        String parameter;
+        try {
+            parameter = parameterQueue.remove();
+        } catch (NoSuchElementException e) {
+            parameter = "";
+        }
+        String finalParameter = parameter;
+
+        if (finalParameter.isEmpty()) {
+            event.reply(new PresetBuilder(Colossus.getErrorPresetType(), "Invalid Subcommand",
+                "This command requires a subcommand. Possible subcommands are: " +
+                    ((SubCommandHolder) command).getFormattedSubCommands()));
+            throw new IllegalArgumentException();
+        }
+
         List<SubCommand> matches = ((SubCommandHolder) command).getSubCommands().stream()
-            .filter(subcommand -> ((Command) subcommand).getName().equalsIgnoreCase(parameter)).collect(Collectors.toList());
+            .filter(subcommand -> ((Command) subcommand).getName().equalsIgnoreCase(finalParameter)).collect(Collectors.toList());
+
         if (matches.isEmpty()) {
             event.reply(new PresetBuilder(Colossus.getErrorPresetType(), "Invalid Subcommand",
                 "`" + parameter + "` is not a valid subcommand. Possible subcommands are: " +
