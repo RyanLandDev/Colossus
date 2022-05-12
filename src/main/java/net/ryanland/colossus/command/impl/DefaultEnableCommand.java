@@ -4,7 +4,7 @@ import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.command.CombinedCommand;
 import net.ryanland.colossus.command.Command;
 import net.ryanland.colossus.command.CommandException;
-import net.ryanland.colossus.command.DefaultCommand;
+import net.ryanland.colossus.command.BaseCommand;
 import net.ryanland.colossus.command.annotations.CommandBuilder;
 import net.ryanland.colossus.command.arguments.ArgumentSet;
 import net.ryanland.colossus.command.arguments.types.CommandArgument;
@@ -21,7 +21,7 @@ import net.ryanland.colossus.sys.message.PresetBuilder;
         description = "Re-enables a globally disabled command.",
         guildOnly = false
 )
-public class DefaultEnableCommand extends DefaultCommand implements CombinedCommand {
+public final class DefaultEnableCommand extends DefaultCommand implements CombinedCommand {
 
     @Override
     public PermissionHolder getPermission() {

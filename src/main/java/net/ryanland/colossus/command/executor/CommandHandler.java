@@ -1,28 +1,18 @@
 package net.ryanland.colossus.command.executor;
 
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
-import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
-import net.dv8tion.jda.api.interactions.commands.build.SubcommandGroupData;
 import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.command.*;
-import net.ryanland.colossus.command.annotations.CommandBuilder;
-import net.ryanland.colossus.command.arguments.Argument;
-import net.ryanland.colossus.command.info.HelpMaker;
 import net.ryanland.colossus.events.CommandEvent;
-import net.ryanland.colossus.events.MessageCommandEvent;
-import net.ryanland.colossus.events.SlashEvent;
 
 import java.util.*;
-import java.util.function.BiConsumer;
 
 public class CommandHandler {
 
     private static final List<Command> COMMANDS = new ArrayList<>();
     private static final HashMap<String, Command> COMMAND_MAP = new HashMap<>();
     private static final CommandExecutor COMMAND_EXECUTOR = new CommandExecutor();
-    private static final Set<Category> CATEGORIES = new HashSet<>();
 
     private static void commandError(Command command, String error) {
         throw new IllegalArgumentException(
@@ -48,7 +38,6 @@ public class CommandHandler {
             // Add data
             COMMANDS.add(command);
             COMMAND_MAP.put(command.getName(), command);
-            CATEGORIES.add(command.getCategory());
         }
     }
 
@@ -57,19 +46,26 @@ public class CommandHandler {
         if (testGuild == null)
             throw new IllegalStateException("The bot is not in the provided test guild, or the ID is invalid.");
 
-        for (Command command : COMMANDS) {
-            if (!(command instanceof SlashCommand)) continue;
+        // remove commands that were previously registered but not anymore
+        Colossus.getJda().updateCommands().queue();
 
-            CommandBuilder cmdInfo = HelpMaker.getInfo(command);
+        for (Command command : COMMANDS) {
+            if (!(command instanceof SlashCommand)) {
+                if (!(command instanceof SubCommandHolder) ||
+                    ((SubCommandHolder) command).getRealSubCommands().stream()
+                        .noneMatch(subcommand -> subcommand instanceof SlashCommand))
+                    continue;
+            }
+
             CommandData slashCmdData = new CommandData(command.getName(), command.getDescription());
 
             // Subcommands
             if (command instanceof SubCommandHolder) {
                 for (SubCommand subcommand : ((SubCommandHolder) command).getSubCommands()) {
                     if (subcommand instanceof SubCommandHolder)
-                        slashCmdData.addSubcommandGroups(((SubCommandHolder) subcommand).getData());
-                    else
-                        slashCmdData.addSubcommands(subcommand.getData());
+                        slashCmdData.addSubcommandGroups(((SubCommandHolder) subcommand).getSlashCommandData());
+                    else if (subcommand instanceof SlashCommand)
+                        slashCmdData.addSubcommands(subcommand.getSlashData());
                 }
             // Regular commands
             } else {
@@ -87,10 +83,6 @@ public class CommandHandler {
 
     public static List<Command> getCommands() {
         return COMMANDS;
-    }
-
-    public static Set<Category> getCategories() {
-        return CATEGORIES;
     }
 
     public static Command getCommand(String alias) {

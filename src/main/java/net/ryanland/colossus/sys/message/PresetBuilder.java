@@ -3,14 +3,19 @@ package net.ryanland.colossus.sys.message;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.ryanland.colossus.Colossus;
+import net.ryanland.colossus.sys.interactions.InteractionUtil;
+import net.ryanland.colossus.sys.interactions.button.ButtonRow;
+import net.ryanland.colossus.sys.interactions.button.BaseButton;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class PresetBuilder {
 
+    private String content;
     private String title;
     private String description;
     private OffsetDateTime timestamp;
@@ -24,6 +29,7 @@ public class PresetBuilder {
     private String image;
     private List<MessageEmbed.Field> fields;
     private boolean ephemeral;
+    private List<ButtonRow> buttonRows;
 
     public PresetBuilder() {
         this(Colossus.getDefaultPresetType());
@@ -46,6 +52,7 @@ public class PresetBuilder {
     }
 
     public PresetBuilder(PresetType type, String title, String description) {
+        this.content = type.getContent();
         this.title = title;
         this.description = description;
         this.timestamp = type.getTimestamp();
@@ -59,6 +66,16 @@ public class PresetBuilder {
         this.image = type.getImage();
         this.fields = new ArrayList<>(Arrays.asList(type.getFields()));
         this.ephemeral = type.isEphemeral();
+        this.buttonRows = new ArrayList<>();
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public PresetBuilder setContent(String content) {
+        this.content = content;
+        return this;
     }
 
     public String getTitle() {
@@ -206,12 +223,52 @@ public class PresetBuilder {
         return this;
     }
 
+    public List<ButtonRow> getButtonRows() {
+        return buttonRows;
+    }
+
+    public PresetBuilder addButtonRow(ButtonRow buttonRow) {
+        buttonRows.add(buttonRow);
+        return this;
+    }
+
+    public PresetBuilder setButtonRows(List<ButtonRow> buttonRows) {
+        this.buttonRows = buttonRows;
+        return this;
+    }
+
+    /**
+     * Creates one or more {@link ButtonRow}s and adds them to this {@link PresetBuilder} based on the buttons provided.
+     * @see #addButtons(List)
+     * @see #addButtonRow(ButtonRow)
+     * @see InteractionUtil#ofBase(List)
+     */
+    public PresetBuilder addButtons(BaseButton... buttons) {
+        return addButtons(List.of(buttons));
+    }
+
+    /**
+     * Creates one or more {@link ButtonRow}s and adds them to this {@link PresetBuilder} based on the buttons provided.
+     * @see #addButtons(BaseButton...)
+     * @see #addButtonRow(ButtonRow)
+     * @see InteractionUtil#ofBase(List)
+     */
+    public PresetBuilder addButtons(List<BaseButton> buttons) {
+        buttonRows.addAll(InteractionUtil.ofBase(buttons));
+        return this;
+    }
+
+    public PresetBuilder clearButtons() {
+        setButtonRows(new ArrayList<>());
+        return this;
+    }
+
     /**
      * Returns a new {@link EmbedBuilder} with all values set in this {@link PresetBuilder}.
-     * <br>Note: The ephemeral boolean value will be ignored.
-     * @see #build()
+     * <br>Note: The content, ephemeral boolean value and attached {@link BaseButton}s will be ignored.
+     * @see #embed()
      */
-    public EmbedBuilder builder() {
+    public EmbedBuilder embedBuilder() {
         EmbedBuilder builder = new EmbedBuilder()
             .setTitle(title)
             .setDescription(description)
@@ -229,10 +286,10 @@ public class PresetBuilder {
 
     /**
      * Builds this {@link PresetBuilder} into a {@link MessageEmbed}.
-     * <br>Note: The ephemeral boolean value will be ignored.
-     * @see #builder()
+     * <br>Note: The content, ephemeral boolean value and attached {@link BaseButton}s will be ignored.
+     * @see #embedBuilder()
      */
-    public MessageEmbed build() {
-        return builder().build();
+    public MessageEmbed embed() {
+        return embedBuilder().build();
     }
 }

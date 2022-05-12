@@ -2,9 +2,7 @@ package net.ryanland.colossus.command;
 
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandGroupData;
 import net.ryanland.colossus.ColossusBuilder;
-import net.ryanland.colossus.command.impl.TestSubCommand;
 
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -47,10 +45,13 @@ public interface SubCommandHolder {
     /**
      * Create a {@link SubcommandGroupData} for this {@link SubCommandHolder}
      */
-    default SubcommandGroupData getData() {
+    default SubcommandGroupData getSlashCommandData() {
         Command command = (Command) this;
         return new SubcommandGroupData(command.getName(), command.getDescription())
-            .addSubcommands(getSubCommands().stream().map(SubCommand::getData).collect(Collectors.toList()));
+            .addSubcommands(getSubCommands().stream()
+                .filter(subcommand -> subcommand instanceof SlashCommand)
+                .map(SubCommand::getSlashData)
+                .collect(Collectors.toList()));
     }
 
     /**

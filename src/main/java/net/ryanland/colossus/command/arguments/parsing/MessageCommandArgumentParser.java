@@ -3,12 +3,12 @@ package net.ryanland.colossus.command.arguments.parsing;
 import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.command.Command;
 import net.ryanland.colossus.command.SubCommand;
-import net.ryanland.colossus.command.SubCommandHolder;
 import net.ryanland.colossus.command.arguments.Argument;
 import net.ryanland.colossus.command.arguments.ArgumentSet;
 import net.ryanland.colossus.command.arguments.ParsedArgumentMap;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.ArgumentException;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.MalformedArgumentException;
+import net.ryanland.colossus.command.arguments.parsing.exceptions.MissingArgumentException;
 import net.ryanland.colossus.events.CommandEvent;
 import net.ryanland.colossus.events.MessageCommandEvent;
 import net.ryanland.colossus.sys.message.PresetBuilder;
@@ -46,7 +46,7 @@ public non-sealed class MessageCommandArgumentParser extends ArgumentParser {
         if (event.getCommand() instanceof SubCommand) {
             queue.remove();
             // (nested) subcommand group
-            if (event.getCommand() instanceof SubCommandHolder)
+            if (event.getNestedSubCommandHolder() != null)
                 queue.remove();
         }
         return queue;
@@ -61,22 +61,27 @@ public non-sealed class MessageCommandArgumentParser extends ArgumentParser {
         PresetBuilder embed = new PresetBuilder(Colossus.getErrorPresetType());
 
         // failsafe for if getArguments returns null
-        System.out.println("eee " + command.getName());
         ArgumentSet arguments = command.getArguments();
-        if (arguments == null)
-            arguments = new ArgumentSet();
-        System.out.println(arguments);
+        if (arguments == null) arguments = new ArgumentSet();
 
         for (Argument<?> arg : arguments) {
             try {
                 Object parsedArg;
                 if (queue.peek() == null && arg.isOptional())
                     parsedArg = arg.getOptionalFunction().apply(event);
+                else if (queue.peek() == null)
+                    throw new MissingArgumentException();
                 else
                     parsedArg = arg.resolveMessageCommandArgument(queue, getEvent());
 
                 parsedArgs.put(arg.getId(), parsedArg);
 
+            } catch (MissingArgumentException e) {
+                event.reply(embed
+                    .setDescription(e.getMessage(event, arg))
+                    .setTitle("Missing Argument")
+                );
+                return false;
             } catch (MalformedArgumentException e) {
                 event.reply(embed
                     .setDescription(e.getMessage(event, arg))

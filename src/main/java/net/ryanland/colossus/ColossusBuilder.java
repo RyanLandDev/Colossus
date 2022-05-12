@@ -5,23 +5,25 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.SelfUser;
+import net.ryanland.colossus.command.Category;
 import net.ryanland.colossus.command.Command;
 import net.ryanland.colossus.command.CommandException;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.MalformedArgumentException;
 import net.ryanland.colossus.command.cooldown.Cooldown;
 import net.ryanland.colossus.command.cooldown.CooldownHandler;
 import net.ryanland.colossus.command.cooldown.CooldownManager;
+import net.ryanland.colossus.command.executor.CommandHandler;
 import net.ryanland.colossus.command.executor.DisabledCommandHandler;
 import net.ryanland.colossus.command.finalizers.CooldownFinalizer;
 import net.ryanland.colossus.command.finalizers.Finalizer;
+import net.ryanland.colossus.command.impl.DefaultCommand;
 import net.ryanland.colossus.command.impl.DefaultDisableCommand;
 import net.ryanland.colossus.command.impl.DefaultEnableCommand;
 import net.ryanland.colossus.command.impl.DefaultHelpCommand;
 import net.ryanland.colossus.command.inhibitors.*;
-import net.ryanland.colossus.events.ColossusButtonEvent;
+import net.ryanland.colossus.events.ClickButtonEvent;
 import net.ryanland.colossus.events.EventWaiterListener;
-import net.ryanland.colossus.events.MessageCommandReceivedEvent;
-import net.ryanland.colossus.events.OnSlashCommandEvent;
+import net.ryanland.colossus.events.InternalEventListener;
 import net.ryanland.colossus.sys.file.*;
 import net.ryanland.colossus.sys.file.database.DatabaseDriver;
 import net.ryanland.colossus.sys.file.serializer.CooldownsSerializer;
@@ -32,8 +34,8 @@ import net.ryanland.colossus.sys.message.PresetBuilder;
 import net.ryanland.colossus.sys.message.PresetType;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
 /**
@@ -42,7 +44,7 @@ import java.util.function.Function;
 public class ColossusBuilder {
 
     private static final Object[] CORE_EVENTS = new Object[]{
-        new ColossusButtonEvent(), new OnSlashCommandEvent(), new MessageCommandReceivedEvent(),
+        new InternalEventListener(),
         EventWaiterListener.getInstance()
     };
 
@@ -70,6 +72,7 @@ public class ColossusBuilder {
     private JDABuilder jdaBuilder;
     private Config config;
     private String configDirectory;
+    private final Set<Category> categories = new HashSet<>();
     private final List<Command> commands = new ArrayList<>();
     private final List<LocalFile> localFiles = new ArrayList<>();
     private final List<String> configEntries = new ArrayList<>(List.of(CORE_CONFIG_ENTRIES));
@@ -78,6 +81,8 @@ public class ColossusBuilder {
 
     private boolean disableHelpCommand = false;
     private boolean disableCommandToggleCommands = false;
+    private long buttonListenerExpirationTimeAmount = 2;
+    private TimeUnit buttonListenerExpirationTimeUnit = TimeUnit.MINUTES;
     private DatabaseDriver databaseDriver = null;
     private PresetType defaultPresetType = DefaultPresetType.DEFAULT;
     private PresetType errorPresetType = DefaultPresetType.ERROR;
@@ -156,18 +161,27 @@ public class ColossusBuilder {
      * @see Colossus
      */
     public Colossus build() {
-        if (!disableHelpCommand) commands.add(new DefaultHelpCommand());
-        if (!disableCommandToggleCommands) commands.addAll(List.of(new DefaultDisableCommand(), new DefaultEnableCommand()));
+        // register default commands
+        if (!disableHelpCommand || !disableCommandToggleCommands) {
+            List<DefaultCommand> defaultCommands = new ArrayList<>();
+            if (!disableHelpCommand) defaultCommands.add(new DefaultHelpCommand());
+            if (!disableCommandToggleCommands) defaultCommands.addAll(List.of(new DefaultDisableCommand(), new DefaultEnableCommand()));
+            registerCategories(new Category("Default", "These are the default commands provided by Colossus. " +
+                "You can optionally disable them in your *ColossusBuilder*. If you want to give them a new category, " +
+                "run ```java\nCommandHandler.getCommand(\"COMMAND_NAME\").setCategory(YOUR_CATEGORY);``` " +
+                "**after** initializing your bot.",
+                "⚠", defaultCommands.toArray(Command[]::new)));
+        }
 
+        // add core inhibitors and finalizers
         inhibitors.addAll(List.of(CORE_INHIBITORS));
         finalizers.addAll(List.of(CORE_FINALIZERS));
 
         buildConfigFile();
 
-        return new Colossus(jdaBuilder, config, commands, localFiles,
-            databaseDriver, defaultPresetType, errorPresetType,
-            successPresetType, cooldownsSerializer, disabledCommandsSerializer,
-            inhibitors, finalizers);
+        return new Colossus(jdaBuilder, config, categories, commands, localFiles, buttonListenerExpirationTimeAmount,
+            buttonListenerExpirationTimeUnit, databaseDriver, defaultPresetType, errorPresetType,
+            successPresetType, cooldownsSerializer, disabledCommandsSerializer, inhibitors, finalizers);
     }
 
     /**
@@ -183,13 +197,17 @@ public class ColossusBuilder {
     }
 
     /**
-     * Register {@link Command}s
-     * @param commands The command(s) to register
+     * Register categories with commands
+     * @param categories The categories to register
      * @return The builder
+     * @see Category
      * @see Command
      */
-    public ColossusBuilder registerCommands(Command... commands) {
-        this.commands.addAll(List.of(commands));
+    public ColossusBuilder registerCategories(Category... categories) {
+        for (Category category : categories) {
+            commands.addAll(category.getAllCommands());
+            this.categories.add(category);
+        }
         return this;
     }
 
@@ -225,6 +243,21 @@ public class ColossusBuilder {
      */
     public ColossusBuilder setJDABuilder(Function<JDABuilder, JDABuilder> modifier) {
         jdaBuilder = modifier.apply(jdaBuilder);
+        return this;
+    }
+
+    /**
+     * Modify the default amount of time to wait before a button listener should expire.<br>
+     * Expiring means removing the buttons from the message and stopping listeners.<br>
+     * This value is only used in the {@link ClickButtonEvent#addListener(Long, List, Runnable)} method.<br>
+     * By default, this value is set to <strong>2 minutes</strong>.
+     * @return This {@link ColossusBuilder}
+     * @see ClickButtonEvent
+     * @see ClickButtonEvent#addListener(Long, List, Runnable)
+     */
+    public ColossusBuilder setDefaultButtonListenerExpirationTime(long timeAmount, TimeUnit timeUnit) {
+        buttonListenerExpirationTimeAmount = timeAmount;
+        buttonListenerExpirationTimeUnit = timeUnit;
         return this;
     }
 

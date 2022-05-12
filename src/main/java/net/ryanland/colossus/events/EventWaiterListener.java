@@ -25,8 +25,7 @@ public class EventWaiterListener implements EventListener {
         Event event = (Event) genericEvent;
         List<EventWaiter> waiters = getWaiters(event.getClass());
         for (EventWaiter waiter : waiters) {
-            if (waiter.checkCondition(event))
-                waiter.performAction(event);
+            if (waiter.checkCondition(event)) waiter.performAction(event);
         }
     }
 
@@ -43,10 +42,8 @@ public class EventWaiterListener implements EventListener {
     public void disable(EventWaiter eventWaiter) {
         List<EventWaiter> waiters = getWaiters(eventWaiter.getEventType());
         waiters.remove(eventWaiter);
-        if (waiters.isEmpty())
-            ACTIVE.remove(eventWaiter.getEventType());
-        else
-            ACTIVE.put(eventWaiter.getEventType(), waiters);
+        if (waiters.isEmpty()) ACTIVE.remove(eventWaiter.getEventType());
+        else ACTIVE.put(eventWaiter.getEventType(), waiters);
     }
 
 }

@@ -10,10 +10,5 @@ public abstract sealed class ArgumentParser permits MessageCommandArgumentParser
         this.event = event;
     }
 
-    //TODO remove
-    public CommandEvent event() {
-        return event;
-    }
-
     public abstract boolean parseArguments();
 }

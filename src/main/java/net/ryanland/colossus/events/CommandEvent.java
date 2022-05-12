@@ -4,31 +4,30 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.*;
 import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.command.Command;
-import net.ryanland.colossus.command.CommandException;
+import net.ryanland.colossus.command.SubCommandHolder;
 import net.ryanland.colossus.command.arguments.ParsedArgumentMap;
 import net.ryanland.colossus.sys.file.database.DatabaseDriver;
 import net.ryanland.colossus.sys.file.database.Table;
-import net.ryanland.colossus.sys.interactions.menu.InteractionMenu;
-import net.ryanland.colossus.sys.interactions.menu.InteractionMenuBuilder;
-import net.ryanland.colossus.sys.message.PresetBuilder;
 
-public abstract class CommandEvent {
+public abstract class CommandEvent implements RepliableEvent {
 
     public abstract Command getCommand();
 
-    public abstract String getName();
+    public abstract SubCommandHolder getHeadSubCommandHolder();
+
+    public abstract SubCommandHolder getNestedSubCommandHolder();
 
     public abstract void setCommand(Command command);
+
+    public abstract void setHeadSubCommandHolder(SubCommandHolder subCommandHolder);
+
+    public abstract void setNestedSubCommandHolder(SubCommandHolder subCommandHolder);
+
+    public abstract String getName();
 
     public abstract ParsedArgumentMap getParsedArgs();
 
     public abstract void setParsedArgs(ParsedArgumentMap parsedArgs);
-
-    public abstract User getUser();
-
-    public abstract Member getMember();
-
-    public abstract Guild getGuild();
 
     public abstract MessageChannel getChannel();
 
@@ -59,28 +58,17 @@ public abstract class CommandEvent {
         return Colossus.getDatabaseDriver().get(getGuild());
     }
 
+    public String getUsedPrefix() {
+        if (this instanceof SlashEvent) return "/";
+        else return getGuildPrefix();
+    }
+
     public String getGuildPrefix() {
         String prefix = getGuildTable().get("_prf");
         if (prefix != null)
             return prefix;
         else
             return Colossus.getConfig().getPrefix();
-    }
-
-    public abstract void reply(Message message);
-
-    public abstract void reply(String message);
-
-    public abstract void reply(MessageEmbed message);
-
-    public abstract void reply(PresetBuilder message);
-
-    public void reply(InteractionMenu menu) throws CommandException {
-        menu.send(this);
-    }
-
-    public void reply(InteractionMenuBuilder<?> menuBuilder) {
-        reply(menuBuilder);
     }
 
     public abstract <T> T getArgument(String id);

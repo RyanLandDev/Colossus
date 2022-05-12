@@ -12,7 +12,7 @@ public abstract class SnowflakeArgument<T extends ISnowflake> extends SingleArgu
     public T resolveMessageCommandArgument(String arg, MessageCommandEvent event) throws ArgumentException {
         try {
             return resolveMessageCommandArgument(event, arg.replaceAll("\\D", ""));
-        } catch (NumberFormatException e) {
+        } catch (IllegalArgumentException e) {
             throw new MalformedArgumentException("Invalid ID/mention provided, or not found.");
         }
     }

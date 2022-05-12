@@ -41,7 +41,7 @@ public abstract class Argument<T> {
     }
 
     public OptionData getOptionData() {
-        return new OptionData(getSlashCommandOptionType(), name == null ? id : name, description);
+        return new OptionData(getSlashCommandOptionType(), name == null ? id : name, description, !isOptional());
     }
 
     public String getName() {

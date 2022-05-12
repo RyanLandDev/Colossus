@@ -12,33 +12,34 @@ import java.util.function.Supplier;
  */
 public enum DefaultPresetType implements PresetType {
 
-    DEFAULT(() -> null, () -> null, OffsetDateTime::now, () -> 0x2f3136,
+    DEFAULT(() -> null, () -> null, () -> null, OffsetDateTime::now, () -> 0x2f3136,
         () -> null, () -> null, () -> null, () -> null,
         () -> Colossus.getSelfUser().getName(), () -> Colossus.getSelfUser().getAvatarUrl(),
         () -> null, () -> null, () -> false),
 
-    NOTIFICATION(() -> null, () -> null, OffsetDateTime::now, () -> 0x5dadec,
+    NOTIFICATION(() -> null, () -> null, () -> null, OffsetDateTime::now, () -> 0x5dadec,
         () -> Colossus.getSelfUser().getAvatarUrl(), () -> null, () -> null, () -> null,
         () -> Colossus.getSelfUser().getName(), () -> Colossus.getSelfUser().getAvatarUrl(),
         () -> null, () -> null, () -> false),
 
-    ERROR(() -> "Error", () -> null, OffsetDateTime::now, () -> 0xdd2e44,
+    ERROR(() -> null, () -> "Error", () -> null, OffsetDateTime::now, () -> 0xdd2e44,
         () -> null, () -> null, () -> null, () -> null,
         () -> Colossus.getSelfUser().getName(), () -> Colossus.getSelfUser().getAvatarUrl(),
         () -> null, () -> null, () -> true),
 
-    WARNING(() -> "Warning", () -> null, OffsetDateTime::now, () -> 0xffcc4d,
+    WARNING(() -> null, () -> "Warning", () -> null, OffsetDateTime::now, () -> 0xffcc4d,
         () -> null, () -> null, () -> null, () -> null,
         () -> Colossus.getSelfUser().getName(), () -> Colossus.getSelfUser().getAvatarUrl(),
         () -> null, () -> null, () -> false),
 
-    SUCCESS(() -> "Success", () -> null, OffsetDateTime::now, () -> 0x4ccd6a,
+    SUCCESS(() -> null, () -> "Success", () -> null, OffsetDateTime::now, () -> 0x4ccd6a,
         () -> null, () -> null, () -> null, () -> null,
         () -> Colossus.getSelfUser().getName(), () -> Colossus.getSelfUser().getAvatarUrl(),
         () -> null, () -> null, () -> false)
 
     ;
 
+    private final Supplier<String> content;
     private final Supplier<String> title;
     private final Supplier<String> description;
     private final Supplier<OffsetDateTime> timestamp;
@@ -53,10 +54,12 @@ public enum DefaultPresetType implements PresetType {
     private final Supplier<MessageEmbed.Field[]> fields;
     private final Supplier<Boolean> ephemeral;
 
-    DefaultPresetType(Supplier<String> title, Supplier<String> description, Supplier<OffsetDateTime> timestamp, Supplier<Integer> color,
-                      Supplier<String> thumbnail, Supplier<String> authorName, Supplier<String> authorUrl, Supplier<String> authorIconUrl,
-                      Supplier<String> footerText, Supplier<String> footerIconUrl, Supplier<String> image, Supplier<MessageEmbed.Field[]> fields,
-                      Supplier<Boolean> ephemeral) {
+    DefaultPresetType(Supplier<String> content, Supplier<String> title, Supplier<String> description,
+                      Supplier<OffsetDateTime> timestamp, Supplier<Integer> color, Supplier<String> thumbnail,
+                      Supplier<String> authorName, Supplier<String> authorUrl, Supplier<String> authorIconUrl,
+                      Supplier<String> footerText, Supplier<String> footerIconUrl, Supplier<String> image,
+                      Supplier<MessageEmbed.Field[]> fields, Supplier<Boolean> ephemeral) {
+        this.content = content;
         this.title = title;
         this.description = description;
         this.timestamp = timestamp;
@@ -70,6 +73,12 @@ public enum DefaultPresetType implements PresetType {
         this.image = image;
         this.fields = fields;
         this.ephemeral = ephemeral;
+    }
+
+    @Nullable
+    @Override
+    public String getContent() {
+        return content.get();
     }
 
     @Nullable

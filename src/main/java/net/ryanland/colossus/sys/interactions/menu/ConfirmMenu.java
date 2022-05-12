@@ -1,121 +1,45 @@
 package net.ryanland.colossus.sys.interactions.menu;
 
 import net.dv8tion.jda.api.entities.Emoji;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.interactions.Interaction;
-import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.components.Button;
-import net.ryanland.colossus.command.executor.functional_interface.CommandRunnable;
-import net.ryanland.colossus.sys.interactions.ButtonClickContainer;
-import net.ryanland.colossus.sys.interactions.ButtonHandler;
-import net.ryanland.colossus.sys.interactions.InteractionUtil;
+import net.ryanland.colossus.command.executor.functional_interface.CommandConsumer;
+import net.ryanland.colossus.events.ClickButtonEvent;
+import net.ryanland.colossus.events.RepliableEvent;
+import net.ryanland.colossus.sys.interactions.button.BaseButton;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-public record ConfirmMenu(String description, CommandRunnable confirmAction,
-                          String confirmedDescription)
+/**
+ * Creates an {@link InteractionMenu} that presents the user with an option to either go through with an action or cancel it.
+ * @param description The description of the embed to confirm the action
+ * @param confirmedDescription The description of the embed after the user has clicked the Confirm button
+ * @param confirmAction Code to perform when the user has clicked the Confirm button
+ */
+public record ConfirmMenu(String description, String confirmedDescription, CommandConsumer<ClickButtonEvent> confirmAction)
     implements InteractionMenu {
 
     @Override
-    public void send(Interaction interaction) {
-        // Create buttons
-        List<Button> buttons = Arrays.asList(
-            Button.success("confirm", "Confirm")
-                .withEmoji(Emoji.fromUnicode("✅")),
-            Button.danger("dismiss", "Cancel")
-                .withEmoji(Emoji.fromUnicode("❎"))
-        );
+    public void send(RepliableEvent event) {
+        long userId = event.getUser().getIdLong();
 
         // Create embed
         PresetBuilder embed = new PresetBuilder()
             .setTitle("Confirm")
             .setDescription(description)
-            .addLogo();
+            .addLogo()
+            .setEphemeral(true);
 
-        // Send the message and set the action rows
-        InteractionHook hook = interaction.replyEmbeds(embed.build())
-            .addActionRows(InteractionUtil.of(buttons))
-            .setEphemeral(true)
-            .complete();
-
-        // Add a listener for when a button is clicked
-        ButtonHandler.addListener(hook, buttonEvent -> new ButtonHandler.ButtonListener(
-                interaction.getUser().getIdLong(),
-                clickEvent -> new ButtonClickContainer(
-                    event -> {
-                        switch (event.getComponentId()) {
-                            case "confirm" -> {
-                                event.deferEdit().queue();
-                                event.getHook()
-                                    .editOriginalComponents(Collections.emptyList())
-                                    .setEmbeds(embed.setDescription(confirmedDescription).build())
-                                    .queue();
-                                confirmAction.execute();
-                            }
-                            case "dismiss" -> {
-                                event.deferEdit().queue();
-                                event.getHook()
-                                    .editOriginalComponents(Collections.emptyList())
-                                    .setEmbeds(embed.setDescription("Action canceled.").build())
-                                    .queue();
-                            }
-                        }
-                    }
-                )
-            )
-        );
-    }
-
-    @Override
-    public void send(Message message) {
         // Create buttons
-        List<Button> buttons = Arrays.asList(
-            Button.success("confirm", "Confirm")
-                .withEmoji(Emoji.fromUnicode("✅")),
-            Button.danger("dismiss", "Cancel")
-                .withEmoji(Emoji.fromUnicode("❎"))
+        embed.addButtons(
+            BaseButton.user(userId, Button.success("confirm", "Confirm").withEmoji(Emoji.fromUnicode("✅")),
+                evt -> {
+                    evt.reply(embed.setDescription(confirmedDescription).clearButtons());
+                    confirmAction.consume(evt);
+                }),
+            BaseButton.user(userId, Button.danger("dismiss", "Cancel").withEmoji(Emoji.fromUnicode("❎")),
+                evt -> evt.reply(embed.setDescription("Action canceled.").clearButtons()))
         );
 
-        // Create embed
-        PresetBuilder embed = new PresetBuilder()
-            .setTitle("Confirm")
-            .setDescription(description)
-            .addLogo();
-
-        // Send the message and set the action rows
-        Message msg = message.replyEmbeds(embed.build())
-            .setActionRows(InteractionUtil.of(buttons))
-            .complete();
-
-        // Add a listener for when a button is clicked
-        ButtonHandler.addListener(msg, buttonEvent -> new ButtonHandler.ButtonListener(
-                msg.getAuthor().getIdLong(),
-                clickEvent -> new ButtonClickContainer(
-                    event -> {
-                        switch (event.getComponentId()) {
-                            case "confirm" -> {
-                                event.deferEdit().queue();
-                                event.getHook()
-                                    .editOriginalComponents(Collections.emptyList())
-                                    .setEmbeds(embed.setDescription(confirmedDescription).build())
-                                    .queue();
-                                confirmAction.execute();
-                            }
-                            case "dismiss" -> {
-                                event.deferEdit().queue();
-                                event.getHook()
-                                    .editOriginalComponents(Collections.emptyList())
-                                    .setEmbeds(embed.setDescription("Action canceled.").build())
-                                    .queue();
-                            }
-                        }
-                    }
-                )
-            )
-        );
+        // Send the message
+        event.reply(embed);
     }
-
 }

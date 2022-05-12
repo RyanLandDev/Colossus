@@ -6,21 +6,26 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.Interaction;
 import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
+import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.requests.restaction.interactions.ReplyAction;
 import net.ryanland.colossus.command.Command;
-import net.ryanland.colossus.command.CommandException;
+import net.ryanland.colossus.command.SubCommandHolder;
 import net.ryanland.colossus.command.arguments.ParsedArgumentMap;
-import net.ryanland.colossus.sys.interactions.menu.InteractionMenu;
-import net.ryanland.colossus.sys.interactions.menu.InteractionMenuBuilder;
+import net.ryanland.colossus.sys.interactions.button.ButtonRow;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class SlashEvent extends CommandEvent {
 
     private Command command;
+    private SubCommandHolder headSubCommandHolder;
+    private SubCommandHolder nestedSubCommandHolder;
     private ParsedArgumentMap parsedArgs;
     private final SlashCommandEvent event;
 
@@ -34,8 +39,28 @@ public class SlashEvent extends CommandEvent {
     }
 
     @Override
+    public SubCommandHolder getHeadSubCommandHolder() {
+        return headSubCommandHolder;
+    }
+
+    @Override
+    public SubCommandHolder getNestedSubCommandHolder() {
+        return nestedSubCommandHolder;
+    }
+
+    @Override
     public void setCommand(Command command) {
         this.command = command;
+    }
+
+    @Override
+    public void setHeadSubCommandHolder(SubCommandHolder subCommandHolder) {
+        this.headSubCommandHolder = subCommandHolder;
+    }
+
+    @Override
+    public void setNestedSubCommandHolder(SubCommandHolder subCommandHolder) {
+        this.nestedSubCommandHolder = subCommandHolder;
     }
 
     @Override
@@ -54,105 +79,44 @@ public class SlashEvent extends CommandEvent {
         return (T) parsedArgs.get(id);
     }
 
-    private ReplyAction sendReply(Message message, boolean ephemeral) {
-        return event.reply(message).setEphemeral(ephemeral);
-    }
-
-    private ReplyAction sendReply(Message message) {
-        return sendReply(message, false);
-    }
-
-    private ReplyAction sendReply(MessageEmbed embed, boolean ephemeral) {
-        return event.replyEmbeds(embed)
-            .setEphemeral(ephemeral);
-    }
-
-    private ReplyAction sendReply(MessageEmbed embed) {
-        return sendReply(embed, false);
-    }
-
-    private ReplyAction sendReply(String message, boolean ephemeral) {
-        return event.reply(message).setEphemeral(ephemeral);
-    }
-
-    private ReplyAction sendReply(String message) {
-        return sendReply(message, false);
-    }
-
-    private ReplyAction sendReply(PresetBuilder embed, boolean ephemeral) {
-        return sendReply(embed.build(), ephemeral);
-    }
-
-    private ReplyAction sendReply(PresetBuilder embed) {
-        return sendReply(embed, false);
-    }
-
-    public ReplyAction performReply(Message message) {
-        return sendReply(message);
-    }
-
-    public ReplyAction performReply(Message message, boolean ephemeral) {
-        return sendReply(message, ephemeral);
-    }
-
-    public ReplyAction performReply(String message) {
-        return sendReply(message);
-    }
-
-    public ReplyAction performReply(String message, boolean ephemeral) {
-        return sendReply(message, ephemeral);
-    }
-
-    public ReplyAction performReply(PresetBuilder embed) {
-        return sendReply(embed, embed.isEphemeral());
-    }
-
-    public ReplyAction performReply(PresetBuilder embed, boolean ephemeral) {
-        return sendReply(embed, ephemeral);
-    }
-
-    public ReplyAction performReply(MessageEmbed embed) {
-        return sendReply(embed);
-    }
-
-    public ReplyAction performReply(MessageEmbed embed, boolean ephemeral) {
-        return sendReply(embed, ephemeral);
+    public void reply(MessageEmbed embed, boolean ephemeral, List<ActionRow> actionRows) {
+        if (actionRows == null) actionRows = new ArrayList<>();
+        event.replyEmbeds(embed)
+            .setEphemeral(ephemeral)
+            .addActionRows(actionRows)
+            .queue();
     }
 
     @Override
-    public void reply(Message message) {
-        sendReply(message).queue();
-    }
-
     public void reply(Message message, boolean ephemeral) {
-        sendReply(message, ephemeral).queue();
+        event.reply(message).setEphemeral(ephemeral).queue();
     }
 
     @Override
-    public void reply(String message) {
-        sendReply(message).queue();
-    }
-
     public void reply(String message, boolean ephemeral) {
-        sendReply(message, ephemeral).queue();
+        event.reply(message).setEphemeral(ephemeral).queue();
     }
 
     @Override
-    public void reply(MessageEmbed embed) {
-        sendReply(embed).queue();
-    }
-
     public void reply(MessageEmbed embed, boolean ephemeral) {
-        sendReply(embed, ephemeral).queue();
+        event.replyEmbeds(embed).setEphemeral(ephemeral).queue();
     }
 
     @Override
     public void reply(PresetBuilder embed) {
-        sendReply(embed, embed.isEphemeral()).queue();
-    }
-
-    public void reply(PresetBuilder embed, boolean ephemeral) {
-        sendReply(embed, ephemeral).queue();
+        // send reply and set hook
+        InteractionHook hook = event.replyEmbeds(embed.embed())
+            .setEphemeral(embed.isEphemeral())
+            .addActionRows(embed.getButtonRows().stream().map(ButtonRow::toActionRow).collect(Collectors.toList()))
+            .setContent(embed.getContent())
+            .complete();
+        // add listener for the buttons
+        if (!embed.getButtonRows().isEmpty()) {
+            ClickButtonEvent.addListener(
+                hook.retrieveOriginal().complete().getIdLong(), embed.getButtonRows(),
+                () -> hook.editOriginalComponents(Collections.emptyList()).queue()
+            );
+        }
     }
 
     @Override

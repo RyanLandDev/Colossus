@@ -22,7 +22,7 @@ public interface SubCommand {
     /**
      * Create a {@link SubcommandData} for this {@link SubCommand}
      */
-    default SubcommandData getData() {
+    default SubcommandData getSlashData() {
         Command command = (Command) this;
         return new SubcommandData(command.getName(), command.getDescription()).addOptions(command.getOptionsData());
     }

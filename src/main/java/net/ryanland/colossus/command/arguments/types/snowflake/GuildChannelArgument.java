@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.ArgumentException;
+import net.ryanland.colossus.command.arguments.parsing.exceptions.MalformedArgumentException;
 import net.ryanland.colossus.events.MessageCommandEvent;
 import net.ryanland.colossus.events.SlashEvent;
 
@@ -45,7 +46,7 @@ public class GuildChannelArgument extends SnowflakeArgument<GuildChannel> {
         if (permittedChannelTypes.length == 0 || List.of(permittedChannelTypes).contains(channel.getType()))
             return channel;
         else
-            throw new ArgumentException("Only channels of the following types are permitted: " +
+            throw new MalformedArgumentException("Only channels of the following types are permitted: " +
                 Arrays.stream(permittedChannelTypes)
                     .map(type -> type.name().charAt(0) + type.name().substring(1).toLowerCase())
                     .collect(Collectors.joining("hi")));

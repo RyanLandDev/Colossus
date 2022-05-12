@@ -19,7 +19,7 @@ public class ArgumentException extends CommandException {
     }
 
     public String getMessage(CommandEvent event, Argument<?> argument) {
-        return HelpMaker.formattedUsage(event.getCommand(), argument)
+        return HelpMaker.formattedUsage(event, argument)
             + "\n\n" + message;
     }
 }

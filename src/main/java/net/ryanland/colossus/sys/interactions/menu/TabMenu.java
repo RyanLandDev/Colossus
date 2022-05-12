@@ -1,141 +1,81 @@
 package net.ryanland.colossus.sys.interactions.menu;
 
 import net.dv8tion.jda.api.entities.Emoji;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.interactions.Interaction;
-import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.components.Button;
 import net.dv8tion.jda.api.interactions.components.ButtonStyle;
-import net.ryanland.colossus.sys.interactions.ButtonClickContainer;
-import net.ryanland.colossus.sys.interactions.ButtonHandler;
-import net.ryanland.colossus.sys.interactions.InteractionUtil;
+import net.ryanland.colossus.events.RepliableEvent;
+import net.ryanland.colossus.sys.interactions.button.BaseButton;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class TabMenu implements InteractionMenu {
 
-    private final TabMenuPage[] pages;
+    private final List<TabMenuPage> pages;
+    private final TabMenuPage homePage;
 
-    public TabMenu(List<TabMenuPage> pages) {
-        this(pages.toArray(new TabMenuPage[0]));
-    }
-
-    public TabMenu(TabMenuPage[] pages) {
+    public TabMenu(List<TabMenuPage> pages, PresetBuilder homePage) {
         this.pages = pages;
+        this.homePage = new TabMenuPage("_home", homePage, null, true);
     }
 
     @Override
-    public void send(Interaction interaction) {
-        // Set all embed titles to match the category name
-        for (TabMenuPage page : pages) {
-            PresetBuilder embed = page.getEmbed();
-
-            if (embed.getTitle() == null)
-                embed.setTitle(page.getName());
-        }
-
-        // Init vars
-        HashMap<String, TabMenuPage> pageMap = new HashMap<>(pages.length);
-        List<Button> buttons = new ArrayList<>();
-
-        // Iterate over all pages
-        for (TabMenuPage page : pages) {
-            // Skip if this page should be hidden
-            if (page.isHidden())
-                continue;
-
-            // Create the Button
-            Button button = Button.secondary(page.getName(), page.getName());
-            if (page.getEmoji() != null)
-                button = button.withEmoji(Emoji.fromMarkdown(page.getEmoji()));
-
-            // Put the page and buttons in their respective data structures
-            pageMap.put(button.getId(), page);
-            buttons.add(button);
-        }
-
-        // Send the message and set the action rows
-        InteractionHook hook = interaction.replyEmbeds(pages[0].getEmbed().build())
-            .addActionRows(InteractionUtil.of(buttons))
-            .complete();
-
-        // Add a listener for when a button is clicked
-        ButtonHandler.addListener(hook, buttonEvent -> new ButtonHandler.ButtonListener(
-                interaction.getUser().getIdLong(),
-                clickEvent -> new ButtonClickContainer(
-                    event -> {
-                        event.deferEdit().queue();
-
-                        hook.editOriginalEmbeds(pageMap.get(event.getComponentId())
-                                .getEmbed().build())
-                            .setActionRows(
-                                InteractionUtil.of(buttons.stream()
-                                    .map(button -> button.equals(event.getButton()) ?
-                                        button.withStyle(ButtonStyle.SUCCESS).asDisabled() :
-                                        button.withStyle(ButtonStyle.SECONDARY).asEnabled())
-                                    .collect(Collectors.toList())
-                                ))
-                            .queue();
-                    })));
+    public void send(RepliableEvent event) {
+        event.reply(renderPage(homePage, event.getUser().getIdLong()));
     }
 
-    @Override
-    public void send(Message message) {
-        // Set all embed titles to match the category name
-        for (TabMenuPage page : pages) {
-            PresetBuilder embed = page.getEmbed();
+    public PresetBuilder renderPage(TabMenuPage page, long userId) {
+        boolean hasSubPages = !page.getChildren().isEmpty();
+        List<BaseButton> buttons = new ArrayList<>();
 
-            if (embed.getTitle() == null)
-                embed.setTitle(page.getName());
+        // if parent exists, add back button
+        if (page.getParent() != null) {
+            buttons.add(BaseButton.user(userId,
+                Button.primary("_back", "Back").withEmoji(Emoji.fromUnicode("⬅")),
+                evt -> evt.reply(renderPage(page.getParent(), userId))
+            ));
+        // if there is no parent, but we are currently in a subpage menu, add a back button to return to the home page
+        } else if (hasSubPages) {
+            buttons.add(BaseButton.user(userId,
+                Button.primary("_back", "Back").withEmoji(Emoji.fromUnicode("⬅")),
+                evt -> evt.reply(renderPage(homePage, userId))
+            ));
         }
 
-        // Init vars
-        HashMap<String, TabMenuPage> pageMap = new HashMap<>(pages.length);
-        List<Button> buttons = new ArrayList<>();
+        // has subpages, display subpage buttons
+        if (hasSubPages) {
+            for (TabMenuPage subpage : page) {
+                // skip hidden or invalid subpages
+                if (subpage.getEmbed() == null || subpage.isHidden()) continue;
 
-        // Iterate over all pages
-        for (TabMenuPage page : pages) {
-            // Skip if this page should be hidden
-            if (page.isHidden())
-                continue;
+                // create the button
+                buttons.add(BaseButton.user(userId,
+                    Button.secondary("." + subpage.getName(), subpage.getName())
+                        .withEmoji(Emoji.fromMarkdown(subpage.getEmoji())),
+                    evt -> evt.reply(renderPage(subpage, userId))
+                ));
+            }
+        // has no subpages, display other page buttons
+        } else {
+            // if there is no parent page, show all top page buttons. else, show the subpage buttons of the parent page
+            List<TabMenuPage> pages;
+            if (page.getParent() == null) pages = this.pages;
+            else pages = page.getParent().getChildren();
 
-            // Create the Button
-            Button button = Button.secondary(page.getName(), page.getName());
-            if (page.getEmoji() != null)
-                button = button.withEmoji(Emoji.fromMarkdown(page.getEmoji()));
-
-            // Put the page and buttons in their respective data structures
-            pageMap.put(button.getId(), page);
-            buttons.add(button);
+            // loop through pages
+            for (TabMenuPage _page : pages) {
+                if (_page.getEmbed() == null || _page.isHidden()) continue;
+                Button button = Button.secondary("." + _page.getName(), _page.getName())
+                    .withEmoji(Emoji.fromMarkdown(_page.getEmoji()));
+                buttons.add(BaseButton.user(userId,
+                    _page.getName().equals(page.getName()) ? button.withStyle(ButtonStyle.SUCCESS).asDisabled() : button,
+                    evt -> evt.reply(renderPage(_page, userId))
+                ));
+            }
         }
 
-        // Send the message and set the action rows
-        Message msg = message.replyEmbeds(pages[0].getEmbed().build())
-            .setActionRows(InteractionUtil.of(buttons))
-            .complete();
-
-        // Add a listener for when a button is clicked
-        ButtonHandler.addListener(msg, buttonEvent -> new ButtonHandler.ButtonListener(
-                message.getAuthor().getIdLong(),
-                clickEvent -> new ButtonClickContainer(
-                    event -> {
-                        event.deferEdit().queue();
-
-                        msg.editMessageEmbeds(pageMap.get(event.getComponentId())
-                                .getEmbed().build())
-                            .setActionRows(
-                                InteractionUtil.of(buttons.stream()
-                                    .map(button -> button.equals(event.getButton()) ?
-                                        button.withStyle(ButtonStyle.SUCCESS).asDisabled() :
-                                        button.withStyle(ButtonStyle.SECONDARY).asEnabled())
-                                    .collect(Collectors.toList())
-                                ))
-                            .queue();
-                    })));
+        return page.getEmbed().clearButtons().addButtons(buttons);
     }
-
 }

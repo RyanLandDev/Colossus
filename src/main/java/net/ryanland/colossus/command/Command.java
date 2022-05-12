@@ -10,15 +10,20 @@ import net.ryanland.colossus.command.executor.CommandHandler;
 import net.ryanland.colossus.command.executor.DisabledCommandHandler;
 import net.ryanland.colossus.command.permissions.PermissionHolder;
 
-import javax.swing.text.html.Option;
-import java.util.HashMap;
-import java.util.stream.Collectors;
-
 import static net.ryanland.colossus.command.info.HelpMaker.getInfo;
 
-public sealed abstract class Command permits DefaultCommand {
+public sealed abstract class Command permits BaseCommand {
 
-    public Command() {}
+    private Category category = null;
+
+    protected Command setCategory(Category category) {
+        this.category = category;
+        return this;
+    }
+
+    public final Category getCategory() {
+        return category;
+    }
 
     // CommandData getters --------------------
 
@@ -55,7 +60,8 @@ public sealed abstract class Command permits DefaultCommand {
     }
 
     public final OptionData[] getOptionsData() {
-        return getArguments().stream().map(Argument::getOptionData).toArray(OptionData[]::new);
+        return (getArguments() == null ? new ArgumentSet() : getArguments())
+            .stream().map(Argument::getOptionData).toArray(OptionData[]::new);
     }
 
     public final boolean isDisabled() {
@@ -67,8 +73,6 @@ public sealed abstract class Command permits DefaultCommand {
     }
 
     // ---------------------------------------------------------
-
-    public abstract Category getCategory();
 
     public abstract PermissionHolder getPermission();
 

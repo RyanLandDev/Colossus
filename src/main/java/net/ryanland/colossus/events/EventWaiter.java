@@ -24,7 +24,7 @@ public class EventWaiter {
     public <T extends Event> EventWaiter(Class<T> eventType, Predicate<T> condition, Consumer<T> action,
                        long timeAmount, TimeUnit timeUnit, Runnable timeoutAction) {
         this(eventType, condition, action);
-        ExecutorUtil.schedule(() -> {
+        ExecutorUtil.schedule(null, () -> {
             EventWaiterListener.getInstance().disable(this);
             if (timeoutAction != null) timeoutAction.run();
         }, timeAmount, timeUnit);

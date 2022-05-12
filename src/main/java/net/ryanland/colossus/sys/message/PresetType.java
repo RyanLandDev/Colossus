@@ -12,6 +12,8 @@ import java.time.OffsetDateTime;
  */
 public interface PresetType {
 
+    @Nullable String getContent();
+
     @Nullable String getTitle();
 
     @Nullable String getDescription();

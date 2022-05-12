@@ -9,6 +9,7 @@ public interface CommandConsumer<T> extends Consumer<T> {
 
     @Override
     default void accept(T t) {
+        throw new IllegalStateException("Use CommandConsumer#consume instead");
     }
 
     void consume(T t) throws CommandException;

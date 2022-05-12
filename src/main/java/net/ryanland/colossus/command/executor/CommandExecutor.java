@@ -6,7 +6,6 @@ import net.ryanland.colossus.command.arguments.parsing.ArgumentParser;
 import net.ryanland.colossus.command.arguments.parsing.MessageCommandArgumentParser;
 import net.ryanland.colossus.command.arguments.parsing.SlashCommandArgumentParser;
 import net.ryanland.colossus.command.finalizers.Finalizer;
-import net.ryanland.colossus.command.impl.TestSubCommand;
 import net.ryanland.colossus.command.inhibitors.Inhibitor;
 import net.ryanland.colossus.command.inhibitors.InhibitorException;
 import net.ryanland.colossus.events.CommandEvent;
@@ -17,7 +16,6 @@ import net.ryanland.colossus.sys.message.PresetBuilder;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Deque;
 import java.util.List;
-import java.util.Locale;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
@@ -46,27 +44,40 @@ public class CommandExecutor {
             argumentParser = new SlashCommandArgumentParser(event);
 
             // Applying a different command if a subcommand is used
-            if (eventAsSlashCommand.getSubCommandGroup() != null || eventAsSlashCommand.getSubCommandName() != null) {
+            if (eventAsSlashCommand.getSubCommandName() != null) {
                 SlashEvent finalEventAsSlashCommand = eventAsSlashCommand;
-                command = (Command) ((SubCommandHolder) command).getRealSubCommands().stream()
+                // if a subcommand group is used, define this first before finding the actual subcommand,
+                // to prevent subcommands with duplicate names
+                if (eventAsSlashCommand.getSubCommandGroup() != null) {
+                    event.setHeadSubCommandHolder(((SubCommandHolder) command));
+                    command = (Command) ((SubCommandHolder) command).getSubCommands().stream()
+                        .filter(subcommandGroup -> ((Command) subcommandGroup).getName()
+                            .equals(finalEventAsSlashCommand.getSubCommandGroup()))
+                        .findFirst().get();
+                    event.setNestedSubCommandHolder((SubCommandHolder) command);
+                }
+                // finding the subcommand
+                command = (Command) ((SubCommandHolder) command).getSubCommands().stream()
                     .filter(subCommand -> ((Command) subCommand).getName().equals(finalEventAsSlashCommand.getSubCommandName()))
                     .findFirst().get();
+
+                if (eventAsSlashCommand.getSubCommandGroup() == null)
+                    event.setNestedSubCommandHolder((SubCommandHolder) command);
             }
         } else if (event instanceof MessageCommandEvent) {
             eventAsMessageCommand = (MessageCommandEvent) event;
             argumentParser = new MessageCommandArgumentParser(event);
 
-            System.out.println("0");
             // Find the subcommand if one is used
             if (command instanceof SubCommandHolder) {
-                System.out.println("1");
                 Deque<String> queue = ((MessageCommandArgumentParser) argumentParser).getRawArgumentQueue();
-                System.out.println(queue);
                 try {
+                    event.setHeadSubCommandHolder((SubCommandHolder) command);
                     command = (Command) findSubcommand(event, command, queue);
-                    System.out.println(command.getName());
-                    if (command instanceof SubCommandHolder)
+                    if (command instanceof SubCommandHolder) {
+                        event.setNestedSubCommandHolder((SubCommandHolder) command);
                         command = (Command) findSubcommand(event, command, queue);
+                    }
                 } catch (IllegalArgumentException e) {
                     return;
                 }
@@ -84,7 +95,6 @@ public class CommandExecutor {
                 }
             }
 
-            System.out.println(argumentParser.event().getCommand().getName());
             if (argumentParser.parseArguments()) {
                 try {
                     //Invoking the run method, only the InvocationTargetException can be thrown through the method,
@@ -126,7 +136,7 @@ public class CommandExecutor {
 
         if (finalParameter.isEmpty()) {
             event.reply(new PresetBuilder(Colossus.getErrorPresetType(), "Invalid Subcommand",
-                "This command requires a subcommand. Possible subcommands are: " +
+                "This command requires a subcommand.\n\nPossible subcommands are: " +
                     ((SubCommandHolder) command).getFormattedSubCommands()));
             throw new IllegalArgumentException();
         }
@@ -136,7 +146,7 @@ public class CommandExecutor {
 
         if (matches.isEmpty()) {
             event.reply(new PresetBuilder(Colossus.getErrorPresetType(), "Invalid Subcommand",
-                "`" + parameter + "` is not a valid subcommand. Possible subcommands are: " +
+                "`" + parameter + "` is not a valid subcommand.\n\nPossible subcommands are: " +
                     ((SubCommandHolder) command).getFormattedSubCommands()));
             throw new IllegalArgumentException();
         }

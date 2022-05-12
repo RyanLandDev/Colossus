@@ -3,16 +3,20 @@ package net.ryanland.colossus.events;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.api.requests.restaction.MessageAction;
 import net.ryanland.colossus.command.Command;
+import net.ryanland.colossus.command.SubCommandHolder;
 import net.ryanland.colossus.command.arguments.ParsedArgumentMap;
+import net.ryanland.colossus.sys.interactions.button.ButtonRow;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 
-import java.util.Arrays;
+import java.util.Collections;
+import java.util.stream.Collectors;
 
 public class MessageCommandEvent extends CommandEvent {
 
     private Command command;
+    private SubCommandHolder headSubCommandHolder;
+    private SubCommandHolder nestedSubCommandHolder;
     private ParsedArgumentMap parsedArgs;
     private final MessageReceivedEvent event;
 
@@ -23,6 +27,16 @@ public class MessageCommandEvent extends CommandEvent {
     @Override
     public Command getCommand() {
         return command;
+    }
+
+    @Override
+    public SubCommandHolder getHeadSubCommandHolder() {
+        return headSubCommandHolder;
+    }
+
+    @Override
+    public SubCommandHolder getNestedSubCommandHolder() {
+        return nestedSubCommandHolder;
     }
 
     @Override
@@ -39,6 +53,16 @@ public class MessageCommandEvent extends CommandEvent {
     @Override
     public void setCommand(Command command) {
         this.command = command;
+    }
+
+    @Override
+    public void setHeadSubCommandHolder(SubCommandHolder subCommandHolder) {
+        this.headSubCommandHolder = subCommandHolder;
+    }
+
+    @Override
+    public void setNestedSubCommandHolder(SubCommandHolder subCommandHolder) {
+        this.nestedSubCommandHolder = subCommandHolder;
     }
 
     @Override
@@ -62,40 +86,34 @@ public class MessageCommandEvent extends CommandEvent {
         return event.isFromGuild();
     }
 
-    public MessageAction performReply(Message message) {
-        return event.getMessage().reply(message);
-    }
-
-    public MessageAction performReply(String message) {
-        return event.getMessage().reply(message);
-    }
-
-    public MessageAction performReply(MessageEmbed embed) {
-        return event.getMessage().replyEmbeds(embed);
-    }
-
-    public MessageAction performReply(PresetBuilder embed) {
-        return performReply(embed.build());
+    @Override
+    public void reply(Message message, boolean ephemeral) {
+        event.getMessage().reply(message).queue();
     }
 
     @Override
-    public void reply(Message message) {
-        performReply(message).queue();
+    public void reply(String message, boolean ephemeral) {
+        event.getMessage().reply(message).queue();
     }
 
     @Override
-    public void reply(String message) {
-        performReply(message).queue();
-    }
-
-    @Override
-    public void reply(MessageEmbed embed) {
-        performReply(embed).queue();
+    public void reply(MessageEmbed embed, boolean ephemeral) {
+        event.getMessage().replyEmbeds(embed).queue();
     }
 
     @Override
     public void reply(PresetBuilder embed) {
-        performReply(embed).queue();
+        // send reply
+        Message message = event.getMessage().replyEmbeds(embed.embed())
+            .setActionRows(embed.getButtonRows().stream().map(ButtonRow::toActionRow).collect(Collectors.toList()))
+            .content(embed.getContent())
+            .complete();
+        // add listener for the buttons
+        if (!embed.getButtonRows().isEmpty()) {
+            ClickButtonEvent.addListener(message.getIdLong(), embed.getButtonRows(),
+                () -> message.editMessageComponents(Collections.emptyList()).queue()
+            );
+        }
     }
 
     @Override
