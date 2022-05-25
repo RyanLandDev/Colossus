@@ -35,7 +35,18 @@ public class Category extends Node<Category> {
         this.name = name;
         this.description = description;
         this.emoji = emoji;
-        for (Command command : commands) command.setCategory(this);
+        for (Command command : commands) {
+            command.setCategory(this);
+            if (command instanceof SubCommandHolder) {
+                command.getSubCommands().forEach(subcommand -> {
+                    ((Command) subcommand).setCategory(this);
+                    if (subcommand instanceof SubCommandHolder) {
+                        ((Command) subcommand).getSubCommands()
+                            .forEach(nestedSubcommand -> ((Command) nestedSubcommand).setCategory(this));
+                    }
+                });
+            }
+        }
         this.commands = List.of(commands);
     }
 

@@ -205,7 +205,7 @@ public class ColossusBuilder {
      */
     public ColossusBuilder registerCategories(Category... categories) {
         for (Category category : categories) {
-            commands.addAll(category.getAllCommands());
+            this.commands.addAll(category.getAllCommands());
             this.categories.add(category);
         }
         return this;

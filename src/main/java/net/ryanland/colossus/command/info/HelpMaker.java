@@ -6,9 +6,7 @@ import net.ryanland.colossus.command.SubCommandHolder;
 import net.ryanland.colossus.command.annotations.CommandBuilder;
 import net.ryanland.colossus.command.arguments.Argument;
 import net.ryanland.colossus.command.arguments.ArgumentSet;
-import net.ryanland.colossus.command.impl.TestTwoCommand;
 import net.ryanland.colossus.events.CommandEvent;
-import net.ryanland.colossus.sys.message.PresetBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -37,7 +35,7 @@ public class HelpMaker {
         elements.add(command.getName());
 
         if (command instanceof SubCommandHolder) {
-            elements.add(String.format("<%s>", ((SubCommandHolder) command).getSubCommands()
+            elements.add(String.format("<%s>", command.getSubCommands()
                 .stream().map(subCommand -> ((Command) subCommand).getName()).collect(Collectors.joining("/"))));
             elements.add("[...]");
         } else {

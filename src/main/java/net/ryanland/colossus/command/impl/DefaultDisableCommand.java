@@ -25,7 +25,7 @@ public final class DefaultDisableCommand extends DefaultCommand implements Combi
     @Override
     public PermissionHolder getPermission() {
         return new PermissionBuilder()
-            .addRequirement(new BotOwnerRequirement())
+            .addRequirements(new BotOwnerRequirement())
             .build();
     }
 

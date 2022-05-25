@@ -13,7 +13,6 @@ import net.ryanland.colossus.sys.interactions.menu.TabMenuBuilder;
 import net.ryanland.colossus.sys.interactions.menu.TabMenuPage;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -81,25 +80,59 @@ public final class DefaultHelpCommand extends DefaultCommand implements Combined
         for (Category subcategory : category) addCategoryPage(menu, categoryPage, subcategory, member);
     }
 
-    private void supplyCommandHelp(CommandEvent event, Command command) {
+    private void supplyCommandHelp(CommandEvent event, Command command) throws CommandException {
         // base command
-        PresetBuilder baseEmbed = new PresetBuilder()
-            .setTitle(command.getUppercaseName() + " Command" +
-                (command.isDisabled() ? " [Disabled]" : ""))
+        PresetBuilder baseEmbed = generateCommandEmbed(event, command, null, null);
+
+        // return base command info
+        if (!(command instanceof SubCommandHolder)) {
+            event.reply(baseEmbed);
+        // if a subcommand holder is used, use a menu instead with buttons for the subcommands
+        } else {
+            TabMenuBuilder menu = new TabMenuBuilder().setHomePage(baseEmbed);
+            for (SubCommand subcommand : command.getSubCommands()) {
+                // for every subcommand, create a page
+                TabMenuPage page = new TabMenuPage(((Command) subcommand).getName(),
+                    generateCommandEmbed(event, (Command) subcommand, (SubCommandHolder) command, null),
+                    null, false);
+
+                // if this subcommand contains nested subcommands, create subpages for those
+                if (subcommand instanceof SubCommandHolder) {
+                    for (SubCommand nestedSubcommand : ((SubCommandHolder) subcommand).getSubCommands()) {
+                        page.addChildren(new TabMenuPage(((Command) nestedSubcommand).getName(),
+                            generateCommandEmbed(event, (Command) nestedSubcommand, (SubCommandHolder) command,
+                                (SubCommandHolder) subcommand), null, false));
+                    }
+                }
+
+                // add the page to the menu
+                menu.addPages(page);
+            }
+            // send
+            event.reply(menu.build());
+        }
+    }
+
+    private PresetBuilder generateCommandEmbed(CommandEvent event, Command command,
+                                               SubCommandHolder headSubCommandHolder, SubCommandHolder nestedSubCommandHolder) {
+        PresetBuilder embed = new PresetBuilder()
+            .setTitle(((Command) (headSubCommandHolder == null ? command : headSubCommandHolder)).getUppercaseName() + " Command" +
+                (headSubCommandHolder == null && nestedSubCommandHolder == null ? "" : " - " +
+                    (headSubCommandHolder == null || nestedSubCommandHolder == null ? command.getName() :
+                        ((Command) nestedSubCommandHolder).getName() + " " + command.getName())
+                ) + (command.isDisabled() ? " [Disabled]" : ""))
             .setDescription(command.getDescription() + "\n\u200b")
             .addLogo()
             .addField("Category", command.getCategory().getName())
             .addField("Usage", String.format("```html\n%s\n```",
-                HelpMaker.formattedUsage(command, null, event.getUsedPrefix(), null, null)));
-        if (command.getPermission() != null && !command.getPermission().isEmpty())
-            baseEmbed.addField("Permission Required", command.getPermission().getName());
+                HelpMaker.formattedUsage(command, null,
+                    event.getUsedPrefix(), headSubCommandHolder, nestedSubCommandHolder)
+            ));
 
-        // return base command info
-        if (!(command instanceof SubCommandHolder))
-            event.reply(baseEmbed);
-        // if a subcommand holder is used, use a menu instead with buttons for the subcommands
-        else {
-
+        if (command.getPermission() != null && !command.getPermission().isEmpty()) {
+            embed.addField("Permission Required", command.getPermission().getName());
         }
+
+        return embed;
     }
 }

@@ -51,11 +51,9 @@ public class TabMenu implements InteractionMenu {
                 if (subpage.getEmbed() == null || subpage.isHidden()) continue;
 
                 // create the button
-                buttons.add(BaseButton.user(userId,
-                    Button.secondary("." + subpage.getName(), subpage.getName())
-                        .withEmoji(Emoji.fromMarkdown(subpage.getEmoji())),
-                    evt -> evt.reply(renderPage(subpage, userId))
-                ));
+                Button button = Button.secondary("." + subpage.getName(), subpage.getName());
+                if (subpage.getEmoji() != null) button = button.withEmoji(Emoji.fromMarkdown(subpage.getEmoji()));
+                buttons.add(BaseButton.user(userId, button, evt -> evt.reply(renderPage(subpage, userId))));
             }
         // has no subpages, display other page buttons
         } else {
@@ -67,8 +65,8 @@ public class TabMenu implements InteractionMenu {
             // loop through pages
             for (TabMenuPage _page : pages) {
                 if (_page.getEmbed() == null || _page.isHidden()) continue;
-                Button button = Button.secondary("." + _page.getName(), _page.getName())
-                    .withEmoji(Emoji.fromMarkdown(_page.getEmoji()));
+                Button button = Button.secondary("." + _page.getName(), _page.getName());
+                if (_page.getEmoji() != null) button = button.withEmoji(Emoji.fromUnicode(_page.getEmoji()));
                 buttons.add(BaseButton.user(userId,
                     _page.getName().equals(page.getName()) ? button.withStyle(ButtonStyle.SUCCESS).asDisabled() : button,
                     evt -> evt.reply(renderPage(_page, userId))

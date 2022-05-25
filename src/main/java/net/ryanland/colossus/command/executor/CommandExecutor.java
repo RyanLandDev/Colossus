@@ -50,14 +50,14 @@ public class CommandExecutor {
                 // to prevent subcommands with duplicate names
                 if (eventAsSlashCommand.getSubCommandGroup() != null) {
                     event.setHeadSubCommandHolder(((SubCommandHolder) command));
-                    command = (Command) ((SubCommandHolder) command).getSubCommands().stream()
+                    command = (Command) command.getSubCommands().stream()
                         .filter(subcommandGroup -> ((Command) subcommandGroup).getName()
                             .equals(finalEventAsSlashCommand.getSubCommandGroup()))
                         .findFirst().get();
                     event.setNestedSubCommandHolder((SubCommandHolder) command);
                 }
                 // finding the subcommand
-                command = (Command) ((SubCommandHolder) command).getSubCommands().stream()
+                command = (Command) command.getSubCommands().stream()
                     .filter(subCommand -> ((Command) subCommand).getName().equals(finalEventAsSlashCommand.getSubCommandName()))
                     .findFirst().get();
 
@@ -141,7 +141,7 @@ public class CommandExecutor {
             throw new IllegalArgumentException();
         }
 
-        List<SubCommand> matches = ((SubCommandHolder) command).getSubCommands().stream()
+        List<SubCommand> matches = command.getSubCommands().stream()
             .filter(subcommand -> ((Command) subcommand).getName().equalsIgnoreCase(finalParameter)).collect(Collectors.toList());
 
         if (matches.isEmpty()) {

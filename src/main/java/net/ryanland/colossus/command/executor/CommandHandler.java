@@ -61,7 +61,7 @@ public class CommandHandler {
 
             // Subcommands
             if (command instanceof SubCommandHolder) {
-                for (SubCommand subcommand : ((SubCommandHolder) command).getSubCommands()) {
+                for (SubCommand subcommand : command.getSubCommands()) {
                     if (subcommand instanceof SubCommandHolder)
                         slashCmdData.addSubcommandGroups(((SubCommandHolder) subcommand).getSlashCommandData());
                     else if (subcommand instanceof SlashCommand)

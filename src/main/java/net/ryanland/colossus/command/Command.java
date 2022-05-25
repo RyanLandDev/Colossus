@@ -10,19 +10,31 @@ import net.ryanland.colossus.command.executor.CommandHandler;
 import net.ryanland.colossus.command.executor.DisabledCommandHandler;
 import net.ryanland.colossus.command.permissions.PermissionHolder;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static net.ryanland.colossus.command.info.HelpMaker.getInfo;
 
 public sealed abstract class Command permits BaseCommand {
 
-    private Category category = null;
+    private Category category;
+    private List<SubCommand> subcommands;
 
-    protected Command setCategory(Category category) {
+    public Command setCategory(Category category) {
         this.category = category;
         return this;
     }
 
     public final Category getCategory() {
         return category;
+    }
+
+    public final List<SubCommand> getSubCommands() {
+        if (!(this instanceof SubCommandHolder))
+            throw new IllegalStateException("This Command is not an instance of SubCommandHolder");
+        if (subcommands == null)
+            subcommands = ((SubCommandHolder) this).registerSubCommands();
+        return subcommands;
     }
 
     // CommandData getters --------------------

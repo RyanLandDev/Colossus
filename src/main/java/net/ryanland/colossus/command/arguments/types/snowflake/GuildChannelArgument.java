@@ -49,7 +49,7 @@ public class GuildChannelArgument extends SnowflakeArgument<GuildChannel> {
             throw new MalformedArgumentException("Only channels of the following types are permitted: " +
                 Arrays.stream(permittedChannelTypes)
                     .map(type -> type.name().charAt(0) + type.name().substring(1).toLowerCase())
-                    .collect(Collectors.joining("hi")));
+                    .collect(Collectors.joining(", ")));
     }
 
 }

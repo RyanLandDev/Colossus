@@ -26,7 +26,7 @@ public final class DefaultEnableCommand extends DefaultCommand implements Combin
     @Override
     public PermissionHolder getPermission() {
         return new PermissionBuilder()
-            .addRequirement(new BotOwnerRequirement())
+            .addRequirements(new BotOwnerRequirement())
             .build();
     }
 

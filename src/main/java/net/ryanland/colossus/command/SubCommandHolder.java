@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
  * <li>Don't implement either of the {@link MessageCommand}/{@link SlashCommand}/{@link CombinedCommand} interfaces as well.
  * <br>This will have no effect.</li>
  * <li>The {@link Command#getArguments()} method will be ignored.</li>
- * <li>Define your subcommands in the {@link #getSubCommands()} method.</li>
+ * <li>Define your subcommands in the {@link #registerSubCommands()} method.</li>
  * <li>For nested subcommands (subcommand groups), implement both this and the {@link SubCommand} interface in a subcommand.</li>
  * <li>As for every command, do not forget to register it in your {@link ColossusBuilder}.
  * <br>Subcommands and nested subcommand holders should not be registered.</li>
@@ -26,7 +26,11 @@ import java.util.stream.Collectors;
  */
 public interface SubCommandHolder {
 
-    List<SubCommand> getSubCommands();
+    List<SubCommand> registerSubCommands();
+
+    default List<SubCommand> getSubCommands() {
+        return ((Command) this).getSubCommands();
+    }
 
     /**
      * Returns a list of all subcommands and nested subcommands, excluding the holders
@@ -35,7 +39,7 @@ public interface SubCommandHolder {
         List<SubCommand> subcommands = new ArrayList<>();
         for (SubCommand subcommand : getSubCommands()) {
             if (subcommand instanceof SubCommandHolder)
-                subcommands.addAll(((SubCommandHolder) subcommand).getSubCommands());
+                subcommands.addAll(((Command) subcommand).getSubCommands());
             else
                 subcommands.add(subcommand);
         }
