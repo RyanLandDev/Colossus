@@ -21,14 +21,17 @@ repositories {
 
 dependencies {
     // log
-    implementation 'ch.qos.logback:logback-classic:1.2.8'
+    implementation 'ch.qos.logback:logback-classic:1.2.11'
 
     // jda
     implementation 'net.dv8tion:JDA:4.4.0_351'
 
+    // database
+    implementation 'org.mongodb:mongodb-driver-sync:4.6.0'
+
     // json
-    implementation 'org.json:json:20211205'
-    implementation 'com.google.code.gson:gson:2.8.9'
+    implementation 'org.json:json:20220320'
+    implementation 'com.google.code.gson:gson:2.9.0'
 }
 
 publishing {
