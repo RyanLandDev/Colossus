@@ -2,6 +2,7 @@ package net.ryanland.colossus;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.SelfUser;
@@ -44,8 +45,7 @@ import java.util.function.Function;
 public class ColossusBuilder {
 
     private static final Object[] CORE_EVENTS = new Object[]{
-        new InternalEventListener(),
-        EventWaiterListener.getInstance()
+        new InternalEventListener()
     };
 
     private static final Inhibitor[] CORE_INHIBITORS = new Inhibitor[]{
@@ -149,7 +149,7 @@ public class ColossusBuilder {
      * @see Colossus
      */
     public ColossusBuilder(String token, String clientId, String prefix, String testGuild) {
-        config = new Config(token, clientId, prefix, testGuild);
+        config = new Config(token, clientId, prefix, "", testGuild, true);
         jdaBuilder = JDABuilder.createDefault(config.getToken())
             .addEventListeners(CORE_EVENTS);
     }
@@ -411,15 +411,23 @@ public class ColossusBuilder {
         boolean changed = false;
         for (String key : configEntries) {
             if (!configJson.has(key)) {
-                configJson.add(key, null);
+                configJson.addProperty(key, "");
                 changed = true;
             }
         }
-        if (changed)
-            configFile.write(configJson);
+        if (changed) configFile.write(gson.toJson(configJson));
 
         // Create a new Config and set it
         config = new Config(configJson);
+    }
+
+    /**
+     * Returns the {@link Config} in its current state.<br>
+     * This method should only be used before the bot is initialized.
+     * @see Colossus#getConfig()
+     */
+    public Config getConfig() {
+        return config;
     }
 
 }

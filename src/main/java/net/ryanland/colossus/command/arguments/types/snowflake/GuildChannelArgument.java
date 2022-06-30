@@ -39,7 +39,7 @@ public class GuildChannelArgument extends SnowflakeArgument<GuildChannel> {
 
     @Override
     public GuildChannel resolveMessageCommandArgument(MessageCommandEvent event, String id) throws ArgumentException {
-        return checkIfChannelTypeIsPermitted(Colossus.getJda().getGuildChannelById(id));
+        return checkIfChannelTypeIsPermitted(Colossus.getJDA().getGuildChannelById(id));
     }
 
     private GuildChannel checkIfChannelTypeIsPermitted(GuildChannel channel) throws ArgumentException {

@@ -38,15 +38,6 @@ public class Config {
         updateValueMap();
     }
 
-    public Config(String token, String clientId, String prefix, String testGuild) {
-        this(token, clientId, prefix, testGuild, true);
-    }
-
-    public Config(String token, String clientId, String prefix,
-                  String testGuild, boolean testing) {
-        this(token, clientId, prefix, null, testGuild, testing);
-    }
-
     public JsonObject getRawConfig() {
         return rawConfig;
     }
@@ -75,7 +66,7 @@ public class Config {
         return getString("client_id");
     }
 
-     public String getPrefix() {
+    public String getPrefix() {
         return getString("prefix");
      }
 

@@ -5,13 +5,16 @@ import net.dv8tion.jda.api.entities.User;
 import org.jetbrains.annotations.Contract;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
 /**
- * Different types of tables of data the database has.
- * Examples include: UserTable, MemberTable, GuildTable, GlobalTable, etc.
- * Uses {@link LinkedHashMap} to store values.
+ * Different types of tables of data the database has.<br>
+ * Examples include: UserTable, MemberTable, GuildTable, GlobalTable, etc.<br>
+ * Uses {@link LinkedHashMap} to store values.<br><br>
+ *
+ * Preserved keys: {@code _id _dc _prf}
  * @param <T> The type of entity this table is for, for example {@link User}
  * @see DatabaseDriver
  */
@@ -24,8 +27,8 @@ public class Table<T extends ISnowflake> {
     }
 
     public Table(String clientId, Map<String, Object> data) {
-        put("_id", clientId);
         DATA.putAll(data);
+        put("_id", clientId);
     }
 
     /**
@@ -38,6 +41,7 @@ public class Table<T extends ISnowflake> {
     /**
      * Returns the value associated with the provided key, and performs an unchecked cast to it.<br>
      * Will be null if the value does not exist.
+     * @see #get(String, Object) 
      */
     @SuppressWarnings("unchecked")
     public final <R> R get(String key) {
@@ -47,10 +51,11 @@ public class Table<T extends ISnowflake> {
     /**
      * Returns the value associated with the provided key, and performs an unchecked cast to it.
      * @param defaultValue If the value is null, this value will be returned instead.
+     * @see #get(String) 
      */
     @SuppressWarnings("unchecked")
     public final <R> R get(String key, Object defaultValue) {
-        R value = (R) DATA.get(key);
+        R value = get(key);
         if (value == null) return (R) defaultValue;
         else return value;
     }
@@ -85,7 +90,6 @@ public class Table<T extends ISnowflake> {
      */
     @Contract("_, _ -> this")
     public final <V> Table<T> modify(String key, Function<V, V> modifier) {
-        DATA.put(key, modifier.apply(get(key)));
-        return this;
+        return put(key, modifier.apply(get(key)));
     }
 }

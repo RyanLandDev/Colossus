@@ -8,9 +8,13 @@ import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.requests.restaction.interactions.ReplyAction;
+import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.command.Command;
 import net.ryanland.colossus.command.SubCommandHolder;
 import net.ryanland.colossus.command.arguments.ParsedArgumentMap;
+import net.ryanland.colossus.sys.entities.ColossusGuild;
+import net.ryanland.colossus.sys.entities.ColossusMember;
+import net.ryanland.colossus.sys.entities.ColossusUser;
 import net.ryanland.colossus.sys.interactions.button.ButtonRow;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 import org.jetbrains.annotations.NotNull;
@@ -120,8 +124,8 @@ public class SlashEvent extends CommandEvent {
     }
 
     @Override
-    public User getUser() {
-        return event.getUser();
+    public ColossusUser getUser() {
+        return new ColossusUser(event.getUser());
     }
 
     public List<OptionMapping> getOptions() {
@@ -205,8 +209,8 @@ public class SlashEvent extends CommandEvent {
     }
 
     @Override
-    public Guild getGuild() {
-        return event.getGuild();
+    public ColossusGuild getGuild() {
+        return new ColossusGuild(event.getGuild());
     }
 
     public Interaction getInteraction() {
@@ -214,8 +218,8 @@ public class SlashEvent extends CommandEvent {
     }
 
     @Override
-    public Member getMember() {
-        return event.getMember();
+    public ColossusMember getMember() {
+        return new ColossusMember(event.getMember());
     }
 
     public OffsetDateTime getTimeCreated() {

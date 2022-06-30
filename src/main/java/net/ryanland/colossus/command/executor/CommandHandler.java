@@ -42,12 +42,12 @@ public class CommandHandler {
     }
 
     public static void upsertAll() {
-        Guild testGuild = Colossus.getJda().getGuildById(Colossus.getConfig().getTestGuildId());
+        Guild testGuild = Colossus.getJDA().getGuildById(Colossus.getConfig().getTestGuildId());
         if (testGuild == null)
             throw new IllegalStateException("The bot is not in the provided test guild, or the ID is invalid.");
 
         // remove commands that were previously registered but not anymore
-        Colossus.getJda().updateCommands().queue();
+        Colossus.getJDA().updateCommands().queue();
 
         for (Command command : COMMANDS) {
             if (!(command instanceof SlashCommand)) {
@@ -75,7 +75,7 @@ public class CommandHandler {
             if (Colossus.getConfig().isTesting()) {
                 testGuild.upsertCommand(slashCmdData).queue();
             } else {
-                Colossus.getJda().upsertCommand(slashCmdData).queue();
+                Colossus.getJDA().upsertCommand(slashCmdData).queue();
             }
 
         }

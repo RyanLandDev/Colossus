@@ -3,10 +3,14 @@ package net.ryanland.colossus.events;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.interactions.InteractionHook;
+import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.ColossusBuilder;
 import net.ryanland.colossus.command.CommandException;
 import net.ryanland.colossus.sys.ExecutorUtil;
+import net.ryanland.colossus.sys.entities.ColossusGuild;
+import net.ryanland.colossus.sys.entities.ColossusMember;
+import net.ryanland.colossus.sys.entities.ColossusUser;
 import net.ryanland.colossus.sys.interactions.button.BaseButton;
 import net.ryanland.colossus.sys.interactions.button.ButtonRow;
 import net.ryanland.colossus.sys.message.PresetBuilder;
@@ -109,55 +113,87 @@ public class ClickButtonEvent implements RepliableEvent {
     }
 
     @Override
-    public User getUser() {
-        return event.getUser();
+    public ColossusUser getUser() {
+        return new ColossusUser(event.getUser());
     }
 
     @Override
-    public Member getMember() {
-        return event.getMember();
+    public ColossusMember getMember() {
+        return new ColossusMember(event.getMember());
     }
 
     @Override
-    public Guild getGuild() {
-        return event.getGuild();
+    public ColossusGuild getGuild() {
+        return new ColossusGuild(event.getGuild());
     }
 
-    // reply methods ----- for button clicks, this will edit the existing message instead of creating a new message
+    // reply methods ----- for button clicks, this will edit the existing message instead of creating a new message,
+    //                     except for ephemeral messages
 
     @Override
     public void reply(Message message, boolean ephemeral) {
-        event.editMessage(message).queue();
+        if (!ephemeral) {
+            event.editMessage(message).queue();
+        } else {
+            event.reply(message)
+                .setEphemeral(true)
+                .queue();
+        }
     }
 
     @Override
     public void reply(String message, boolean ephemeral) {
-        event.editMessageEmbeds(Collections.emptyList())
-            .setActionRows(Collections.emptyList())
-            .setContent(message)
-            .queue();
+        if (!ephemeral) {
+            event.editMessageEmbeds(Collections.emptyList())
+                .setActionRows(Collections.emptyList())
+                .setContent(message)
+                .queue();
+        } else {
+            event.reply(message)
+                .setEphemeral(true)
+                .queue();
+        }
     }
 
     @Override
     public void reply(MessageEmbed message, boolean ephemeral) {
-        event.editMessageEmbeds(message)
-            .setActionRows(Collections.emptyList())
-            .setContent("")
-            .queue();
+        if (!ephemeral) {
+            event.editMessageEmbeds(message)
+                .setActionRows(Collections.emptyList())
+                .setContent("")
+                .queue();
+        } else {
+            event.replyEmbeds(message)
+                .setEphemeral(true)
+                .queue();
+        }
     }
 
     @Override
     public void reply(PresetBuilder message) {
-        // remove old button listeners
-        if (!event.getMessage().getActionRows().isEmpty()) {
-            ExecutorUtil.cancel(event.getMessageId(), false); // cancel an active action row emptier
-            removeListeners(event.getMessageIdLong());
+        InteractionHook hook;
+        List<ActionRow> actionRows = message.getButtonRows().stream().map(ButtonRow::toActionRow).collect(Collectors.toList());
+
+        if (!message.isEphemeral()) {
+            // remove old button listeners
+            if (!event.getMessage().getActionRows().isEmpty()) {
+                ExecutorUtil.cancel(event.getMessageId(), false); // cancel an active action row emptier
+                removeListeners(event.getMessageIdLong());
+            }
+            // send reply and set hook
+            hook = event.editMessageEmbeds(message.embed())
+                .setActionRows(actionRows)
+                .setContent(message.getContent())
+                .complete();
+
+        } else {
+            // send reply and set hook
+            hook = event.replyEmbeds(message.embed())
+                .addActionRows(actionRows)
+                .setContent(message.getContent())
+                .setEphemeral(true)
+                .complete();
         }
-        // send reply and set hook
-        InteractionHook hook = event.editMessageEmbeds(message.embed())
-            .setActionRows(message.getButtonRows().stream().map(ButtonRow::toActionRow).collect(Collectors.toList()))
-            .setContent(message.getContent())
-            .complete();
         // add listener for the buttons
         if (!message.getButtonRows().isEmpty()) {
             ClickButtonEvent.addListener(

@@ -9,7 +9,7 @@ public class GuildArgument extends PureSnowflakeArgument<Guild> {
 
     @Override
     public Guild resolve(CommandEvent event, String id) throws ArgumentException {
-        Guild guild = Colossus.getJda().getGuildById(id);
+        Guild guild = Colossus.getJDA().getGuildById(id);
         if (guild == null) throw new NumberFormatException();
         return guild;
     }

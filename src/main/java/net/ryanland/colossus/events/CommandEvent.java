@@ -53,8 +53,7 @@ public abstract class CommandEvent implements RepliableEvent {
      * @see DatabaseDriver
      */
     public Table<Guild> getGuildTable() {
-        if (getGuild() == null)
-            return null;
+        if (getGuild() == null) return null;
         return Colossus.getDatabaseDriver().get(getGuild());
     }
 

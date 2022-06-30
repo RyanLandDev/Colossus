@@ -27,6 +27,8 @@ dependencies {
     implementation 'net.dv8tion:JDA:4.4.0_351'
 
     // database
+    // note: this package is unnecessary for users not using the MongoDatabaseDriver,
+    // unnecessarily increasing the size of colossus. is this a problem? if so, solution?
     implementation 'org.mongodb:mongodb-driver-sync:4.6.0'
 
     // json

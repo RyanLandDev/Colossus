@@ -65,7 +65,6 @@ public class MongoDatabaseDriver extends DatabaseDriver {
     /**
      * Retrieves the data associated with the provided client from the database,
      * and then deserializes it to a {@link Table}.
-     *
      * @param client The client to get the table of
      * @return The found table, {@code null} if it doesn't exist
      */
@@ -79,7 +78,6 @@ public class MongoDatabaseDriver extends DatabaseDriver {
 
     /**
      * Insert a new table in the database.
-     *
      * @param client The client this table is associated with
      * @param table  The table to insert
      * @return The table inserted
@@ -93,7 +91,6 @@ public class MongoDatabaseDriver extends DatabaseDriver {
 
     /**
      * Deletes the table associated with the provided client from the database.
-     *
      * @param client The client of the table to delete
      */
     @Override
@@ -103,13 +100,12 @@ public class MongoDatabaseDriver extends DatabaseDriver {
 
     /**
      * Updates a {@link Table} in the database with modified values.
-     *
      * @param client The client this table is associated with
      * @param table  The table to update (with)
      */
     @Override
     public <T extends ISnowflake> void updateTable(T client, Table<T> table) {
-        getCollection(client).updateOne(Filters.eq("e", 1), getUpdates(findTable(client), table));
+        getCollection(client).updateOne(Filters.eq("_id", client.getId()), getUpdates(findTable(client), table));
     }
 
     private <T extends ISnowflake> List<Bson> getUpdates(Table<T> oldTable, Table<T> newTable) {

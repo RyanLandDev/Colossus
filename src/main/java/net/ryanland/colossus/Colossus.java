@@ -114,7 +114,7 @@ public class Colossus {
         return LOGGER;
     }
 
-    public static JDA getJda() {
+    public static JDA getJDA() {
         return jda;
     }
 

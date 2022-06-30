@@ -6,6 +6,7 @@ import net.ryanland.colossus.ColossusBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
@@ -26,9 +27,11 @@ public abstract class DatabaseDriver {
      */
     protected abstract List<TableCache<? extends ISnowflake>> getCaches();
 
+    private final List<TableCache<? extends ISnowflake>> CACHES = getCaches();
+
     @SuppressWarnings("unchecked")
     private <T extends ISnowflake> TableCache<T> getCache(T client) {
-        for (TableCache<? extends ISnowflake> cache : getCaches()) {
+        for (TableCache<? extends ISnowflake> cache : CACHES) {
             if (cache.getType().isAssignableFrom(client.getClass()))
                 return (TableCache<T>) cache;
         }
@@ -174,6 +177,7 @@ public abstract class DatabaseDriver {
      * @param client The client this table is associated with
      * @param table The table to update (with)
      * @param <T> The type of client, e.g. {@link User}
+     * @see #modifyTable(ISnowflake, Function) 
      */
     public abstract <T extends ISnowflake> void updateTable(T client, Table<T> table);
 

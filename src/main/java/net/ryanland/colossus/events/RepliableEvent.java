@@ -3,6 +3,9 @@ package net.ryanland.colossus.events;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.interaction.GenericInteractionCreateEvent;
 import net.ryanland.colossus.command.CommandException;
+import net.ryanland.colossus.sys.entities.ColossusGuild;
+import net.ryanland.colossus.sys.entities.ColossusMember;
+import net.ryanland.colossus.sys.entities.ColossusUser;
 import net.ryanland.colossus.sys.interactions.menu.InteractionMenu;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 
@@ -14,11 +17,11 @@ import java.util.concurrent.TimeUnit;
  */
 public interface RepliableEvent {
 
-    User getUser();
+    ColossusUser getUser();
 
-    Member getMember();
+    ColossusMember getMember();
 
-    Guild getGuild();
+    ColossusGuild getGuild();
 
     /**
      * Reply to this event with a {@link Message} object
