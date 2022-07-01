@@ -3,6 +3,7 @@ package net.ryanland.colossus.command.arguments.types.primitive;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.ryanland.colossus.command.arguments.Argument;
+import net.ryanland.colossus.command.arguments.ArgumentOptionData;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.ArgumentException;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.MalformedArgumentException;
 import net.ryanland.colossus.events.MessageCommandEvent;
@@ -15,8 +16,8 @@ import java.util.List;
 public class QuoteStringArgument extends Argument<String> {
 
     @Override
-    public OptionType getSlashCommandOptionType() {
-        return OptionType.STRING;
+    public ArgumentOptionData getArgumentOptionData() {
+        return new ArgumentOptionData(OptionType.STRING);
     }
 
     @Override

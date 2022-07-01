@@ -5,6 +5,7 @@ import net.dv8tion.jda.api.entities.GuildChannel;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.ryanland.colossus.Colossus;
+import net.ryanland.colossus.command.arguments.ArgumentOptionData;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.ArgumentException;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.MalformedArgumentException;
 import net.ryanland.colossus.events.MessageCommandEvent;
@@ -28,13 +29,13 @@ public class GuildChannelArgument extends SnowflakeArgument<GuildChannel> {
     }
 
     @Override
-    public OptionType getSlashCommandOptionType() {
-        return OptionType.CHANNEL;
+    public ArgumentOptionData getArgumentOptionData() {
+        return (ArgumentOptionData) new ArgumentOptionData(OptionType.CHANNEL).setChannelTypes(permittedChannelTypes);
     }
 
     @Override
     public GuildChannel resolveSlashCommandArgument(OptionMapping arg, SlashEvent event) throws ArgumentException {
-        return checkIfChannelTypeIsPermitted(arg.getAsGuildChannel());
+        return arg.getAsGuildChannel();
     }
 
     @Override

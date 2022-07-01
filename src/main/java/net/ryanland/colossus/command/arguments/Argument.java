@@ -41,7 +41,10 @@ public abstract class Argument<T> {
     }
 
     public OptionData getOptionData() {
-        return new OptionData(getSlashCommandOptionType(), name == null ? id : name, description, !isOptional());
+        return getArgumentOptionData()
+            .setName(name == null ? id : name)
+            .setDescription(description)
+            .setRequired(!isOptional());
     }
 
     public String getName() {
@@ -64,7 +67,7 @@ public abstract class Argument<T> {
         return description;
     }
 
-    public abstract OptionType getSlashCommandOptionType();
+    public abstract ArgumentOptionData getArgumentOptionData();
 
     public abstract T resolveSlashCommandArgument(Deque<OptionMapping> args, SlashEvent event) throws ArgumentException;
 

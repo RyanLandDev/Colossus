@@ -3,6 +3,7 @@ package net.ryanland.colossus.command.arguments.types.snowflake;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.ryanland.colossus.command.arguments.ArgumentOptionData;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.ArgumentException;
 import net.ryanland.colossus.events.MessageCommandEvent;
 import net.ryanland.colossus.events.SlashEvent;
@@ -10,8 +11,8 @@ import net.ryanland.colossus.events.SlashEvent;
 public class MemberArgument extends SnowflakeArgument<Member> {
 
     @Override
-    public OptionType getSlashCommandOptionType() {
-        return OptionType.USER;
+    public ArgumentOptionData getArgumentOptionData() {
+        return new ArgumentOptionData(OptionType.USER);
     }
 
     @Override

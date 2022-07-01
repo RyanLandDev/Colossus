@@ -9,7 +9,7 @@ import net.ryanland.colossus.events.MessageCommandEvent;
 public abstract class SnowflakeArgument<T extends ISnowflake> extends SingleArgument<T> {
 
     @Override
-    public T resolveMessageCommandArgument(String arg, MessageCommandEvent event) throws ArgumentException {
+    public final T resolveMessageCommandArgument(String arg, MessageCommandEvent event) throws ArgumentException {
         try {
             return resolveMessageCommandArgument(event, arg.replaceAll("\\D", ""));
         } catch (IllegalArgumentException e) {

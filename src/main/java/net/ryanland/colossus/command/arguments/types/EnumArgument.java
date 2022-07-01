@@ -1,6 +1,8 @@
 package net.ryanland.colossus.command.arguments.types;
 
 import net.dv8tion.jda.api.interactions.commands.Command;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.ryanland.colossus.command.arguments.ArgumentOptionData;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.ArgumentException;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.MalformedArgumentException;
 import net.ryanland.colossus.command.arguments.types.primitive.ArgumentStringResolver;
@@ -10,7 +12,7 @@ import java.util.EnumSet;
 import java.util.stream.Collectors;
 
 public class EnumArgument<E extends Enum<E> & EnumArgument.InputEnum>
-    extends ArgumentStringResolver<E> implements SlashCommandArgumentChoices {
+    extends ArgumentStringResolver<E> {
 
     private final EnumSet<E> associatedEnum;
 
@@ -19,11 +21,13 @@ public class EnumArgument<E extends Enum<E> & EnumArgument.InputEnum>
     }
 
     @Override
-    public Command.Choice[] getChoices() {
-        return associatedEnum.stream()
-            .filter(e -> !e.isHidden())
-            .map(e -> new Command.Choice(e.getTitle(), e.getTitle()))
-            .toArray(Command.Choice[]::new);
+    public ArgumentOptionData getArgumentOptionData() {
+        return (ArgumentOptionData) super.getArgumentOptionData().addChoices(
+            associatedEnum.stream()
+                .filter(e -> !e.isHidden())
+                .map(e -> new Command.Choice(e.getTitle(), e.getTitle()))
+                .toArray(Command.Choice[]::new)
+        );
     }
 
     @Override
@@ -32,12 +36,7 @@ public class EnumArgument<E extends Enum<E> & EnumArgument.InputEnum>
             if (arg.equals(element.getTitle()))
                 return element;
         }
-        throw new MalformedArgumentException("This is not a valid option! Choose from: `" +
-            associatedEnum.stream()
-                .filter(e -> !e.isHidden())
-                .map(InputEnum::getTitle)
-                .collect(Collectors.joining("` `"))
-            + "`");
+        throw new MalformedArgumentException("This is not a valid option! Choose from: " + getFormattedOptions());
     }
 
     private String getFormattedOptions() {

@@ -9,7 +9,7 @@ import net.ryanland.colossus.events.CommandEvent;
 public abstract class PureSnowflakeArgument<T extends ISnowflake> extends ArgumentStringResolver<T> {
 
     @Override
-    public T resolve(String arg, CommandEvent event) throws ArgumentException {
+    public final T resolve(String arg, CommandEvent event) throws ArgumentException {
         try {
             return resolve(event, arg);
         } catch (NumberFormatException e) {
