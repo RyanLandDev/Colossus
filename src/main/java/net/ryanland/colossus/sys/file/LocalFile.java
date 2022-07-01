@@ -59,9 +59,9 @@ public class LocalFile extends File {
         path = path.replaceFirst("^/", "");
         LocalFile dir = new LocalFile(path);
         if (!dir.exists())
-            throw new InvalidPathException(path, "This path is invalid or does not exist.");
+            throw new InvalidPathException(path, "This path is invalid or does not exist");
         if (!dir.isDirectory())
-            throw new InvalidPathException(path, "The provided path is not a directory.");
+            throw new InvalidPathException(path, "The provided path is not a directory");
         return dir;
     }
 }
