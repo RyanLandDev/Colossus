@@ -7,7 +7,7 @@ import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.command.arguments.ArgumentOptionData;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.ArgumentException;
 import net.ryanland.colossus.events.MessageCommandEvent;
-import net.ryanland.colossus.events.SlashEvent;
+import net.ryanland.colossus.events.SlashCommandEvent;
 
 public class UserArgument extends SnowflakeArgument<User> {
 
@@ -17,7 +17,7 @@ public class UserArgument extends SnowflakeArgument<User> {
     }
 
     @Override
-    public User resolveSlashCommandArgument(OptionMapping arg, SlashEvent event) throws ArgumentException {
+    public User resolveSlashCommandArgument(OptionMapping arg, SlashCommandEvent event) throws ArgumentException {
         return arg.getAsUser();
     }
 

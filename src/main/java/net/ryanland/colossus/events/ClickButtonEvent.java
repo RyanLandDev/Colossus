@@ -1,7 +1,7 @@
 package net.ryanland.colossus.events;
 
 import net.dv8tion.jda.api.entities.*;
-import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.ryanland.colossus.Colossus;
@@ -88,10 +88,10 @@ public class ClickButtonEvent implements RepliableEvent {
         MESSAGE_BUTTONS.remove(msgId).forEach(BUTTONS::remove);
     }
 
-    public final ButtonClickEvent event;
+    public final ButtonInteractionEvent event;
     public final BaseButton button;
 
-    public ClickButtonEvent(ButtonClickEvent event) {
+    public ClickButtonEvent(ButtonInteractionEvent event) {
         this.event = event;
         this.button = BUTTONS.get(new ButtonIdentifier(event.getMessageIdLong(), event.getButton().getId()));
     }
@@ -104,7 +104,7 @@ public class ClickButtonEvent implements RepliableEvent {
         if (button.onClick() != null) button.onClick().consume(this);
     }
 
-    public ButtonClickEvent getEvent() {
+    public ButtonInteractionEvent getEvent() {
         return event;
     }
 

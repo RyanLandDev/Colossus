@@ -1,7 +1,7 @@
 package net.ryanland.colossus.events;
 
-import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.ryanland.colossus.Colossus;
@@ -14,8 +14,8 @@ public class InternalEventListener extends ListenerAdapter {
 
     // Execute slash command
     @Override
-    public void onSlashCommand(@NotNull SlashCommandEvent event) {
-        CommandHandler.run(new SlashEvent(event));
+    public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
+        CommandHandler.run(new SlashCommandEvent(event));
     }
 
     // Execute message command
@@ -27,7 +27,7 @@ public class InternalEventListener extends ListenerAdapter {
 
     // Click button
     @Override
-    public void onButtonClick(@NotNull ButtonClickEvent event) {
+    public void onButtonInteraction(@NotNull ButtonInteractionEvent event) {
         try {
             new ClickButtonEvent(event).handle();
         } catch (CommandException e) {

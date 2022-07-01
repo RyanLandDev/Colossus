@@ -7,7 +7,7 @@ import net.ryanland.colossus.command.arguments.ArgumentOptionData;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.ArgumentException;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.MalformedArgumentException;
 import net.ryanland.colossus.events.MessageCommandEvent;
-import net.ryanland.colossus.events.SlashEvent;
+import net.ryanland.colossus.events.SlashCommandEvent;
 
 import java.util.ArrayList;
 import java.util.Deque;
@@ -21,7 +21,7 @@ public class QuoteStringArgument extends Argument<String> {
     }
 
     @Override
-    public String resolveSlashCommandArgument(Deque<OptionMapping> args, SlashEvent event) throws ArgumentException {
+    public String resolveSlashCommandArgument(Deque<OptionMapping> args, SlashCommandEvent event) throws ArgumentException {
         return args.pop().getAsString();
     }
 

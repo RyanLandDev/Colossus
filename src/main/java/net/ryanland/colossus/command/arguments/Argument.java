@@ -1,12 +1,11 @@
 package net.ryanland.colossus.command.arguments;
 
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
-import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.ArgumentException;
 import net.ryanland.colossus.events.CommandEvent;
 import net.ryanland.colossus.events.MessageCommandEvent;
-import net.ryanland.colossus.events.SlashEvent;
+import net.ryanland.colossus.events.SlashCommandEvent;
 
 import java.util.Deque;
 import java.util.function.Function;
@@ -69,7 +68,7 @@ public abstract class Argument<T> {
 
     public abstract ArgumentOptionData getArgumentOptionData();
 
-    public abstract T resolveSlashCommandArgument(Deque<OptionMapping> args, SlashEvent event) throws ArgumentException;
+    public abstract T resolveSlashCommandArgument(Deque<OptionMapping> args, SlashCommandEvent event) throws ArgumentException;
 
     public abstract T resolveMessageCommandArgument(Deque<String> args, MessageCommandEvent event) throws ArgumentException;
 }

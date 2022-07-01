@@ -1,8 +1,8 @@
 package net.ryanland.colossus.sys.interactions.menu;
 
-import net.dv8tion.jda.api.entities.Emoji;
-import net.dv8tion.jda.api.interactions.components.Button;
-import net.dv8tion.jda.api.interactions.components.ButtonStyle;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
+import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle;
 import net.ryanland.colossus.events.RepliableEvent;
 import net.ryanland.colossus.sys.interactions.button.BaseButton;
 import net.ryanland.colossus.sys.message.PresetBuilder;
@@ -52,7 +52,7 @@ public class TabMenu implements InteractionMenu {
 
                 // create the button
                 Button button = Button.secondary("." + subpage.getName(), subpage.getName());
-                if (subpage.getEmoji() != null) button = button.withEmoji(Emoji.fromMarkdown(subpage.getEmoji()));
+                if (subpage.getEmoji() != null) button = button.withEmoji(Emoji.fromFormatted(subpage.getEmoji()));
                 buttons.add(BaseButton.user(userId, button, evt -> evt.reply(renderPage(subpage, userId))));
             }
         // has no subpages, display other page buttons

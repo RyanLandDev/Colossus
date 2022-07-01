@@ -6,7 +6,7 @@ import net.ryanland.colossus.command.arguments.ArgumentOptionData;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.ArgumentException;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.MalformedArgumentException;
 import net.ryanland.colossus.events.MessageCommandEvent;
-import net.ryanland.colossus.events.SlashEvent;
+import net.ryanland.colossus.events.SlashCommandEvent;
 
 public class IntegerArgument extends NumberArgument<Integer> {
 
@@ -47,7 +47,7 @@ public class IntegerArgument extends NumberArgument<Integer> {
     }
 
     @Override
-    public Integer resolveSlashCommandArgument(SlashEvent event, OptionMapping arg) throws ArgumentException {
+    public Integer resolveSlashCommandArgument(SlashCommandEvent event, OptionMapping arg) throws ArgumentException {
         return (int) arg.getAsLong();
     }
 

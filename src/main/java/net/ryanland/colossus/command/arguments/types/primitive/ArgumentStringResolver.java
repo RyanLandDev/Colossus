@@ -7,7 +7,7 @@ import net.ryanland.colossus.command.arguments.parsing.exceptions.ArgumentExcept
 import net.ryanland.colossus.command.arguments.types.SingleArgument;
 import net.ryanland.colossus.events.CommandEvent;
 import net.ryanland.colossus.events.MessageCommandEvent;
-import net.ryanland.colossus.events.SlashEvent;
+import net.ryanland.colossus.events.SlashCommandEvent;
 
 public abstract class ArgumentStringResolver<T> extends SingleArgument<T> {
 
@@ -17,7 +17,7 @@ public abstract class ArgumentStringResolver<T> extends SingleArgument<T> {
     }
 
     @Override
-    public final T resolveSlashCommandArgument(OptionMapping arg, SlashEvent event) throws ArgumentException {
+    public final T resolveSlashCommandArgument(OptionMapping arg, SlashCommandEvent event) throws ArgumentException {
         return resolve(arg.getAsString(), event);
     }
 

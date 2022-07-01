@@ -6,7 +6,7 @@ import net.ryanland.colossus.command.arguments.ArgumentOptionData;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.ArgumentException;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.MalformedArgumentException;
 import net.ryanland.colossus.events.MessageCommandEvent;
-import net.ryanland.colossus.events.SlashEvent;
+import net.ryanland.colossus.events.SlashCommandEvent;
 
 public class FloatArgument extends NumberArgument<Float> {
 
@@ -47,7 +47,7 @@ public class FloatArgument extends NumberArgument<Float> {
     }
 
     @Override
-    public Float resolveSlashCommandArgument(SlashEvent event, OptionMapping arg) throws ArgumentException {
+    public Float resolveSlashCommandArgument(SlashCommandEvent event, OptionMapping arg) throws ArgumentException {
         return (float) arg.getAsDouble();
     }
 

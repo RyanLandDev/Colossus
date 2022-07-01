@@ -2,6 +2,8 @@ package net.ryanland.colossus.command.executor;
 
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+import net.dv8tion.jda.api.interactions.commands.build.Commands;
+import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.command.*;
 import net.ryanland.colossus.events.CommandEvent;
@@ -57,7 +59,7 @@ public class CommandHandler {
                     continue;
             }
 
-            CommandData slashCmdData = new CommandData(command.getName(), command.getDescription());
+            SlashCommandData slashCmdData = Commands.slash(command.getName(), command.getDescription());
 
             // Subcommands
             if (command instanceof SubCommandHolder) {

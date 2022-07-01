@@ -10,7 +10,7 @@ import net.ryanland.colossus.command.arguments.ParsedArgumentMap;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.ArgumentException;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.MalformedArgumentException;
 import net.ryanland.colossus.events.CommandEvent;
-import net.ryanland.colossus.events.SlashEvent;
+import net.ryanland.colossus.events.SlashCommandEvent;
 import net.ryanland.colossus.sys.message.DefaultPresetType;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 
@@ -23,8 +23,8 @@ public non-sealed class SlashCommandArgumentParser extends ArgumentParser {
         super(event);
     }
 
-    private SlashEvent getEvent() {
-        return (SlashEvent) event;
+    private SlashCommandEvent getEvent() {
+        return (SlashCommandEvent) event;
     }
 
     public Deque<OptionMapping> getArgumentQueue() {

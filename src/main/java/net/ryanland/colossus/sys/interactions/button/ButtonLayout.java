@@ -1,7 +1,7 @@
 package net.ryanland.colossus.sys.interactions.button;
 
 import net.dv8tion.jda.api.interactions.components.ActionRow;
-import net.dv8tion.jda.api.interactions.components.Button;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -10,7 +10,7 @@ import net.ryanland.colossus.command.inhibitors.Inhibitor;
 import net.ryanland.colossus.command.inhibitors.InhibitorException;
 import net.ryanland.colossus.events.CommandEvent;
 import net.ryanland.colossus.events.MessageCommandEvent;
-import net.ryanland.colossus.events.SlashEvent;
+import net.ryanland.colossus.events.SlashCommandEvent;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 
 import java.lang.reflect.InvocationTargetException;
@@ -37,15 +37,15 @@ public class CommandExecutor {
 
         // Getting the event to their original event for possible use later in exception handling
         MessageCommandEvent eventAsMessageCommand = null;
-        SlashEvent eventAsSlashCommand = null;
+        SlashCommandEvent eventAsSlashCommand = null;
         ArgumentParser argumentParser = null;
-        if (event instanceof SlashEvent) {
-            eventAsSlashCommand = (SlashEvent) event;
+        if (event instanceof SlashCommandEvent) {
+            eventAsSlashCommand = (SlashCommandEvent) event;
             argumentParser = new SlashCommandArgumentParser(event);
 
             // Applying a different command if a subcommand is used
             if (eventAsSlashCommand.getSubCommandName() != null) {
-                SlashEvent finalEventAsSlashCommand = eventAsSlashCommand;
+                SlashCommandEvent finalEventAsSlashCommand = eventAsSlashCommand;
                 // if a subcommand group is used, define this first before finding the actual subcommand,
                 // to prevent subcommands with duplicate names
                 if (eventAsSlashCommand.getSubCommandGroup() != null) {
@@ -100,7 +100,7 @@ public class CommandExecutor {
                     //Invoking the run method, only the InvocationTargetException can be thrown through the method,
                     // if any exception is thrown while executing the code
                     //A new else if statement for all types of commands is necessary, no automatisation possible
-                    if (event instanceof SlashEvent)
+                    if (event instanceof SlashCommandEvent)
                         ((SlashCommand) cmdClass.getDeclaredConstructor().newInstance()).run(eventAsSlashCommand);
                     else if (event instanceof MessageCommandEvent)
                         ((MessageCommand) cmdClass.getDeclaredConstructor().newInstance()).run(eventAsMessageCommand);

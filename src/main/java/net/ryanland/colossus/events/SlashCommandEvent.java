@@ -2,13 +2,12 @@ package net.ryanland.colossus.events;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.*;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.Interaction;
 import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
-import net.dv8tion.jda.api.requests.restaction.interactions.ReplyAction;
-import net.ryanland.colossus.Colossus;
+import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
 import net.ryanland.colossus.command.Command;
 import net.ryanland.colossus.command.SubCommandHolder;
 import net.ryanland.colossus.command.arguments.ParsedArgumentMap;
@@ -25,15 +24,15 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class SlashEvent extends CommandEvent {
+public class SlashCommandEvent extends CommandEvent {
 
     private Command command;
     private SubCommandHolder headSubCommandHolder;
     private SubCommandHolder nestedSubCommandHolder;
     private ParsedArgumentMap parsedArgs;
-    private final SlashCommandEvent event;
+    private final SlashCommandInteractionEvent event;
 
-    public SlashEvent(SlashCommandEvent event) {
+    public SlashCommandEvent(SlashCommandInteractionEvent event) {
         this.event = event;
     }
 
@@ -157,11 +156,11 @@ public class SlashEvent extends CommandEvent {
         return event.getSubcommandGroup();
     }
 
-    public ReplyAction deferReply() {
+    public ReplyCallbackAction deferReply() {
         return event.deferReply();
     }
 
-    public ReplyAction deferReply(boolean ephemeral) {
+    public ReplyCallbackAction deferReply(boolean ephemeral) {
         return event.deferReply(ephemeral);
     }
 
@@ -226,7 +225,7 @@ public class SlashEvent extends CommandEvent {
         return event.getTimeCreated();
     }
 
-    public SlashCommandEvent getEvent() {
+    public SlashCommandInteractionEvent getEvent() {
         return event;
     }
 

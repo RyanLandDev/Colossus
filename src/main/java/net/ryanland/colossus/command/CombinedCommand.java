@@ -2,7 +2,7 @@ package net.ryanland.colossus.command;
 
 import net.ryanland.colossus.events.CommandEvent;
 import net.ryanland.colossus.events.MessageCommandEvent;
-import net.ryanland.colossus.events.SlashEvent;
+import net.ryanland.colossus.events.SlashCommandEvent;
 
 public interface CombinedCommand extends SlashCommand, MessageCommand {
 
@@ -12,7 +12,7 @@ public interface CombinedCommand extends SlashCommand, MessageCommand {
     }
 
     @Override
-    default void run(SlashEvent event) throws CommandException {
+    default void run(SlashCommandEvent event) throws CommandException {
         execute(event);
     }
 

@@ -1,7 +1,7 @@
 package net.ryanland.colossus.sys.interactions.menu;
 
-import net.dv8tion.jda.api.entities.Emoji;
-import net.dv8tion.jda.api.interactions.components.Button;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.ryanland.colossus.command.executor.functional_interface.CommandConsumer;
 import net.ryanland.colossus.events.ClickButtonEvent;
 import net.ryanland.colossus.events.RepliableEvent;

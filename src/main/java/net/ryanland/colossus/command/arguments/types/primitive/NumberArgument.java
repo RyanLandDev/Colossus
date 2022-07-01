@@ -5,12 +5,12 @@ import net.ryanland.colossus.command.arguments.parsing.exceptions.ArgumentExcept
 import net.ryanland.colossus.command.arguments.parsing.exceptions.MalformedArgumentException;
 import net.ryanland.colossus.command.arguments.types.SingleArgument;
 import net.ryanland.colossus.events.MessageCommandEvent;
-import net.ryanland.colossus.events.SlashEvent;
+import net.ryanland.colossus.events.SlashCommandEvent;
 
 public abstract class NumberArgument<T> extends SingleArgument<T> {
 
     @Override
-    public T resolveSlashCommandArgument(OptionMapping arg, SlashEvent event) throws ArgumentException {
+    public T resolveSlashCommandArgument(OptionMapping arg, SlashCommandEvent event) throws ArgumentException {
         try {
             return resolveSlashCommandArgument(event, arg);
         } catch (NumberFormatException e) {
@@ -27,7 +27,7 @@ public abstract class NumberArgument<T> extends SingleArgument<T> {
         }
     }
 
-    public abstract T resolveSlashCommandArgument(SlashEvent event, OptionMapping arg) throws ArgumentException;
+    public abstract T resolveSlashCommandArgument(SlashCommandEvent event, OptionMapping arg) throws ArgumentException;
 
     public abstract T resolveMessageCommandArgument(MessageCommandEvent event, String arg) throws ArgumentException;
 }

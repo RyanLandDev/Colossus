@@ -58,7 +58,7 @@ public abstract class CommandEvent implements RepliableEvent {
     }
 
     public String getUsedPrefix() {
-        if (this instanceof SlashEvent) return "/";
+        if (this instanceof SlashCommandEvent) return "/";
         else return getGuildPrefix();
     }
 
