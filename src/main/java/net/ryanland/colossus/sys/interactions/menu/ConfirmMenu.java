@@ -3,7 +3,7 @@ package net.ryanland.colossus.sys.interactions.menu;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.ryanland.colossus.command.executor.functional_interface.CommandConsumer;
-import net.ryanland.colossus.events.ClickButtonEvent;
+import net.ryanland.colossus.events.ButtonClickEvent;
 import net.ryanland.colossus.events.RepliableEvent;
 import net.ryanland.colossus.sys.interactions.button.BaseButton;
 import net.ryanland.colossus.sys.message.PresetBuilder;
@@ -14,7 +14,7 @@ import net.ryanland.colossus.sys.message.PresetBuilder;
  * @param confirmedDescription The description of the embed after the user has clicked the Confirm button
  * @param confirmAction Code to perform when the user has clicked the Confirm button
  */
-public record ConfirmMenu(String description, String confirmedDescription, CommandConsumer<ClickButtonEvent> confirmAction)
+public record ConfirmMenu(String description, String confirmedDescription, CommandConsumer<ButtonClickEvent> confirmAction)
     implements InteractionMenu {
 
     @Override
@@ -32,11 +32,11 @@ public record ConfirmMenu(String description, String confirmedDescription, Comma
         embed.addButtons(
             BaseButton.user(userId, Button.success("confirm", "Confirm").withEmoji(Emoji.fromUnicode("✅")),
                 evt -> {
-                    evt.reply(embed.setDescription(confirmedDescription).clearButtons());
+                    evt.reply(embed.setDescription(confirmedDescription).clearComponentRows());
                     confirmAction.consume(evt);
                 }),
             BaseButton.user(userId, Button.danger("dismiss", "Cancel").withEmoji(Emoji.fromUnicode("❎")),
-                evt -> evt.reply(embed.setDescription("Action canceled.").clearButtons()))
+                evt -> evt.reply(embed.setDescription("Action canceled.").clearComponentRows()))
         );
 
         // Send the message

@@ -1,11 +1,16 @@
 package net.ryanland.colossus.events;
 
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.ChannelType;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.interactions.components.Modal;
 import net.ryanland.colossus.command.Command;
 import net.ryanland.colossus.command.SubCommandHolder;
 import net.ryanland.colossus.command.arguments.ParsedArgumentMap;
+import net.ryanland.colossus.command.executor.functional_interface.CommandConsumer;
 import net.ryanland.colossus.sys.entities.ColossusGuild;
 import net.ryanland.colossus.sys.entities.ColossusMember;
 import net.ryanland.colossus.sys.entities.ColossusUser;
@@ -107,16 +112,24 @@ public class MessageCommandEvent extends CommandEvent {
     @Override
     public void reply(PresetBuilder embed) {
         // send reply
-        Message message = event.getMessage().replyEmbeds(embed.embed())
-            .setActionRows(embed.getButtonRows().stream().map(ButtonRow::toActionRow).collect(Collectors.toList()))
+        event.getMessage().replyEmbeds(embed.embed())
+            .setActionRows(embed.getActionRows())
             .content(embed.getContent())
-            .complete();
-        // add listener for the buttons
-        if (!embed.getButtonRows().isEmpty()) {
-            ClickButtonEvent.addListener(message.getIdLong(), embed.getButtonRows(),
-                () -> message.editMessageComponents(Collections.emptyList()).queue()
-            );
-        }
+            .queue(embed::addComponentRowListeners);
+    }
+
+    /**
+     * Reply to this event with a {@link Modal}<br>
+     * Note: When overriding this method, do not forget to add a modal submit listener!
+     *
+     * @param modal
+     * @param action
+     * @see ModalSubmitEvent
+     * @see ModalSubmitEvent#addListener(Long, String, CommandConsumer)
+     */
+    @Override
+    public void reply(Modal modal, CommandConsumer<ModalSubmitEvent> action) {
+        throw new IllegalStateException("Message commands do not support replying with modals");
     }
 
     @Override

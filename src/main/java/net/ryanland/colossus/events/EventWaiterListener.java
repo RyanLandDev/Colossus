@@ -6,11 +6,7 @@ import net.dv8tion.jda.api.hooks.EventListener;
 import net.ryanland.colossus.Colossus;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public class EventWaiterListener implements EventListener {

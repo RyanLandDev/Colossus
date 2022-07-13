@@ -1,7 +1,9 @@
 package net.ryanland.colossus.command.impl;
 
 import net.dv8tion.jda.api.entities.GuildChannel;
-import net.ryanland.colossus.command.*;
+import net.ryanland.colossus.command.BaseCommand;
+import net.ryanland.colossus.command.CommandException;
+import net.ryanland.colossus.command.SlashCommand;
 import net.ryanland.colossus.command.annotations.CommandBuilder;
 import net.ryanland.colossus.command.arguments.ArgumentSet;
 import net.ryanland.colossus.command.arguments.types.snowflake.GuildChannelArgument;

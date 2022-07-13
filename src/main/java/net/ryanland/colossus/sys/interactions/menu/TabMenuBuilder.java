@@ -1,6 +1,5 @@
 package net.ryanland.colossus.sys.interactions.menu;
 
-import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 
 import java.util.ArrayList;

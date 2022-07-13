@@ -62,7 +62,7 @@ public class CommandExecutor {
                     .findFirst().get();
 
                 if (eventAsSlashCommand.getSubCommandGroup() == null)
-                    event.setNestedSubCommandHolder((SubCommandHolder) command);
+                    event.setNestedSubCommandHolder((SubCommandHolder) originalCommand);
             }
         } else if (event instanceof MessageCommandEvent) {
             eventAsMessageCommand = (MessageCommandEvent) event;

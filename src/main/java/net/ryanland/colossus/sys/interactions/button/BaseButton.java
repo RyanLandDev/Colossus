@@ -4,7 +4,7 @@ import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.command.executor.functional_interface.CommandConsumer;
 import net.ryanland.colossus.command.executor.functional_interface.CommandPredicate;
-import net.ryanland.colossus.events.ClickButtonEvent;
+import net.ryanland.colossus.events.ButtonClickEvent;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 
 import java.util.List;
@@ -14,14 +14,14 @@ import java.util.List;
  * @param button The JDA Button object
  * @param onClick What to do when this button is clicked, with the click event given
  */
-public record BaseButton(Button button, CommandConsumer<ClickButtonEvent> onClick) {
+public record BaseButton(Button button, CommandConsumer<ButtonClickEvent> onClick) {
 
     /**
      * Create a button which only works if the provided predicate is true, and do something if false
      */
-    public static BaseButton predicate(CommandPredicate<ClickButtonEvent> predicate,
-                                       CommandConsumer<ClickButtonEvent> ifFalse, Button button,
-                                       CommandConsumer<ClickButtonEvent> onClick) {
+    public static BaseButton predicate(CommandPredicate<ButtonClickEvent> predicate,
+                                       CommandConsumer<ButtonClickEvent> ifFalse, Button button,
+                                       CommandConsumer<ButtonClickEvent> onClick) {
         return new BaseButton(button, event -> {
             if (!predicate.check(event)) ifFalse.consume(event);
             else if (onClick != null) onClick.consume(event);
@@ -32,7 +32,7 @@ public record BaseButton(Button button, CommandConsumer<ClickButtonEvent> onClic
      * Create a button which only one user can press
      */
     public static BaseButton user(Long userId, Button button,
-                                  CommandConsumer<ClickButtonEvent> onClick) {
+                                  CommandConsumer<ButtonClickEvent> onClick) {
         return group(new Long[]{ userId }, button, onClick);
     }
 
@@ -40,7 +40,7 @@ public record BaseButton(Button button, CommandConsumer<ClickButtonEvent> onClic
      * Create a button which only a specific group of users can press
      */
     public static BaseButton group(Long[] userIds, Button button,
-                                   CommandConsumer<ClickButtonEvent> onClick) {
+                                   CommandConsumer<ButtonClickEvent> onClick) {
         return predicate(event -> List.of(userIds).contains(event.getUser().getIdLong()),
             event -> event.reply(new PresetBuilder(Colossus.getErrorPresetType())
                 .setTitle("Not Allowed")

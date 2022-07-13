@@ -9,12 +9,14 @@ import net.ryanland.colossus.command.Category;
 import net.ryanland.colossus.command.Command;
 import net.ryanland.colossus.command.cooldown.Cooldown;
 import net.ryanland.colossus.command.executor.CommandHandler;
+import net.ryanland.colossus.command.executor.functional_interface.CommandConsumer;
 import net.ryanland.colossus.command.finalizers.Finalizer;
 import net.ryanland.colossus.command.inhibitors.Inhibitor;
-import net.ryanland.colossus.events.ClickButtonEvent;
+import net.ryanland.colossus.events.ButtonClickEvent;
+import net.ryanland.colossus.events.SelectMenuEvent;
 import net.ryanland.colossus.sys.file.Config;
-import net.ryanland.colossus.sys.file.database.DatabaseDriver;
 import net.ryanland.colossus.sys.file.LocalFile;
+import net.ryanland.colossus.sys.file.database.DatabaseDriver;
 import net.ryanland.colossus.sys.file.database.Table;
 import net.ryanland.colossus.sys.file.serializer.Serializer;
 import net.ryanland.colossus.sys.message.PresetType;
@@ -41,8 +43,8 @@ public class Colossus {
     private static Set<Category> categories;
     private static List<Command> commands;
     private static List<LocalFile> localFiles;
-    private static long buttonListenerExpirationTimeAmount;
-    private static TimeUnit buttonListenerExpirationTimeUnit;
+    private static long componentListenerExpirationTimeAmount;
+    private static TimeUnit componentListenerExpirationTimeUnit;
     private static DatabaseDriver databaseDriver;
     private static PresetType defaultPresetType;
     private static PresetType errorPresetType;
@@ -68,8 +70,8 @@ public class Colossus {
         Colossus.categories = categories;
         Colossus.commands = commands;
         Colossus.localFiles = localFiles;
-        Colossus.buttonListenerExpirationTimeAmount = buttonListenerExpirationTimeAmount;
-        Colossus.buttonListenerExpirationTimeUnit = buttonListenerExpirationTimeUnit;
+        Colossus.componentListenerExpirationTimeAmount = buttonListenerExpirationTimeAmount;
+        Colossus.componentListenerExpirationTimeUnit = buttonListenerExpirationTimeUnit;
         Colossus.databaseDriver = databaseDriver;
         Colossus.defaultPresetType = defaultPresetType;
         Colossus.errorPresetType = errorPresetType;
@@ -102,7 +104,7 @@ public class Colossus {
             e.printStackTrace();
         }
 
-        botOwner = jda.retrieveApplicationInfo().complete().getOwner();
+        jda.retrieveApplicationInfo().queue(appInfo -> botOwner = appInfo.getOwner());
 
         // Upsert the registered slash commands
         CommandHandler.upsertAll();
@@ -162,23 +164,24 @@ public class Colossus {
     }
 
     /**
-     * Get the default button listener expiration time amount
-     * @see #getDefaultButtonListenerExpirationTimeUnit()
-     * @see ColossusBuilder#setDefaultButtonListenerExpirationTime(long, TimeUnit)
-     * @see ClickButtonEvent#addListener(Long, List, Runnable)
+     * Get the default component listener expiration time amount
+     * @see #getDefaultComponentListenerExpirationTimeUnit()
+     * @see ColossusBuilder#setDefaultComponentListenerExpirationTime(long, TimeUnit)
+     * @see ButtonClickEvent#addListener(Long, List, Runnable)
+     * @see SelectMenuEvent#addListener(Long, String, CommandConsumer) 
      */
-    public static long getDefaultButtonListenerExpirationTimeAmount() {
-        return buttonListenerExpirationTimeAmount;
+    public static long getDefaultComponentListenerExpirationTimeAmount() {
+        return componentListenerExpirationTimeAmount;
     }
 
     /**
-     * Get the default button listener expiration time unit
-     * @see #getDefaultButtonListenerExpirationTimeAmount()
-     * @see ColossusBuilder#setDefaultButtonListenerExpirationTime(long, TimeUnit)
-     * @see ClickButtonEvent#addListener(Long, List, Runnable)
+     * Get the default component listener expiration time unit
+     * @see #getDefaultComponentListenerExpirationTimeAmount()
+     * @see ColossusBuilder#setDefaultComponentListenerExpirationTime(long, TimeUnit)
+     * @see ButtonClickEvent#addListener(Long, List, Runnable)
      */
-    public static TimeUnit getDefaultButtonListenerExpirationTimeUnit() {
-        return buttonListenerExpirationTimeUnit;
+    public static TimeUnit getDefaultComponentListenerExpirationTimeUnit() {
+        return componentListenerExpirationTimeUnit;
     }
 
     /**

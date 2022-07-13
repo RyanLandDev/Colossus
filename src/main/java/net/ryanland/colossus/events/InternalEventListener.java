@@ -1,7 +1,9 @@
 package net.ryanland.colossus.events;
 
+import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.SelectMenuInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.ryanland.colossus.Colossus;
@@ -29,7 +31,31 @@ public class InternalEventListener extends ListenerAdapter {
     @Override
     public void onButtonInteraction(@NotNull ButtonInteractionEvent event) {
         try {
-            new ClickButtonEvent(event).handle();
+            new ButtonClickEvent(event).handle();
+        } catch (CommandException e) {
+            event.deferReply().addEmbeds(
+                new PresetBuilder(Colossus.getErrorPresetType(), e.getMessage()).embed()
+            ).queue();
+        }
+    }
+
+    // Submit modal
+    @Override
+    public void onModalInteraction(@NotNull ModalInteractionEvent event) {
+        try {
+            new ModalSubmitEvent(event).handle();
+        } catch (CommandException e) {
+            event.deferReply().addEmbeds(
+                new PresetBuilder(Colossus.getErrorPresetType(), e.getMessage()).embed()
+            ).queue();
+        }
+    }
+
+    // Submit select menu
+    @Override
+    public void onSelectMenuInteraction(@NotNull SelectMenuInteractionEvent event) {
+        try {
+            new SelectMenuEvent(event).handle();
         } catch (CommandException e) {
             event.deferReply().addEmbeds(
                 new PresetBuilder(Colossus.getErrorPresetType(), e.getMessage()).embed()

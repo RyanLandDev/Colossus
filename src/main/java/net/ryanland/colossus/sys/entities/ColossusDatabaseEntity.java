@@ -1,7 +1,6 @@
 package net.ryanland.colossus.sys.entities;
 
 import net.dv8tion.jda.api.entities.ISnowflake;
-import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.sys.file.database.DatabaseDriver;
 import net.ryanland.colossus.sys.file.database.Table;
 

@@ -10,7 +10,6 @@ import net.ryanland.colossus.command.executor.CommandHandler;
 import net.ryanland.colossus.command.executor.DisabledCommandHandler;
 import net.ryanland.colossus.command.permissions.PermissionHolder;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static net.ryanland.colossus.command.info.HelpMaker.getInfo;

@@ -1,30 +1,27 @@
 package net.ryanland.colossus.events;
 
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.ChannelType;
+import net.dv8tion.jda.api.entities.GuildChannel;
+import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.Interaction;
 import net.dv8tion.jda.api.interactions.InteractionHook;
+import net.dv8tion.jda.api.interactions.callbacks.IReplyCallback;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
 import net.ryanland.colossus.command.Command;
 import net.ryanland.colossus.command.SubCommandHolder;
 import net.ryanland.colossus.command.arguments.ParsedArgumentMap;
-import net.ryanland.colossus.sys.entities.ColossusGuild;
-import net.ryanland.colossus.sys.entities.ColossusMember;
-import net.ryanland.colossus.sys.entities.ColossusUser;
-import net.ryanland.colossus.sys.interactions.button.ButtonRow;
-import net.ryanland.colossus.sys.message.PresetBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
-public class SlashCommandEvent extends CommandEvent {
+public class SlashCommandEvent extends CommandEvent implements InteractionRepliableEvent {
 
     private Command command;
     private SubCommandHolder headSubCommandHolder;
@@ -91,40 +88,8 @@ public class SlashCommandEvent extends CommandEvent {
     }
 
     @Override
-    public void reply(Message message, boolean ephemeral) {
-        event.reply(message).setEphemeral(ephemeral).queue();
-    }
-
-    @Override
-    public void reply(String message, boolean ephemeral) {
-        event.reply(message).setEphemeral(ephemeral).queue();
-    }
-
-    @Override
-    public void reply(MessageEmbed embed, boolean ephemeral) {
-        event.replyEmbeds(embed).setEphemeral(ephemeral).queue();
-    }
-
-    @Override
-    public void reply(PresetBuilder embed) {
-        // send reply and set hook
-        InteractionHook hook = event.replyEmbeds(embed.embed())
-            .setEphemeral(embed.isEphemeral())
-            .addActionRows(embed.getButtonRows().stream().map(ButtonRow::toActionRow).collect(Collectors.toList()))
-            .setContent(embed.getContent())
-            .complete();
-        // add listener for the buttons
-        if (!embed.getButtonRows().isEmpty()) {
-            ClickButtonEvent.addListener(
-                hook.retrieveOriginal().complete().getIdLong(), embed.getButtonRows(),
-                () -> hook.editOriginalComponents(Collections.emptyList()).queue()
-            );
-        }
-    }
-
-    @Override
-    public ColossusUser getUser() {
-        return new ColossusUser(event.getUser());
+    public IReplyCallback getCallback() {
+        return getEvent();
     }
 
     public List<OptionMapping> getOptions() {
@@ -207,18 +172,8 @@ public class SlashCommandEvent extends CommandEvent {
         return event.getIdLong();
     }
 
-    @Override
-    public ColossusGuild getGuild() {
-        return new ColossusGuild(event.getGuild());
-    }
-
     public Interaction getInteraction() {
         return event.getInteraction();
-    }
-
-    @Override
-    public ColossusMember getMember() {
-        return new ColossusMember(event.getMember());
     }
 
     public OffsetDateTime getTimeCreated() {

@@ -1,8 +1,8 @@
 package net.ryanland.colossus.sys.file.serializer;
 
 import net.ryanland.colossus.sys.file.database.Table;
-import org.jetbrains.annotations.NotNull;
 import org.bson.Document;
+import org.jetbrains.annotations.NotNull;
 
 public class MongoTableSerializer implements Serializer<Document, Table<?>> {
 

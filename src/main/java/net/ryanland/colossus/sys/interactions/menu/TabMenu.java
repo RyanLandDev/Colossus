@@ -8,7 +8,6 @@ import net.ryanland.colossus.sys.interactions.button.BaseButton;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class TabMenu implements InteractionMenu {
@@ -74,6 +73,6 @@ public class TabMenu implements InteractionMenu {
             }
         }
 
-        return page.getEmbed().clearButtons().addButtons(buttons);
+        return page.getEmbed().clearComponentRows().addButtons(buttons);
     }
 }

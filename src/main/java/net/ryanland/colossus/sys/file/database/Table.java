@@ -5,7 +5,6 @@ import net.dv8tion.jda.api.entities.User;
 import org.jetbrains.annotations.Contract;
 
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 

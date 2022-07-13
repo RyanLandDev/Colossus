@@ -1,12 +1,17 @@
 package net.ryanland.colossus.sys.interactions.button;
 
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
+import net.ryanland.colossus.events.ButtonClickEvent;
+import net.ryanland.colossus.sys.interactions.ComponentRow;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ButtonRow {
+public class ButtonRow extends ComponentRow {
 
     public ButtonRow(BaseButton... buttons) {
         add(buttons);
@@ -34,7 +39,16 @@ public class ButtonRow {
         return buttons.get(index);
     }
 
+    @Override
     public ActionRow toActionRow() {
         return ActionRow.of(getButtons().stream().map(BaseButton::button).collect(Collectors.toList()));
+    }
+
+    @Override
+    public void startListening(Message message) {
+        ButtonClickEvent.addListener(
+            message.getIdLong(), List.of(this),
+            () -> message.editMessageComponents(Collections.emptyList()).queue()
+        );
     }
 }

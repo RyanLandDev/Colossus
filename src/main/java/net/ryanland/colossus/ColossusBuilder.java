@@ -2,7 +2,6 @@ package net.ryanland.colossus;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.SelfUser;
@@ -13,7 +12,6 @@ import net.ryanland.colossus.command.arguments.parsing.exceptions.MalformedArgum
 import net.ryanland.colossus.command.cooldown.Cooldown;
 import net.ryanland.colossus.command.cooldown.CooldownHandler;
 import net.ryanland.colossus.command.cooldown.CooldownManager;
-import net.ryanland.colossus.command.executor.CommandHandler;
 import net.ryanland.colossus.command.executor.DisabledCommandHandler;
 import net.ryanland.colossus.command.finalizers.CooldownFinalizer;
 import net.ryanland.colossus.command.finalizers.Finalizer;
@@ -22,10 +20,12 @@ import net.ryanland.colossus.command.impl.DefaultDisableCommand;
 import net.ryanland.colossus.command.impl.DefaultEnableCommand;
 import net.ryanland.colossus.command.impl.DefaultHelpCommand;
 import net.ryanland.colossus.command.inhibitors.*;
-import net.ryanland.colossus.events.ClickButtonEvent;
-import net.ryanland.colossus.events.EventWaiterListener;
+import net.ryanland.colossus.events.ButtonClickEvent;
 import net.ryanland.colossus.events.InternalEventListener;
-import net.ryanland.colossus.sys.file.*;
+import net.ryanland.colossus.sys.file.Config;
+import net.ryanland.colossus.sys.file.LocalFile;
+import net.ryanland.colossus.sys.file.LocalFileBuilder;
+import net.ryanland.colossus.sys.file.LocalFileType;
 import net.ryanland.colossus.sys.file.database.DatabaseDriver;
 import net.ryanland.colossus.sys.file.serializer.CooldownsSerializer;
 import net.ryanland.colossus.sys.file.serializer.DisabledCommandsSerializer;
@@ -35,7 +35,10 @@ import net.ryanland.colossus.sys.message.PresetBuilder;
 import net.ryanland.colossus.sys.message.PresetType;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
@@ -249,13 +252,13 @@ public class ColossusBuilder {
     /**
      * Modify the default amount of time to wait before a button listener should expire.<br>
      * Expiring means removing the buttons from the message and stopping listeners.<br>
-     * This value is only used in the {@link ClickButtonEvent#addListener(Long, List, Runnable)} method.<br>
+     * This value is only used in the {@link ButtonClickEvent#addListener(Long, List, Runnable)} method.<br>
      * By default, this value is set to <strong>2 minutes</strong>.
      * @return This {@link ColossusBuilder}
-     * @see ClickButtonEvent
-     * @see ClickButtonEvent#addListener(Long, List, Runnable)
+     * @see ButtonClickEvent
+     * @see ButtonClickEvent#addListener(Long, List, Runnable)
      */
-    public ColossusBuilder setDefaultButtonListenerExpirationTime(long timeAmount, TimeUnit timeUnit) {
+    public ColossusBuilder setDefaultComponentListenerExpirationTime(long timeAmount, TimeUnit timeUnit) {
         buttonListenerExpirationTimeAmount = timeAmount;
         buttonListenerExpirationTimeUnit = timeUnit;
         return this;

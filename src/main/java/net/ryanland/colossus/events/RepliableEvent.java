@@ -1,8 +1,10 @@
 package net.ryanland.colossus.events;
 
-import net.dv8tion.jda.api.entities.*;
-import net.dv8tion.jda.api.events.interaction.GenericInteractionCreateEvent;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.interactions.components.Modal;
 import net.ryanland.colossus.command.CommandException;
+import net.ryanland.colossus.command.executor.functional_interface.CommandConsumer;
 import net.ryanland.colossus.sys.entities.ColossusGuild;
 import net.ryanland.colossus.sys.entities.ColossusMember;
 import net.ryanland.colossus.sys.entities.ColossusUser;
@@ -66,11 +68,19 @@ public interface RepliableEvent {
      * Reply to this event with a {@link PresetBuilder}<br>
      * Note: When overriding this method, do not forget to add a button listener!
      * @see PresetBuilder#setEphemeral(boolean)
-     * @see ClickButtonEvent#addListener(Long, List)
-     * @see ClickButtonEvent#addListener(Long, List, Runnable)
-     * @see ClickButtonEvent#addListener(Long, List, Runnable, long, TimeUnit)
+     * @see ButtonClickEvent#addListener(Long, List)
+     * @see ButtonClickEvent#addListener(Long, List, Runnable)
+     * @see ButtonClickEvent#addListener(Long, List, Runnable, long, TimeUnit)
      */
     void reply(PresetBuilder message);
+
+    /**
+     * Reply to this event with a {@link Modal}<br>
+     * Note: When overriding this method, do not forget to add a modal submit listener!
+     * @see ModalSubmitEvent
+     * @see ModalSubmitEvent#addListener(Long, String, CommandConsumer)
+     */
+    void reply(Modal modal, CommandConsumer<ModalSubmitEvent> action);
 
     /**
      * Reply to this event with a {@link InteractionMenu}
