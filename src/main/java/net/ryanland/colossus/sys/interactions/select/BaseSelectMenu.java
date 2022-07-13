@@ -52,7 +52,7 @@ public class BaseSelectMenu extends ComponentRow {
     }
 
     /**
-     * Create a select menu which only one user can press
+     * Create a select menu which only one user can use
      */
     public static BaseSelectMenu user(Long userId, SelectMenu selectMenu,
                                       CommandConsumer<SelectMenuEvent> onClick) {
@@ -60,7 +60,7 @@ public class BaseSelectMenu extends ComponentRow {
     }
 
     /**
-     * Create a select menu which only a specific group of users can press
+     * Create a select menu which only a specific group of users can use
      */
     public static BaseSelectMenu group(Long[] userIds, SelectMenu selectMenu,
                                        CommandConsumer<SelectMenuEvent> onClick) {

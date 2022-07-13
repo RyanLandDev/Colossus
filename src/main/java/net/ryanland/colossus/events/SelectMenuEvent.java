@@ -36,7 +36,7 @@ public class SelectMenuEvent implements ComponentInteractionRepliableEvent {
     }
 
     /**
-     * Adds a button listener that will stop listening after the provided time period
+     * Adds a select menu listener that will stop listening after the provided time period
      * @param msgId The ID of the message where the buttons are located
      * @param selectMenu The select menu to listen for
      * @param actionRowEmptier A {@link Runnable} which removes all action rows from the message
@@ -55,7 +55,7 @@ public class SelectMenuEvent implements ComponentInteractionRepliableEvent {
     }
 
     /**
-     * Adds a button listener that will stop listening after the time period defined in {@link Colossus}
+     * Adds a select menu listener that will stop listening after the time period defined in {@link Colossus}
      * @param msgId The ID of the message where the buttons are located
      * @param selectMenu The select menu to listen for
      * @param actionRowEmptier A {@link Runnable} which removes all action rows from the message
