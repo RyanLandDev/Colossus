@@ -48,7 +48,7 @@ public class ContextCommandArgument extends FutureArgumentStringResolver<Context
         // both results
         event.reply(new PresetBuilder(Colossus.getDefaultPresetType())
             .setTitle("Multiple Results")
-            .setDescription("There was both a user and message context command found with the name `" + arg + "`, please pick one.")
+            .setDescription("There was both a user and message context command found with the name `" + arg + "`, please pick one type.")
             .addButtons(BaseButton.user(event.getUser().getIdLong(),
                 Button.secondary("user", "User").withEmoji(Emoji.fromUnicode("👤")),
                 evt -> {

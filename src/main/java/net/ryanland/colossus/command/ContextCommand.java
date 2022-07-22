@@ -18,12 +18,13 @@ import java.lang.reflect.ParameterizedType;
  * All context commands extend this class
  * @param <T> Type of context command; must be either {@link User} or {@link Message}
  */
-public abstract class ContextCommand<T> {
+public abstract non-sealed class ContextCommand<T> extends BasicCommand {
 
     private ContextCommandBuilder getInfo() {
         return getClass().getAnnotation(ContextCommandBuilder.class);
     }
 
+    @Override
     public final String getName() {
         return getInfo().name();
     }
@@ -33,36 +34,34 @@ public abstract class ContextCommand<T> {
         return ContextCommandType.of((Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0]);
     }
 
-    public final String getUppercaseName() {
-        return getName().substring(0, 1).toUpperCase() + getName().substring(1);
+    @Override
+    public final CommandType getCommandType() {
+        return getType().getCommandType();
     }
 
+    @Override
     public final boolean hasCooldown() {
         return getCooldown() != 0;
     }
 
+    @Override
     public final int getCooldown() {
         return getInfo().cooldown();
     }
 
-    public final int getCooldownInMs() {
-        return getCooldown() * 1000;
-    }
-
+    @Override
     public CooldownManager getCooldownManager() {
         return MemoryCooldownManager.getInstance();
     }
 
+    @Override
     public final boolean isDisabled() {
         return DisabledCommandHandler.getInstance().isDisabled(this);
     }
 
+    @Override
     public PermissionHolder getPermission() {
         return new PermissionHolder();
-    }
-
-    public final boolean memberHasPermission(Member member) {
-        return getPermission().check(member);
     }
 
     public abstract void run(ContextCommandEvent<T> event) throws CommandException;

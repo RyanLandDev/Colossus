@@ -10,17 +10,17 @@ import net.ryanland.colossus.command.Command;
 import net.ryanland.colossus.command.CommandException;
 import net.ryanland.colossus.command.ContextCommand;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.MalformedArgumentException;
-import net.ryanland.colossus.command.cooldown.Cooldown;
-import net.ryanland.colossus.command.cooldown.CooldownHandler;
-import net.ryanland.colossus.command.cooldown.CooldownManager;
 import net.ryanland.colossus.command.executor.DisabledCommandHandler;
-import net.ryanland.colossus.command.finalizers.CooldownFinalizer;
-import net.ryanland.colossus.command.finalizers.Finalizer;
+import net.ryanland.colossus.command.finalizers.ContextFinalizer;
+import net.ryanland.colossus.command.finalizers.CooldownCommandFinalizer;
+import net.ryanland.colossus.command.finalizers.CommandFinalizer;
+import net.ryanland.colossus.command.finalizers.CooldownContextFinalizer;
 import net.ryanland.colossus.command.impl.DefaultCommand;
 import net.ryanland.colossus.command.impl.DefaultDisableCommand;
 import net.ryanland.colossus.command.impl.DefaultEnableCommand;
 import net.ryanland.colossus.command.impl.DefaultHelpCommand;
 import net.ryanland.colossus.command.inhibitors.*;
+import net.ryanland.colossus.command.inhibitors.impl.*;
 import net.ryanland.colossus.events.ButtonClickEvent;
 import net.ryanland.colossus.events.InternalEventListener;
 import net.ryanland.colossus.sys.file.Config;
@@ -28,9 +28,6 @@ import net.ryanland.colossus.sys.file.LocalFile;
 import net.ryanland.colossus.sys.file.LocalFileBuilder;
 import net.ryanland.colossus.sys.file.LocalFileType;
 import net.ryanland.colossus.sys.file.database.DatabaseDriver;
-import net.ryanland.colossus.sys.file.serializer.CooldownsSerializer;
-import net.ryanland.colossus.sys.file.serializer.CommandsSerializer;
-import net.ryanland.colossus.sys.file.serializer.Serializer;
 import net.ryanland.colossus.sys.message.DefaultPresetType;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 import net.ryanland.colossus.sys.message.PresetType;
@@ -52,15 +49,25 @@ public class ColossusBuilder {
         new InternalEventListener()
     };
 
-    private static final Inhibitor[] CORE_INHIBITORS = new Inhibitor[]{
-        new DisabledInhibitor(),
-        new PermissionInhibitor(),
-        new CooldownInhibitor(),
-        new GuildOnlyInhibitor()
+    private static final CommandInhibitor[] CORE_COMMAND_INHIBITORS = new CommandInhibitor[]{
+        new DisabledCommandInhibitor(),
+        new PermissionCommandInhibitor(),
+        new CooldownCommandInhibitor(),
+        new GuildOnlyCommandInhibitor()
     };
 
-    private static final Finalizer[] CORE_FINALIZERS = new Finalizer[]{
-        new CooldownFinalizer()
+    private static final ContextInhibitor[] CORE_CONTEXT_INHIBITORS = new ContextInhibitor[]{
+        new DisabledContextInhibitor(),
+        new PermissionContextInhibitor(),
+        new CooldownContextInhibitor()
+    };
+
+    private static final CommandFinalizer[] CORE_COMMAND_FINALIZERS = new CommandFinalizer[]{
+        new CooldownCommandFinalizer()
+    };
+
+    private static final ContextFinalizer[] CORE_CONTEXT_FINALIZERS = new ContextFinalizer[]{
+        new CooldownContextFinalizer()
     };
 
     private static final String[] CORE_CONFIG_ENTRIES = new String[]{
@@ -81,8 +88,10 @@ public class ColossusBuilder {
     private final List<ContextCommand<?>> contextCommands = new ArrayList<>();
     private final List<LocalFile> localFiles = new ArrayList<>();
     private final List<String> configEntries = new ArrayList<>(List.of(CORE_CONFIG_ENTRIES));
-    private final List<Inhibitor> inhibitors = new ArrayList<>();
-    private final List<Finalizer> finalizers = new ArrayList<>();
+    private final List<CommandInhibitor> commandInhibitors = new ArrayList<>();
+    private final List<ContextInhibitor> contextInhibitors = new ArrayList<>();
+    private final List<CommandFinalizer> commandFinalizers = new ArrayList<>();
+    private final List<ContextFinalizer> contextFinalizers = new ArrayList<>();
 
     private boolean disableHelpCommand = false;
     private boolean disableCommandToggleCommands = false;
@@ -92,7 +101,6 @@ public class ColossusBuilder {
     private PresetType defaultPresetType = DefaultPresetType.DEFAULT;
     private PresetType errorPresetType = DefaultPresetType.ERROR;
     private PresetType successPresetType = DefaultPresetType.SUCCESS;
-    private Serializer<?, List<Cooldown>> cooldownsSerializer = CooldownsSerializer.getInstance();
 
     /**
      * Helper class to build a new instance of {@link Colossus}.<br>
@@ -178,14 +186,16 @@ public class ColossusBuilder {
         }
 
         // add core inhibitors and finalizers
-        inhibitors.addAll(List.of(CORE_INHIBITORS));
-        finalizers.addAll(List.of(CORE_FINALIZERS));
+        commandInhibitors.addAll(List.of(CORE_COMMAND_INHIBITORS));
+        contextInhibitors.addAll(List.of(CORE_CONTEXT_INHIBITORS));
+        commandFinalizers.addAll(List.of(CORE_COMMAND_FINALIZERS));
+        contextFinalizers.addAll(List.of(CORE_CONTEXT_FINALIZERS));
 
         buildConfigFile();
 
         return new Colossus(jdaBuilder, config, categories, commands, contextCommands, localFiles,
             buttonListenerExpirationTimeAmount, buttonListenerExpirationTimeUnit, databaseDriver, defaultPresetType,
-            errorPresetType, successPresetType, cooldownsSerializer, inhibitors, finalizers);
+            errorPresetType, successPresetType, commandInhibitors, contextInhibitors, commandFinalizers, contextFinalizers);
     }
 
     /**
@@ -333,44 +343,50 @@ public class ColossusBuilder {
     }
 
     /**
-     * Sets the {@link Serializer} used for cooldowns, when pushed/pulled to/from the database.
-     * <br>When this is not defined, {@link CooldownsSerializer} is used.
-     * @param serializer The serializer to set to
+     * Register {@link CommandInhibitor}s
+     * <br>Core inhibitors will be executed before custom ones. These are defined in {@code ColossusBuilder.CORE_COMMAND_INHIBITORS}
+     * @param commandInhibitors The command inhibitors to register
      * @return The builder
-     * @see Serializer
-     * @see CooldownsSerializer
-     * @see Cooldown
-     * @see CooldownHandler
-     * @see CooldownManager
+     * @see CommandInhibitor
      */
-    public ColossusBuilder setCooldownsSerializer(Serializer<?, List<Cooldown>> serializer) {
-        cooldownsSerializer = serializer;
+    public ColossusBuilder registerCommandInhibitors(CommandInhibitor... commandInhibitors) {
+        this.commandInhibitors.addAll(List.of(commandInhibitors));
         return this;
     }
 
     /**
-     * Register {@link Inhibitor}s
-     * <br>Core inhibitors will be executed before custom ones. These are:<br>
-     * {@link DisabledInhibitor}, {@link PermissionInhibitor}, {@link CooldownInhibitor}
-     * @param inhibitors The inhibitors to register
+     * Register {@link ContextInhibitor}s
+     * <br>Core inhibitors will be executed before custom ones. These are defined in {@code ColossusBuilder.CORE_CONTEXT_INHIBITORS}
+     * @param contextInhibitors The context inhibitors to register
      * @return The builder
-     * @see Inhibitor
+     * @see ContextInhibitor
      */
-    public ColossusBuilder registerInhibitors(Inhibitor... inhibitors) {
-        this.inhibitors.addAll(List.of(inhibitors));
+    public ColossusBuilder registerContextInhibitors(ContextInhibitor... contextInhibitors) {
+        this.contextInhibitors.addAll(List.of(contextInhibitors));
         return this;
     }
 
     /**
-     * Register {@link Finalizer}s
-     * <br>Core finalizers will be executed before custom ones. These are:<br>
-     * {@link CooldownFinalizer}
-     * @param finalizers The finalizers to register
+     * Register {@link CommandFinalizer}s
+     * <br>Core finalizers will be executed before custom ones. These are defined in {@code ColossusBuilder.CORE_COMMAND_FINALIZERS}
+     * @param commandFinalizers The command finalizers to register
      * @return The builder
-     * @see Finalizer
+     * @see CommandFinalizer
      */
-    public ColossusBuilder registerFinalizers(Finalizer... finalizers) {
-        this.finalizers.addAll(List.of(finalizers));
+    public ColossusBuilder registerCommandFinalizers(CommandFinalizer... commandFinalizers) {
+        this.commandFinalizers.addAll(List.of(commandFinalizers));
+        return this;
+    }
+
+    /**
+     * Register {@link ContextFinalizer}s
+     * <br>Core finalizers will be executed before custom ones. These are defined in {@code ColossusBuilder.CORE_CONTEXT_FINALIZERS}
+     * @param contextFinalizers The context finalizers to register
+     * @return The builder
+     * @see CommandFinalizer
+     */
+    public ColossusBuilder registerContextFinalizers(ContextFinalizer... contextFinalizers) {
+        this.contextFinalizers.addAll(List.of(contextFinalizers));
         return this;
     }
 

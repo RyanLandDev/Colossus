@@ -8,18 +8,17 @@ import net.dv8tion.jda.internal.utils.JDALogger;
 import net.ryanland.colossus.command.Category;
 import net.ryanland.colossus.command.Command;
 import net.ryanland.colossus.command.ContextCommand;
-import net.ryanland.colossus.command.cooldown.Cooldown;
 import net.ryanland.colossus.command.executor.CommandHandler;
-import net.ryanland.colossus.command.executor.functional_interface.CommandConsumer;
-import net.ryanland.colossus.command.finalizers.Finalizer;
-import net.ryanland.colossus.command.inhibitors.Inhibitor;
+import net.ryanland.colossus.command.finalizers.CommandFinalizer;
+import net.ryanland.colossus.command.finalizers.ContextFinalizer;
+import net.ryanland.colossus.command.inhibitors.CommandInhibitor;
+import net.ryanland.colossus.command.inhibitors.ContextInhibitor;
 import net.ryanland.colossus.events.ButtonClickEvent;
 import net.ryanland.colossus.events.SelectMenuEvent;
 import net.ryanland.colossus.sys.file.Config;
 import net.ryanland.colossus.sys.file.LocalFile;
 import net.ryanland.colossus.sys.file.database.DatabaseDriver;
 import net.ryanland.colossus.sys.file.database.Table;
-import net.ryanland.colossus.sys.file.serializer.Serializer;
 import net.ryanland.colossus.sys.interactions.select.BaseSelectMenu;
 import net.ryanland.colossus.sys.message.PresetType;
 import org.slf4j.Logger;
@@ -52,9 +51,10 @@ public class Colossus {
     private static PresetType defaultPresetType;
     private static PresetType errorPresetType;
     private static PresetType successPresetType;
-    private static Serializer<?, List<Cooldown>> cooldownsSerializer;
-    private static List<Inhibitor> inhibitors;
-    private static List<Finalizer> finalizers;
+    private static List<CommandInhibitor> commandInhibitors;
+    private static List<ContextInhibitor> contextInhibitors;
+    private static List<CommandFinalizer> commandFinalizers;
+    private static List<ContextFinalizer> contextFinalizers;
 
     private final JDABuilder builder;
 
@@ -63,8 +63,9 @@ public class Colossus {
     public Colossus(JDABuilder builder, Config config, Set<Category> categories, List<Command> commands,
                     List<ContextCommand<?>> contextCommands, List<LocalFile> localFiles, long buttonListenerExpirationTimeAmount,
                     TimeUnit buttonListenerExpirationTimeUnit, DatabaseDriver databaseDriver, PresetType defaultPresetType,
-                    PresetType errorPresetType, PresetType successPresetType, Serializer<?, List<Cooldown>> cooldownsSerializer,
-                    List<Inhibitor> inhibitors, List<Finalizer> finalizers) {
+                    PresetType errorPresetType, PresetType successPresetType, List<CommandInhibitor> commandInhibitors,
+                    List<ContextInhibitor> contextInhibitors, List<CommandFinalizer> commandFinalizers,
+                    List<ContextFinalizer> contextFinalizers) {
         this.builder = builder;
 
         Colossus.config = config;
@@ -78,9 +79,10 @@ public class Colossus {
         Colossus.defaultPresetType = defaultPresetType;
         Colossus.errorPresetType = errorPresetType;
         Colossus.successPresetType = successPresetType;
-        Colossus.cooldownsSerializer = cooldownsSerializer;
-        Colossus.inhibitors = inhibitors;
-        Colossus.finalizers = finalizers;
+        Colossus.commandInhibitors = commandInhibitors;
+        Colossus.contextInhibitors = contextInhibitors;
+        Colossus.commandFinalizers = commandFinalizers;
+        Colossus.contextFinalizers = contextFinalizers;
     }
 
     /**
@@ -220,15 +222,19 @@ public class Colossus {
         return successPresetType;
     }
 
-    public static Serializer<?, List<Cooldown>> getCooldownsSerializer() {
-        return cooldownsSerializer;
+    public static List<CommandInhibitor> getCommandInhibitors() {
+        return commandInhibitors;
     }
 
-    public static List<Inhibitor> getInhibitors() {
-        return inhibitors;
+    public static List<ContextInhibitor> getContextInhibitors() {
+        return contextInhibitors;
     }
 
-    public static List<Finalizer> getFinalizers() {
-        return finalizers;
+    public static List<CommandFinalizer> getCommandFinalizers() {
+        return commandFinalizers;
+    }
+
+    public static List<ContextFinalizer> getContextFinalizers() {
+        return contextFinalizers;
     }
 }

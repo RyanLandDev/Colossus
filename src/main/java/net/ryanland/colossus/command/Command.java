@@ -1,6 +1,5 @@
 package net.ryanland.colossus.command;
 
-import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.ryanland.colossus.command.arguments.Argument;
 import net.ryanland.colossus.command.arguments.ArgumentSet;
@@ -8,13 +7,12 @@ import net.ryanland.colossus.command.cooldown.CooldownManager;
 import net.ryanland.colossus.command.cooldown.MemoryCooldownManager;
 import net.ryanland.colossus.command.executor.CommandHandler;
 import net.ryanland.colossus.command.executor.DisabledCommandHandler;
-import net.ryanland.colossus.command.permissions.PermissionHolder;
 
 import java.util.List;
 
 import static net.ryanland.colossus.command.info.HelpMaker.getInfo;
 
-public sealed abstract class Command permits BaseCommand {
+public sealed abstract class Command extends BasicCommand permits BaseCommand {
 
     private Category category;
     private List<SubCommand> subcommands;
@@ -38,34 +36,35 @@ public sealed abstract class Command permits BaseCommand {
 
     // CommandData getters --------------------
 
+    @Override
     public final String getName() {
         return getInfo(this).name();
-    }
-
-    public final String getUppercaseName() {
-        return getName().substring(0, 1).toUpperCase() + getName().substring(1);
     }
 
     public final String getDescription() {
         return getInfo(this).description();
     }
 
+    @Override
+    public final CommandType getCommandType() {
+        return CommandType.NORMAL;
+    }
+
+    @Override
     public final boolean hasCooldown() {
         return getCooldown() != 0;
     }
 
+    @Override
     public final int getCooldown() {
         return getInfo(this).cooldown();
-    }
-
-    public final int getCooldownInMs() {
-        return getCooldown() * 1000;
     }
 
     public final boolean isGuildOnly() {
         return getInfo(this).guildOnly();
     }
 
+    @Override
     public CooldownManager getCooldownManager() {
         return MemoryCooldownManager.getInstance();
     }
@@ -75,6 +74,7 @@ public sealed abstract class Command permits BaseCommand {
             .stream().map(Argument::getOptionData).toArray(OptionData[]::new);
     }
 
+    @Override
     public final boolean isDisabled() {
         return DisabledCommandHandler.getInstance().isDisabled(this);
     }
@@ -83,16 +83,6 @@ public sealed abstract class Command permits BaseCommand {
         return CommandHandler.getCommand(alias);
     }
 
-    // ---------------------------------------------------------
-
-    public abstract PermissionHolder getPermission();
-
     public abstract ArgumentSet getArguments();
-
-    // ---------------------------------------------------------
-
-    public final boolean memberHasPermission(Member member) {
-        return getPermission().check(member);
-    }
 
 }

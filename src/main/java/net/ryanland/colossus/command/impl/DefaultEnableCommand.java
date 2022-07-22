@@ -1,11 +1,9 @@
 package net.ryanland.colossus.command.impl;
 
 import net.ryanland.colossus.Colossus;
-import net.ryanland.colossus.command.CombinedCommand;
-import net.ryanland.colossus.command.Command;
-import net.ryanland.colossus.command.CommandException;
-import net.ryanland.colossus.command.CommandBuilder;
+import net.ryanland.colossus.command.*;
 import net.ryanland.colossus.command.arguments.ArgumentSet;
+import net.ryanland.colossus.command.arguments.types.command.BasicCommandArgument;
 import net.ryanland.colossus.command.arguments.types.command.CommandArgument;
 import net.ryanland.colossus.command.executor.DisabledCommandHandler;
 import net.ryanland.colossus.command.permissions.BotOwnerRequirement;
@@ -13,7 +11,6 @@ import net.ryanland.colossus.command.permissions.PermissionBuilder;
 import net.ryanland.colossus.command.permissions.PermissionHolder;
 import net.ryanland.colossus.events.CommandEvent;
 import net.ryanland.colossus.sys.message.PresetBuilder;
-
 
 @CommandBuilder(
         name = "enable",
@@ -32,7 +29,7 @@ public final class DefaultEnableCommand extends DefaultCommand implements Combin
     @Override
     public ArgumentSet getArguments() {
         return new ArgumentSet().addArguments(
-            new CommandArgument()
+            new BasicCommandArgument()
                 .id("command")
                 .description("Command to enable")
         );
@@ -40,7 +37,7 @@ public final class DefaultEnableCommand extends DefaultCommand implements Combin
 
     @Override
     public void execute(CommandEvent event) throws CommandException {
-        Command command = event.getArgument("command");
+        BasicCommand command = event.getArgument("command");
         DisabledCommandHandler.getInstance().enable(command);
 
         event.reply(

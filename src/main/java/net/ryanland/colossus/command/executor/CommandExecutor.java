@@ -6,8 +6,10 @@ import net.ryanland.colossus.command.arguments.parsing.ArgumentParser;
 import net.ryanland.colossus.command.arguments.parsing.MessageCommandArgumentParser;
 import net.ryanland.colossus.command.arguments.parsing.SlashCommandArgumentParser;
 import net.ryanland.colossus.command.context.ContextCommandType;
-import net.ryanland.colossus.command.finalizers.Finalizer;
-import net.ryanland.colossus.command.inhibitors.Inhibitor;
+import net.ryanland.colossus.command.finalizers.CommandFinalizer;
+import net.ryanland.colossus.command.finalizers.ContextFinalizer;
+import net.ryanland.colossus.command.inhibitors.CommandInhibitor;
+import net.ryanland.colossus.command.inhibitors.ContextInhibitor;
 import net.ryanland.colossus.command.inhibitors.InhibitorException;
 import net.ryanland.colossus.events.CommandEvent;
 import net.ryanland.colossus.events.ContextCommandEvent;
@@ -99,13 +101,15 @@ public class CommandExecutor {
         cmdClass = command.getClass();
 
         try {
-            for (Inhibitor inhibitor : Colossus.getInhibitors()) {
+            // run inhibitors
+            for (CommandInhibitor inhibitor : Colossus.getCommandInhibitors()) {
                 if (inhibitor.check(event)) {
                     event.reply(inhibitor.buildMessage(event));
                     throw new InhibitorException();
                 }
             }
 
+            // parse args
             if (argumentParser.parseArguments()) {
                 try {
                     //Invoking the run method, only the InvocationTargetException can be thrown through the method,
@@ -128,8 +132,10 @@ public class CommandExecutor {
                     return;
                 }
 
-                for (Finalizer finalizer : Colossus.getFinalizers())
+                // run finalizers
+                for (CommandFinalizer finalizer : Colossus.getCommandFinalizers()) {
                     finalizer.finalize(event);
+                }
             }
 
         } catch (InhibitorException ignored) {
@@ -167,17 +173,34 @@ public class CommandExecutor {
     @SuppressWarnings("all")
     public <T> void execute(ContextCommandEvent<T> event) {
         ContextCommand<T> command = event.getCommand();
+
         try {
-            command.run(event);
-        } catch (Exception e) {
-            if (!(e instanceof CommandException)) {
-                e.printStackTrace();
+            // run inhibitors
+            for (ContextInhibitor inhibitor : Colossus.getContextInhibitors()) {
+                if (inhibitor.check(event)) {
+                    event.reply(inhibitor.buildMessage(event));
+                    throw new InhibitorException();
+                }
             }
 
-            event.reply(new PresetBuilder(Colossus.getErrorPresetType(),
-                e instanceof CommandException ? e.getMessage() : "Unknown error, please report it to a developer."));
-            return;
-        }
+            // run command
+            try {
+                command.run(event);
+            } catch (Exception e) {
+                if (!(e instanceof CommandException)) {
+                    e.printStackTrace();
+                }
+
+                event.reply(new PresetBuilder(Colossus.getErrorPresetType(),
+                    e instanceof CommandException ? e.getMessage() : "Unknown error, please report it to a developer."));
+                return;
+            }
+
+            // run finalizers
+            for (ContextFinalizer finalizer : Colossus.getContextFinalizers()) {
+                finalizer.finalize(event);
+            }
+        } catch (InhibitorException ignored) {}
     }
 
 }

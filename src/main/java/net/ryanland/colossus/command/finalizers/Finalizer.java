@@ -1,11 +1,8 @@
 package net.ryanland.colossus.command.finalizers;
 
-import net.ryanland.colossus.events.CommandEvent;
+import net.ryanland.colossus.events.RepliableEvent;
 
-/**
- * Command finalizers are executed when a command has finished running without errors
- */
-public interface Finalizer {
+public interface Finalizer<T extends RepliableEvent> {
 
-    void finalize(CommandEvent event);
+    void finalize(T event);
 }

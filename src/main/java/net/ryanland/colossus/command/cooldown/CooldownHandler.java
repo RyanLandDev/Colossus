@@ -1,8 +1,10 @@
 package net.ryanland.colossus.command.cooldown;
 
 import net.dv8tion.jda.api.entities.User;
+import net.ryanland.colossus.command.BasicCommand;
 import net.ryanland.colossus.command.Command;
 import net.ryanland.colossus.events.CommandEvent;
+import net.ryanland.colossus.events.ContextCommandEvent;
 
 import java.util.Date;
 import java.util.List;
@@ -14,7 +16,11 @@ public class CooldownHandler {
         return isCooldownActive(event.getCommand().getCooldownManager(), event.getUser(), event.getCommand());
     }
 
-    public static boolean isCooldownActive(CooldownManager manager, User user, Command command) {
+    public static boolean isCooldownActive(ContextCommandEvent<?> event) {
+        return isCooldownActive(event.getCommand().getCooldownManager(), event.getUser(), event.getCommand());
+    }
+
+    public static boolean isCooldownActive(CooldownManager manager, User user, BasicCommand command) {
         cleanCooldowns(manager, user);
         return getActiveCooldowns(manager, user).stream()
             .anyMatch(cooldown -> cooldown.command().getName().equals(command.getName()));
@@ -24,7 +30,11 @@ public class CooldownHandler {
         return getActiveCooldown(event.getCommand().getCooldownManager(), event.getUser(), event.getCommand());
     }
 
-    public static Cooldown getActiveCooldown(CooldownManager manager, User user, Command command) {
+    public static Cooldown getActiveCooldown(ContextCommandEvent<?> event) {
+        return getActiveCooldown(event.getCommand().getCooldownManager(), event.getUser(), event.getCommand());
+    }
+
+    public static Cooldown getActiveCooldown(CooldownManager manager, User user, BasicCommand command) {
         if (!isCooldownActive(manager, user, command))
             return null;
         return getActiveCooldowns(manager, user).stream()
@@ -37,7 +47,11 @@ public class CooldownHandler {
         newCooldown(event.getCommand().getCooldownManager(), event.getUser(), event.getCommand());
     }
 
-    public static void newCooldown(CooldownManager manager, User user, Command command) {
+    public static void newCooldown(ContextCommandEvent<?> event) {
+        newCooldown(event.getCommand().getCooldownManager(), event.getUser(), event.getCommand());
+    }
+
+    public static void newCooldown(CooldownManager manager, User user, BasicCommand command) {
         cleanCooldowns(manager, user);
         manager.put(user, new Cooldown(command,
             new Date(System.currentTimeMillis() + command.getCooldownInMs())));
@@ -63,7 +77,7 @@ public class CooldownHandler {
         }
     }
 
-    public static void removeCooldown(CooldownManager manager, User user, Command command) {
+    public static void removeCooldown(CooldownManager manager, User user, BasicCommand command) {
         List<Cooldown> activeCooldowns = getActiveCooldowns(manager, user);
         List<Cooldown> cooldowns = activeCooldowns.stream()
             .filter(cooldown -> !cooldown.command().getName().equals(command.getName()))

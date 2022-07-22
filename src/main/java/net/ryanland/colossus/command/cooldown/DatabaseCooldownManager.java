@@ -5,6 +5,7 @@ import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.ColossusBuilder;
 import net.ryanland.colossus.sys.file.database.DatabaseDriver;
 import net.ryanland.colossus.sys.file.database.Table;
+import net.ryanland.colossus.sys.file.serializer.CooldownsSerializer;
 
 import java.util.Collections;
 import java.util.List;
@@ -24,7 +25,7 @@ public class DatabaseCooldownManager implements CooldownManager {
 
     @Override
     public List<Cooldown> get(User user) {
-        return Colossus.getCooldownsSerializer().deserialize(Colossus.getDatabaseDriver().get(user).get(COOLDOWNS_KEY));
+        return CooldownsSerializer.getInstance().deserialize(Colossus.getDatabaseDriver().get(user).get(COOLDOWNS_KEY));
     }
 
     @Override
@@ -39,7 +40,7 @@ public class DatabaseCooldownManager implements CooldownManager {
         List<Cooldown> cooldowns = get(user);
         cooldowns.remove(cooldown);
 
-        table.put(COOLDOWNS_KEY, Colossus.getCooldownsSerializer().serialize(cooldowns));
+        table.put(COOLDOWNS_KEY, CooldownsSerializer.getInstance().serialize(cooldowns));
         Colossus.getDatabaseDriver().updateTable(user, table);
 
         return cooldown;
@@ -52,7 +53,7 @@ public class DatabaseCooldownManager implements CooldownManager {
         List<Cooldown> cooldowns = get(user);
         cooldowns.add(cooldown);
 
-        table.put(COOLDOWNS_KEY, Colossus.getCooldownsSerializer().serialize(cooldowns));
+        table.put(COOLDOWNS_KEY, CooldownsSerializer.getInstance().serialize(cooldowns));
         Colossus.getDatabaseDriver().updateTable(user, table);
 
         return cooldown;
@@ -61,7 +62,7 @@ public class DatabaseCooldownManager implements CooldownManager {
     @Override
     public List<Cooldown> put(User user, List<Cooldown> cooldowns) {
         Colossus.getDatabaseDriver().modifyTable(user, table ->
-            table.put(COOLDOWNS_KEY, Colossus.getCooldownsSerializer().serialize(cooldowns)));
+            table.put(COOLDOWNS_KEY, CooldownsSerializer.getInstance().serialize(cooldowns)));
         return cooldowns;
     }
 }

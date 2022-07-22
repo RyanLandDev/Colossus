@@ -1,6 +1,6 @@
 package net.ryanland.colossus.sys.file.serializer;
 
-import net.ryanland.colossus.command.Command;
+import net.ryanland.colossus.command.CommandType;
 import net.ryanland.colossus.command.cooldown.Cooldown;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
                       List with sublists, containing:
                         0 - command name (String)
                         1 - cooldown expire (Date)
+                        2 - command type (int)
  */
 @SuppressWarnings("all")
 public class CooldownsSerializer implements Serializer<List<List>, List<Cooldown>> {
@@ -27,14 +28,14 @@ public class CooldownsSerializer implements Serializer<List<List>, List<Cooldown
     @Override
     public List<List> serialize(@NotNull List<Cooldown> toSerialize) {
         return toSerialize.stream()
-            .map(cooldown -> Arrays.asList(cooldown.command().getName(), cooldown.expires()))
+            .map(cooldown -> Arrays.asList(cooldown.command().getName(), cooldown.expires(), cooldown.command().getCommandType().getId()))
             .collect(Collectors.toList());
     }
 
     @Override
     public List<Cooldown> deserialize(@NotNull List<List> toDeserialize) {
         return toDeserialize.stream()
-            .map(list -> new Cooldown(Command.of((String) list.get(0)), (Date) list.get(1)))
+            .map(list -> new Cooldown(CommandType.of((int) list.get(2)).getCommand((String) list.get(0)), (Date) list.get(1)))
             .collect(Collectors.toList());
     }
 }

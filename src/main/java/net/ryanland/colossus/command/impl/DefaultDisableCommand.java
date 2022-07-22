@@ -4,6 +4,7 @@ import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.command.*;
 import net.ryanland.colossus.command.CommandBuilder;
 import net.ryanland.colossus.command.arguments.ArgumentSet;
+import net.ryanland.colossus.command.arguments.types.command.BasicCommandArgument;
 import net.ryanland.colossus.command.arguments.types.command.CommandArgument;
 import net.ryanland.colossus.command.executor.DisabledCommandHandler;
 import net.ryanland.colossus.command.permissions.BotOwnerRequirement;
@@ -29,7 +30,7 @@ public final class DefaultDisableCommand extends DefaultCommand implements Combi
     @Override
     public ArgumentSet getArguments() {
         return new ArgumentSet().addArguments(
-            new CommandArgument()
+            new BasicCommandArgument()
                 .id("command")
                 .description("Command to disable")
         );
@@ -37,7 +38,7 @@ public final class DefaultDisableCommand extends DefaultCommand implements Combi
 
     @Override
     public void execute(CommandEvent event) throws CommandException {
-        Command command = event.getArgument("command");
+        BasicCommand command = event.getArgument("command");
         DisabledCommandHandler.getInstance().disable(command);
 
         event.reply(

@@ -4,19 +4,33 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.context.ContextInteraction;
+import net.ryanland.colossus.command.CommandType;
 
 public enum ContextCommandType {
-    USER(Command.Type.USER, ContextInteraction.ContextTarget.USER, User.class),
-    MESSAGE(Command.Type.MESSAGE, ContextInteraction.ContextTarget.MESSAGE, Message.class);
+    USER("User", CommandType.CONTEXT_USER, Command.Type.USER, ContextInteraction.ContextTarget.USER, User.class),
+    MESSAGE("Message", CommandType.CONTEXT_MESSAGE, Command.Type.MESSAGE, ContextInteraction.ContextTarget.MESSAGE, Message.class);
 
+    private final String name;
+    private final CommandType commandType;
     private final Command.Type jdaEquivalent;
     private final ContextInteraction.ContextTarget target;
     private final Class<?> jdaClass;
 
-    ContextCommandType(Command.Type jdaEquivalent, ContextInteraction.ContextTarget target, Class<?> jdaClass) {
+    ContextCommandType(String name, CommandType commandType, Command.Type jdaEquivalent,
+                       ContextInteraction.ContextTarget target, Class<?> jdaClass) {
+        this.name = name;
+        this.commandType = commandType;
         this.jdaEquivalent = jdaEquivalent;
         this.target = target;
         this.jdaClass = jdaClass;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public CommandType getCommandType() {
+        return commandType;
     }
 
     public Command.Type getJDAEquivalent() {

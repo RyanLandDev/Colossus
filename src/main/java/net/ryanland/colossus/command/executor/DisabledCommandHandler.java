@@ -1,6 +1,7 @@
 package net.ryanland.colossus.command.executor;
 
 import net.ryanland.colossus.Colossus;
+import net.ryanland.colossus.command.BasicCommand;
 import net.ryanland.colossus.command.Command;
 import net.ryanland.colossus.command.CommandException;
 import net.ryanland.colossus.command.ContextCommand;
@@ -34,6 +35,16 @@ public class DisabledCommandHandler {
 
     public boolean isDisabled(ContextCommand<?> contextCommand) {
         return getDisabledContextCommands().contains(contextCommand);
+    }
+
+    public void enable(BasicCommand command) throws CommandException {
+        if (command instanceof ContextCommand) enable((ContextCommand<?>) command);
+        else if (command instanceof Command) enable((Command) command);
+    }
+
+    public void disable(BasicCommand command) throws CommandException {
+        if (command instanceof ContextCommand) disable((ContextCommand<?>) command);
+        else if (command instanceof Command) disable((Command) command);
     }
 
     public void enable(Command command) throws CommandException {

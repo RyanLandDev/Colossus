@@ -8,6 +8,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * db format: "TYPE_ID;CMD_NAME"
+ */
 public class ContextCommandsSerializer implements Serializer<List<String>, List<ContextCommand<?>>> {
 
     private static final ContextCommandsSerializer instance = new ContextCommandsSerializer();
