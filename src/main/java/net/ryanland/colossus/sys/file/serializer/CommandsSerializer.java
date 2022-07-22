@@ -7,11 +7,11 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class DisabledCommandsSerializer implements Serializer<List<String>, List<Command>> {
+public class CommandsSerializer implements Serializer<List<String>, List<Command>> {
 
-    private static final DisabledCommandsSerializer instance = new DisabledCommandsSerializer();
+    private static final CommandsSerializer instance = new CommandsSerializer();
 
-    public static DisabledCommandsSerializer getInstance() {
+    public static CommandsSerializer getInstance() {
         return instance;
     }
 

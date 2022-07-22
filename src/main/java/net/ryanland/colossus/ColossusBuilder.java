@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.entities.SelfUser;
 import net.ryanland.colossus.command.Category;
 import net.ryanland.colossus.command.Command;
 import net.ryanland.colossus.command.CommandException;
+import net.ryanland.colossus.command.ContextCommand;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.MalformedArgumentException;
 import net.ryanland.colossus.command.cooldown.Cooldown;
 import net.ryanland.colossus.command.cooldown.CooldownHandler;
@@ -28,7 +29,7 @@ import net.ryanland.colossus.sys.file.LocalFileBuilder;
 import net.ryanland.colossus.sys.file.LocalFileType;
 import net.ryanland.colossus.sys.file.database.DatabaseDriver;
 import net.ryanland.colossus.sys.file.serializer.CooldownsSerializer;
-import net.ryanland.colossus.sys.file.serializer.DisabledCommandsSerializer;
+import net.ryanland.colossus.sys.file.serializer.CommandsSerializer;
 import net.ryanland.colossus.sys.file.serializer.Serializer;
 import net.ryanland.colossus.sys.message.DefaultPresetType;
 import net.ryanland.colossus.sys.message.PresetBuilder;
@@ -77,6 +78,7 @@ public class ColossusBuilder {
     private String configDirectory;
     private final Set<Category> categories = new HashSet<>();
     private final List<Command> commands = new ArrayList<>();
+    private final List<ContextCommand<?>> contextCommands = new ArrayList<>();
     private final List<LocalFile> localFiles = new ArrayList<>();
     private final List<String> configEntries = new ArrayList<>(List.of(CORE_CONFIG_ENTRIES));
     private final List<Inhibitor> inhibitors = new ArrayList<>();
@@ -91,7 +93,6 @@ public class ColossusBuilder {
     private PresetType errorPresetType = DefaultPresetType.ERROR;
     private PresetType successPresetType = DefaultPresetType.SUCCESS;
     private Serializer<?, List<Cooldown>> cooldownsSerializer = CooldownsSerializer.getInstance();
-    private Serializer<?, List<Command>> disabledCommandsSerializer = DisabledCommandsSerializer.getInstance();
 
     /**
      * Helper class to build a new instance of {@link Colossus}.<br>
@@ -182,9 +183,9 @@ public class ColossusBuilder {
 
         buildConfigFile();
 
-        return new Colossus(jdaBuilder, config, categories, commands, localFiles, buttonListenerExpirationTimeAmount,
-            buttonListenerExpirationTimeUnit, databaseDriver, defaultPresetType, errorPresetType,
-            successPresetType, cooldownsSerializer, disabledCommandsSerializer, inhibitors, finalizers);
+        return new Colossus(jdaBuilder, config, categories, commands, contextCommands, localFiles,
+            buttonListenerExpirationTimeAmount, buttonListenerExpirationTimeUnit, databaseDriver, defaultPresetType,
+            errorPresetType, successPresetType, cooldownsSerializer, inhibitors, finalizers);
     }
 
     /**
@@ -211,6 +212,17 @@ public class ColossusBuilder {
             this.commands.addAll(category.getAllCommands());
             this.categories.add(category);
         }
+        return this;
+    }
+
+    /**
+     * Register context commands
+     * @param contextCommands The context commands to register
+     * @return The builder
+     * @see ContextCommand
+     */
+    public ColossusBuilder registerContextCommands(ContextCommand<?>... contextCommands) {
+        this.contextCommands.addAll(List.of(contextCommands));
         return this;
     }
 
@@ -333,20 +345,6 @@ public class ColossusBuilder {
      */
     public ColossusBuilder setCooldownsSerializer(Serializer<?, List<Cooldown>> serializer) {
         cooldownsSerializer = serializer;
-        return this;
-    }
-
-    /**
-     * Sets the {@link Serializer} used for disabled commands, when pushed/pulled to/from the database.
-     * <br>When this is not defined, {@link DisabledCommandsSerializer} is used.
-     * @param serializer The serializer to set to
-     * @return The builder
-     * @see Serializer
-     * @see DisabledCommandsSerializer
-     * @see DisabledCommandHandler
-     */
-    public ColossusBuilder setDisabledCommandsSerializer(Serializer<?, List<Command>> serializer) {
-        disabledCommandsSerializer = serializer;
         return this;
     }
 

@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.internal.utils.JDALogger;
 import net.ryanland.colossus.command.Category;
 import net.ryanland.colossus.command.Command;
+import net.ryanland.colossus.command.ContextCommand;
 import net.ryanland.colossus.command.cooldown.Cooldown;
 import net.ryanland.colossus.command.executor.CommandHandler;
 import net.ryanland.colossus.command.executor.functional_interface.CommandConsumer;
@@ -19,6 +20,7 @@ import net.ryanland.colossus.sys.file.LocalFile;
 import net.ryanland.colossus.sys.file.database.DatabaseDriver;
 import net.ryanland.colossus.sys.file.database.Table;
 import net.ryanland.colossus.sys.file.serializer.Serializer;
+import net.ryanland.colossus.sys.interactions.select.BaseSelectMenu;
 import net.ryanland.colossus.sys.message.PresetType;
 import org.slf4j.Logger;
 
@@ -42,6 +44,7 @@ public class Colossus {
     private static Config config;
     private static Set<Category> categories;
     private static List<Command> commands;
+    private static List<ContextCommand<?>> contextCommands;
     private static List<LocalFile> localFiles;
     private static long componentListenerExpirationTimeAmount;
     private static TimeUnit componentListenerExpirationTimeUnit;
@@ -50,7 +53,6 @@ public class Colossus {
     private static PresetType errorPresetType;
     private static PresetType successPresetType;
     private static Serializer<?, List<Cooldown>> cooldownsSerializer;
-    private static Serializer<?, List<Command>> disabledCommandsSerializer;
     private static List<Inhibitor> inhibitors;
     private static List<Finalizer> finalizers;
 
@@ -59,16 +61,16 @@ public class Colossus {
     private static User botOwner;
 
     public Colossus(JDABuilder builder, Config config, Set<Category> categories, List<Command> commands,
-                    List<LocalFile> localFiles, long buttonListenerExpirationTimeAmount, TimeUnit buttonListenerExpirationTimeUnit,
-                    DatabaseDriver databaseDriver, PresetType defaultPresetType, PresetType errorPresetType,
-                    PresetType successPresetType, Serializer<?, List<Cooldown>> cooldownsSerializer,
-                    Serializer<?, List<Command>> disabledCommandsSerializer, List<Inhibitor> inhibitors,
-                    List<Finalizer> finalizers) {
+                    List<ContextCommand<?>> contextCommands, List<LocalFile> localFiles, long buttonListenerExpirationTimeAmount,
+                    TimeUnit buttonListenerExpirationTimeUnit, DatabaseDriver databaseDriver, PresetType defaultPresetType,
+                    PresetType errorPresetType, PresetType successPresetType, Serializer<?, List<Cooldown>> cooldownsSerializer,
+                    List<Inhibitor> inhibitors, List<Finalizer> finalizers) {
         this.builder = builder;
 
         Colossus.config = config;
         Colossus.categories = categories;
         Colossus.commands = commands;
+        Colossus.contextCommands = contextCommands;
         Colossus.localFiles = localFiles;
         Colossus.componentListenerExpirationTimeAmount = buttonListenerExpirationTimeAmount;
         Colossus.componentListenerExpirationTimeUnit = buttonListenerExpirationTimeUnit;
@@ -77,7 +79,6 @@ public class Colossus {
         Colossus.errorPresetType = errorPresetType;
         Colossus.successPresetType = successPresetType;
         Colossus.cooldownsSerializer = cooldownsSerializer;
-        Colossus.disabledCommandsSerializer = disabledCommandsSerializer;
         Colossus.inhibitors = inhibitors;
         Colossus.finalizers = finalizers;
     }
@@ -88,7 +89,8 @@ public class Colossus {
     public void initialize() {
 
         // Register commands
-        CommandHandler.register(commands);
+        CommandHandler.registerCommands(commands);
+        CommandHandler.registerContextCommands(contextCommands);
 
         // Build the bot
         try {
@@ -168,7 +170,7 @@ public class Colossus {
      * @see #getDefaultComponentListenerExpirationTimeUnit()
      * @see ColossusBuilder#setDefaultComponentListenerExpirationTime(long, TimeUnit)
      * @see ButtonClickEvent#addListener(Long, List, Runnable)
-     * @see SelectMenuEvent#addListener(Long, String, CommandConsumer) 
+     * @see SelectMenuEvent#addListener(Long, BaseSelectMenu, Runnable)
      */
     public static long getDefaultComponentListenerExpirationTimeAmount() {
         return componentListenerExpirationTimeAmount;
@@ -179,6 +181,7 @@ public class Colossus {
      * @see #getDefaultComponentListenerExpirationTimeAmount()
      * @see ColossusBuilder#setDefaultComponentListenerExpirationTime(long, TimeUnit)
      * @see ButtonClickEvent#addListener(Long, List, Runnable)
+     * @see SelectMenuEvent#addListener(Long, BaseSelectMenu, Runnable)
      */
     public static TimeUnit getDefaultComponentListenerExpirationTimeUnit() {
         return componentListenerExpirationTimeUnit;
@@ -219,10 +222,6 @@ public class Colossus {
 
     public static Serializer<?, List<Cooldown>> getCooldownsSerializer() {
         return cooldownsSerializer;
-    }
-
-    public static Serializer<?, List<Command>> getDisabledCommandsSerializer() {
-        return disabledCommandsSerializer;
     }
 
     public static List<Inhibitor> getInhibitors() {

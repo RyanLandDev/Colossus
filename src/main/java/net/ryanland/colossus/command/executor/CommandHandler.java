@@ -1,24 +1,30 @@
 package net.ryanland.colossus.command.executor;
 
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 import net.ryanland.colossus.Colossus;
-import net.ryanland.colossus.command.Command;
-import net.ryanland.colossus.command.SlashCommand;
-import net.ryanland.colossus.command.SubCommand;
-import net.ryanland.colossus.command.SubCommandHolder;
+import net.ryanland.colossus.command.*;
+import net.ryanland.colossus.command.CommandBuilder;
+import net.ryanland.colossus.command.context.ContextCommandBuilder;
+import net.ryanland.colossus.command.context.ContextCommandType;
 import net.ryanland.colossus.events.CommandEvent;
+import net.ryanland.colossus.events.ContextCommandEvent;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class CommandHandler {
 
     private static final List<Command> COMMANDS = new ArrayList<>();
     private static final HashMap<String, Command> COMMAND_MAP = new HashMap<>();
+
+    private static final List<ContextCommand<?>> CONTEXT_COMMANDS = new ArrayList<>();
+    private static final HashMap<String, ContextCommand<User>> USER_CONTEXT_COMMAND_MAP = new HashMap<>();
+    private static final HashMap<String, ContextCommand<Message>> MESSAGE_CONTEXT_COMMAND_MAP = new HashMap<>();
+
     private static final CommandExecutor COMMAND_EXECUTOR = new CommandExecutor();
 
     private static void commandError(Command command, String error) {
@@ -26,8 +32,11 @@ public class CommandHandler {
             Objects.requireNonNullElse(command.getName(), command.getClass().getName()) + " - " + error);
     }
 
-    public static void register(List<Command> commands) {
+    public static void registerCommands(List<Command> commands) {
         for (Command command : commands) {
+            // Check if the CommandBuilder annotation is present
+            if (!command.getClass().isAnnotationPresent(CommandBuilder.class))
+                commandError(command, "Commands must implement the CommandBuilder annotation.");
             // Check if the command's data is not null
             if (command.getName() == null || command.getDescription() == null || command.getCategory() == null)
                 commandError(command, "Commands must have at least a name, description and category.");
@@ -48,6 +57,33 @@ public class CommandHandler {
         }
     }
 
+    private static void commandError(ContextCommand<?> contextCommand, String error) {
+        throw new IllegalArgumentException(
+            Objects.requireNonNullElse(contextCommand.getName(), contextCommand.getClass().getName()) + " - " + error);
+    }
+
+    @SuppressWarnings("all")
+    public static void registerContextCommands(List<ContextCommand<?>> contextCommands) {
+        for (ContextCommand<?> contextCommand : contextCommands) {
+            // Check if the ContextCommandBuilder annotation is present
+            if (!contextCommand.getClass().isAnnotationPresent(ContextCommandBuilder.class))
+                commandError(contextCommand, "Context commands must implement the ContextCommandBuilder annotation.");
+            // Check if the command('s name) has already been registered && context type is not the same
+            if (USER_CONTEXT_COMMAND_MAP.containsKey(contextCommand.getName()) &&
+                USER_CONTEXT_COMMAND_MAP.get(contextCommand.getName()).getType() == contextCommand.getType())
+                commandError(contextCommand, "A command with this name and type has already been registered.");
+            if (USER_CONTEXT_COMMAND_MAP.containsValue(contextCommand))
+                commandError(contextCommand, "This command has already been registered.");
+
+            // Add data
+            CONTEXT_COMMANDS.add(contextCommand);
+            if (contextCommand.getType() == ContextCommandType.MESSAGE)
+                MESSAGE_CONTEXT_COMMAND_MAP.put(contextCommand.getName(), (ContextCommand<Message>) contextCommand);
+            else if (contextCommand.getType() == ContextCommandType.USER)
+                USER_CONTEXT_COMMAND_MAP.put(contextCommand.getName(), (ContextCommand<User>) contextCommand);
+        }
+    }
+
     public static void upsertAll() {
         Guild testGuild = Colossus.getJDA().getGuildById(Colossus.getConfig().getTestGuildId());
         if (testGuild == null)
@@ -56,6 +92,7 @@ public class CommandHandler {
         // remove commands that were previously registered but not anymore
         Colossus.getJDA().updateCommands().queue();
 
+        // normal commands
         for (Command command : COMMANDS) {
             if (!(command instanceof SlashCommand)) {
                 if (!(command instanceof SubCommandHolder) ||
@@ -84,7 +121,17 @@ public class CommandHandler {
             } else {
                 Colossus.getJDA().upsertCommand(slashCmdData).queue();
             }
+        }
 
+        // Context commands
+        for (ContextCommand<?> contextCommand : CONTEXT_COMMANDS) {
+            CommandData cmdData = Commands.context(contextCommand.getType().getJDAEquivalent(), contextCommand.getName());
+
+            if (Colossus.getConfig().isTesting()) {
+                testGuild.upsertCommand(cmdData).queue();
+            } else {
+                Colossus.getJDA().upsertCommand(cmdData).queue();
+            }
         }
     }
 
@@ -96,7 +143,31 @@ public class CommandHandler {
         return COMMAND_MAP.get(alias);
     }
 
+    public static List<ContextCommand<?>> getContextCommands() {
+        return CONTEXT_COMMANDS;
+    }
+
+    @SuppressWarnings("all")
+    public static ContextCommand<User> getUserContextCommand(String alias) {
+        return USER_CONTEXT_COMMAND_MAP.get(alias);
+    }
+
+    @SuppressWarnings("all")
+    public static ContextCommand<Message> getMessageContextCommand(String alias) {
+        return MESSAGE_CONTEXT_COMMAND_MAP.get(alias);
+    }
+
+    public static ContextCommand<?> getContextCommand(ContextCommandType type, String alias) {
+        if (type == ContextCommandType.MESSAGE) return getMessageContextCommand(alias);
+        else if (type == ContextCommandType.USER) return getUserContextCommand(alias);
+        return null;
+    }
+
     public static void run(CommandEvent event) {
+        COMMAND_EXECUTOR.run(event);
+    }
+
+    public static <T> void run(ContextCommandEvent<T> event) {
         COMMAND_EXECUTOR.run(event);
     }
 

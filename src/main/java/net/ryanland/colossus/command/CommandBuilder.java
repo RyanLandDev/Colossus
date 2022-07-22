@@ -1,4 +1,4 @@
-package net.ryanland.colossus.command.annotations;
+package net.ryanland.colossus.command;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

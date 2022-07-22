@@ -4,8 +4,9 @@ import net.ryanland.colossus.events.CommandEvent;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 
 /**
- * Inhibitors are run before a command is executed.
- * They can stop execution of the command is a condition is not met, such as the user not having enough permissions.
+ * Inhibitors are run before a command is executed.<br>
+ * They can stop execution of the command if a condition is not met, such as the user not having enough permissions.
+ * @see net.ryanland.colossus.ColossusBuilder#registerInhibitors(Inhibitor...)
  */
 public interface Inhibitor {
 

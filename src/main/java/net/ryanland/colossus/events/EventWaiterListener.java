@@ -56,14 +56,8 @@ public class EventWaiterListener implements EventListener {
 
     @Override
     public void onEvent(@NotNull GenericEvent event) {
-        if (eventClass.isAssignableFrom(event.getClass())) {
-            System.out.println("yes1");
-            if (condition.test((Event) event)) {
-                System.out.println("yes2");
+        if (eventClass.isAssignableFrom(event.getClass()) && condition.test((Event) event)) {
                 action.accept((Event) event, this);
-            }
-        } else {
-            System.out.println("no");
         }
     }
 }

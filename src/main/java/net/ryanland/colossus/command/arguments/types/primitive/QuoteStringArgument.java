@@ -12,6 +12,7 @@ import net.ryanland.colossus.events.SlashCommandEvent;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class QuoteStringArgument extends Argument<String> {
 
@@ -21,12 +22,14 @@ public class QuoteStringArgument extends Argument<String> {
     }
 
     @Override
-    public String resolveSlashCommandArgument(Deque<OptionMapping> args, SlashCommandEvent event) throws ArgumentException {
-        return args.pop().getAsString();
+    public CompletableFuture<String> resolveSlashCommandArgument(Deque<OptionMapping> args, SlashCommandEvent event) throws ArgumentException {
+        CompletableFuture<String> future = new CompletableFuture<>();
+        future.complete(args.pop().getAsString());
+        return future;
     }
 
     @Override
-    public String resolveMessageCommandArgument(Deque<String> args, MessageCommandEvent event) throws ArgumentException {
+    public CompletableFuture<String> resolveMessageCommandArgument(Deque<String> args, MessageCommandEvent event) throws ArgumentException {
         String ERROR_MESSAGE = "Invalid quote, must start and end with `'` or `\"`.";
 
         // If the argument does not begin with a quote, throw an error
@@ -46,6 +49,8 @@ public class QuoteStringArgument extends Argument<String> {
 
         // Join elements and remove quotes
         String result = String.join(" ", elements);
-        return result.substring(1, result.length()-1);
+        CompletableFuture<String> future = new CompletableFuture<>();
+        future.complete(result.substring(1, result.length()-1));
+        return future;
     }
 }

@@ -1,12 +1,10 @@
 package net.ryanland.colossus.command.impl;
 
 import net.ryanland.colossus.Colossus;
-import net.ryanland.colossus.command.CombinedCommand;
-import net.ryanland.colossus.command.Command;
-import net.ryanland.colossus.command.CommandException;
-import net.ryanland.colossus.command.annotations.CommandBuilder;
+import net.ryanland.colossus.command.*;
+import net.ryanland.colossus.command.CommandBuilder;
 import net.ryanland.colossus.command.arguments.ArgumentSet;
-import net.ryanland.colossus.command.arguments.types.CommandArgument;
+import net.ryanland.colossus.command.arguments.types.command.CommandArgument;
 import net.ryanland.colossus.command.executor.DisabledCommandHandler;
 import net.ryanland.colossus.command.permissions.BotOwnerRequirement;
 import net.ryanland.colossus.command.permissions.PermissionBuilder;

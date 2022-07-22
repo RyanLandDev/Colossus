@@ -19,7 +19,7 @@ public sealed abstract class Command permits BaseCommand {
     private Category category;
     private List<SubCommand> subcommands;
 
-    public Command setCategory(Category category) {
+    public final Command setCategory(Category category) {
         this.category = category;
         return this;
     }
@@ -66,7 +66,7 @@ public sealed abstract class Command permits BaseCommand {
         return getInfo(this).guildOnly();
     }
 
-    public final CooldownManager getCooldownManager() {
+    public CooldownManager getCooldownManager() {
         return MemoryCooldownManager.getInstance();
     }
 

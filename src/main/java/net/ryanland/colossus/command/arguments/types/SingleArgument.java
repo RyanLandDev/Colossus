@@ -7,17 +7,22 @@ import net.ryanland.colossus.events.MessageCommandEvent;
 import net.ryanland.colossus.events.SlashCommandEvent;
 
 import java.util.Deque;
+import java.util.concurrent.CompletableFuture;
 
 public abstract class SingleArgument<T> extends Argument<T> {
 
     @Override
-    public T resolveSlashCommandArgument(Deque<OptionMapping> args, SlashCommandEvent event) throws ArgumentException {
-        return resolveSlashCommandArgument(args.pop(), event);
+    public final CompletableFuture<T> resolveSlashCommandArgument(Deque<OptionMapping> args, SlashCommandEvent event) throws ArgumentException {
+        CompletableFuture<T> future = new CompletableFuture<>();
+        future.complete(resolveSlashCommandArgument(args.pop(), event));
+        return future;
     }
 
     @Override
-    public T resolveMessageCommandArgument(Deque<String> args, MessageCommandEvent event) throws ArgumentException {
-        return resolveMessageCommandArgument(args.pop(), event);
+    public final CompletableFuture<T> resolveMessageCommandArgument(Deque<String> args, MessageCommandEvent event) throws ArgumentException {
+        CompletableFuture<T> future = new CompletableFuture<>();
+        future.complete(resolveMessageCommandArgument(args.pop(), event));
+        return future;
     }
 
     public abstract T resolveSlashCommandArgument(OptionMapping arg, SlashCommandEvent event) throws ArgumentException;

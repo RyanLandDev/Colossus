@@ -9,6 +9,7 @@ import net.ryanland.colossus.events.MessageCommandEvent;
 import net.ryanland.colossus.events.SlashCommandEvent;
 
 import java.util.Deque;
+import java.util.concurrent.CompletableFuture;
 
 public class EndlessStringArgument extends Argument<String> {
 
@@ -18,14 +19,17 @@ public class EndlessStringArgument extends Argument<String> {
     }
 
     @Override
-    public String resolveSlashCommandArgument(Deque<OptionMapping> args, SlashCommandEvent event) throws ArgumentException {
-        return args.pop().getAsString();
+    public CompletableFuture<String> resolveSlashCommandArgument(Deque<OptionMapping> args, SlashCommandEvent event) throws ArgumentException {
+        CompletableFuture<String> future = new CompletableFuture<>();
+        future.complete(args.pop().getAsString());
+        return future;
     }
 
     @Override
-    public String resolveMessageCommandArgument(Deque<String> args, MessageCommandEvent event) throws ArgumentException {
-        String result = String.join(" ", args);
+    public CompletableFuture<String> resolveMessageCommandArgument(Deque<String> args, MessageCommandEvent event) throws ArgumentException {
+        CompletableFuture<String> future = new CompletableFuture<>();
+        future.complete(String.join(" ", args));
         args.clear();
-        return result;
+        return future;
     }
 }

@@ -5,10 +5,12 @@ import net.ryanland.colossus.command.*;
 import net.ryanland.colossus.command.arguments.parsing.ArgumentParser;
 import net.ryanland.colossus.command.arguments.parsing.MessageCommandArgumentParser;
 import net.ryanland.colossus.command.arguments.parsing.SlashCommandArgumentParser;
+import net.ryanland.colossus.command.context.ContextCommandType;
 import net.ryanland.colossus.command.finalizers.Finalizer;
 import net.ryanland.colossus.command.inhibitors.Inhibitor;
 import net.ryanland.colossus.command.inhibitors.InhibitorException;
 import net.ryanland.colossus.events.CommandEvent;
+import net.ryanland.colossus.events.ContextCommandEvent;
 import net.ryanland.colossus.events.MessageCommandEvent;
 import net.ryanland.colossus.events.SlashCommandEvent;
 import net.ryanland.colossus.sys.message.PresetBuilder;
@@ -25,6 +27,15 @@ public class CommandExecutor {
         Command command = CommandHandler.getCommand(event.getName());
         if (command == null) return;
         event.setCommand(command);
+
+        execute(event);
+    }
+
+    public <T> void run(ContextCommandEvent<T> event) {
+        ContextCommandType type = ContextCommandType.of(event.getTargetType());
+        ContextCommand<?> contextCommand = CommandHandler.getContextCommand(type, event.getName());
+        if (contextCommand == null) return;
+        event.setCommand(contextCommand);
 
         execute(event);
     }
@@ -152,4 +163,21 @@ public class CommandExecutor {
         }
         return matches.get(0);
     }
+
+    @SuppressWarnings("all")
+    public <T> void execute(ContextCommandEvent<T> event) {
+        ContextCommand<T> command = event.getCommand();
+        try {
+            command.run(event);
+        } catch (Exception e) {
+            if (!(e instanceof CommandException)) {
+                e.printStackTrace();
+            }
+
+            event.reply(new PresetBuilder(Colossus.getErrorPresetType(),
+                e instanceof CommandException ? e.getMessage() : "Unknown error, please report it to a developer."));
+            return;
+        }
+    }
+
 }

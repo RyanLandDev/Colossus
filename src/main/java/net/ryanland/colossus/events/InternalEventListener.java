@@ -1,7 +1,10 @@
 package net.ryanland.colossus.events;
 
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.command.GenericContextInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.command.MessageContextInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.command.UserContextInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.SelectMenuInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -17,14 +20,15 @@ public class InternalEventListener extends ListenerAdapter {
     // Execute slash command
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
-        CommandHandler.run(new SlashCommandEvent(event));
+        new Thread(() -> CommandHandler.run(new SlashCommandEvent(event))).start();
     }
 
     // Execute message command
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
-        if (!event.getAuthor().isBot())
-            CommandHandler.run(new MessageCommandEvent(event));
+        if (!event.getAuthor().isBot()) {
+            new Thread(() -> CommandHandler.run(new MessageCommandEvent(event))).start();
+        }
     }
 
     // Click button
@@ -61,5 +65,20 @@ public class InternalEventListener extends ListenerAdapter {
                 new PresetBuilder(Colossus.getErrorPresetType(), e.getMessage()).embed()
             ).queue();
         }
+    }
+
+    // Context commands
+    @Override
+    public void onUserContextInteraction(@NotNull UserContextInteractionEvent event) {
+        onContextInteraction(event);
+    }
+
+    @Override
+    public void onMessageContextInteraction(@NotNull MessageContextInteractionEvent event) {
+        onContextInteraction(event);
+    }
+
+    private <T> void onContextInteraction(GenericContextInteractionEvent<T> event) {
+        CommandHandler.run(new ContextCommandEvent<>(event));
     }
 }

@@ -1,6 +1,7 @@
 package net.ryanland.colossus.command.arguments.parsing;
 
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
+import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.command.Command;
 import net.ryanland.colossus.command.SubCommand;
 import net.ryanland.colossus.command.SubCommandHolder;
@@ -16,6 +17,7 @@ import net.ryanland.colossus.sys.message.PresetBuilder;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.concurrent.CompletableFuture;
 
 public non-sealed class SlashCommandArgumentParser extends ArgumentParser {
 
@@ -45,7 +47,7 @@ public non-sealed class SlashCommandArgumentParser extends ArgumentParser {
         ParsedArgumentMap parsedArgs = new ParsedArgumentMap();
 
         Command command = event.getCommand();
-        PresetBuilder embed = new PresetBuilder(DefaultPresetType.ERROR);
+        PresetBuilder embed = new PresetBuilder(Colossus.getErrorPresetType());
 
         // failsafe for if getArguments returns null
         ArgumentSet arguments = command.getArguments();
@@ -55,9 +57,9 @@ public non-sealed class SlashCommandArgumentParser extends ArgumentParser {
             try {
                 Object parsedArg;
                 if (queue.peek() == null && arg.isOptional())
-                    parsedArg = arg.getOptionalFunction().apply(event);
+                    parsedArg = arg.getOptionalValue(event);
                 else
-                    parsedArg = arg.resolveSlashCommandArgument(queue, getEvent());
+                    parsedArg = arg.resolveSlashCommandArgument(getEvent(), queue);
 
                 parsedArgs.put(arg.getId(), parsedArg);
 
