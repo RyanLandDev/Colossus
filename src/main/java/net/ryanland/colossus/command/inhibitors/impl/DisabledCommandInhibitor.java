@@ -2,7 +2,6 @@ package net.ryanland.colossus.command.inhibitors.impl;
 
 import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.command.inhibitors.CommandInhibitor;
-import net.ryanland.colossus.command.inhibitors.ContextInhibitor;
 import net.ryanland.colossus.events.CommandEvent;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 

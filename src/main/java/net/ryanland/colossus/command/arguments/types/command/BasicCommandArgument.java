@@ -3,6 +3,7 @@ package net.ryanland.colossus.command.arguments.types.command;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
+import net.dv8tion.jda.api.interactions.commands.Command.Choice;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.ryanland.colossus.Colossus;
@@ -19,7 +20,6 @@ import net.ryanland.colossus.events.CommandEvent;
 import net.ryanland.colossus.events.SlashCommandEvent;
 import net.ryanland.colossus.sys.interactions.button.BaseButton;
 import net.ryanland.colossus.sys.message.PresetBuilder;
-import net.dv8tion.jda.api.interactions.commands.Command.Choice;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;

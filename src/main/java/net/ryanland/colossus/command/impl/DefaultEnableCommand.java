@@ -1,7 +1,10 @@
 package net.ryanland.colossus.command.impl;
 
 import net.ryanland.colossus.Colossus;
-import net.ryanland.colossus.command.*;
+import net.ryanland.colossus.command.BasicCommand;
+import net.ryanland.colossus.command.CombinedCommand;
+import net.ryanland.colossus.command.CommandBuilder;
+import net.ryanland.colossus.command.CommandException;
 import net.ryanland.colossus.command.arguments.ArgumentOptionData;
 import net.ryanland.colossus.command.arguments.ArgumentSet;
 import net.ryanland.colossus.command.arguments.types.command.BasicCommandArgument;

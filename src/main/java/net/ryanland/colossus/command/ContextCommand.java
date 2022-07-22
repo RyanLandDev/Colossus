@@ -1,7 +1,6 @@
 package net.ryanland.colossus.command;
 
 import net.dv8tion.jda.api.entities.ISnowflake;
-import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.ryanland.colossus.command.context.ContextCommandBuilder;

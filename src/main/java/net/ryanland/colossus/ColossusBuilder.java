@@ -11,15 +11,16 @@ import net.ryanland.colossus.command.CommandException;
 import net.ryanland.colossus.command.ContextCommand;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.MalformedArgumentException;
 import net.ryanland.colossus.command.executor.DisabledCommandHandler;
+import net.ryanland.colossus.command.finalizers.CommandFinalizer;
 import net.ryanland.colossus.command.finalizers.ContextFinalizer;
 import net.ryanland.colossus.command.finalizers.CooldownCommandFinalizer;
-import net.ryanland.colossus.command.finalizers.CommandFinalizer;
 import net.ryanland.colossus.command.finalizers.CooldownContextFinalizer;
 import net.ryanland.colossus.command.impl.DefaultCommand;
 import net.ryanland.colossus.command.impl.DefaultDisableCommand;
 import net.ryanland.colossus.command.impl.DefaultEnableCommand;
 import net.ryanland.colossus.command.impl.DefaultHelpCommand;
-import net.ryanland.colossus.command.inhibitors.*;
+import net.ryanland.colossus.command.inhibitors.CommandInhibitor;
+import net.ryanland.colossus.command.inhibitors.ContextInhibitor;
 import net.ryanland.colossus.command.inhibitors.impl.*;
 import net.ryanland.colossus.events.ButtonClickEvent;
 import net.ryanland.colossus.events.InternalEventListener;
@@ -344,7 +345,7 @@ public class ColossusBuilder {
 
     /**
      * Register {@link CommandInhibitor}s
-     * <br>Core inhibitors will be executed before custom ones. These are defined in {@code ColossusBuilder#CORE_COMMAND_INHIBITORS}
+     * <br>Core inhibitors will be executed before custom ones. These are defined in {@code ColossusBuilder.CORE_COMMAND_INHIBITORS}
      * @param commandInhibitors The command inhibitors to register
      * @return The builder
      * @see CommandInhibitor

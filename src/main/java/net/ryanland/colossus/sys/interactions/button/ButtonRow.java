@@ -1,7 +1,6 @@
 package net.ryanland.colossus.sys.interactions.button;
 
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.ryanland.colossus.events.ButtonClickEvent;
 import net.ryanland.colossus.sys.interactions.ComponentRow;
@@ -9,7 +8,6 @@ import net.ryanland.colossus.sys.interactions.ComponentRow;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ButtonRow extends ComponentRow {
 

@@ -5,24 +5,24 @@ import net.dv8tion.jda.api.entities.ISnowflake;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
-import net.dv8tion.jda.api.interactions.AutoCompleteQuery;
+import net.dv8tion.jda.api.interactions.commands.Command.Choice;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.command.*;
-import net.ryanland.colossus.command.CommandBuilder;
 import net.ryanland.colossus.command.arguments.Argument;
 import net.ryanland.colossus.command.arguments.ArgumentOptionData;
 import net.ryanland.colossus.command.context.ContextCommandBuilder;
 import net.ryanland.colossus.command.context.ContextCommandType;
 import net.ryanland.colossus.events.CommandEvent;
 import net.ryanland.colossus.events.ContextCommandEvent;
-import net.dv8tion.jda.api.interactions.commands.Command.Choice;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 public class CommandHandler {

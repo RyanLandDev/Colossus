@@ -3,7 +3,6 @@ package net.ryanland.colossus.command.impl;
 import net.dv8tion.jda.api.entities.Member;
 import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.command.*;
-import net.ryanland.colossus.command.CommandBuilder;
 import net.ryanland.colossus.command.arguments.ArgumentSet;
 import net.ryanland.colossus.command.arguments.types.command.CommandArgument;
 import net.ryanland.colossus.command.executor.CommandHandler;
@@ -14,7 +13,6 @@ import net.ryanland.colossus.sys.interactions.menu.TabMenuPage;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @CommandBuilder(
         name = "help",

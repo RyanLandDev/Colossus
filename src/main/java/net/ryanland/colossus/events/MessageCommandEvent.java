@@ -14,11 +14,7 @@ import net.ryanland.colossus.command.executor.functional_interface.CommandConsum
 import net.ryanland.colossus.sys.entities.ColossusGuild;
 import net.ryanland.colossus.sys.entities.ColossusMember;
 import net.ryanland.colossus.sys.entities.ColossusUser;
-import net.ryanland.colossus.sys.interactions.button.ButtonRow;
 import net.ryanland.colossus.sys.message.PresetBuilder;
-
-import java.util.Collections;
-import java.util.stream.Collectors;
 
 public class MessageCommandEvent extends CommandEvent {
 

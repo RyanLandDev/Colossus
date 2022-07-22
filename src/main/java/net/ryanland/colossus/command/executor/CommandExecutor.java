@@ -22,7 +22,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Deque;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
 public class CommandExecutor {
 

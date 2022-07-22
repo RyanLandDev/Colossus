@@ -28,7 +28,6 @@ import java.nio.file.InvalidPathException;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 /**
  * Main class for initializing Colossus

@@ -7,7 +7,6 @@ import net.ryanland.colossus.ColossusBuilder;
 import net.ryanland.colossus.command.CommandException;
 import net.ryanland.colossus.command.executor.functional_interface.CommandConsumer;
 import net.ryanland.colossus.sys.ExecutorUtil;
-import net.ryanland.colossus.sys.interactions.button.ButtonRow;
 import net.ryanland.colossus.sys.interactions.select.BaseSelectMenu;
 
 import java.util.ArrayList;
