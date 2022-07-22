@@ -1,20 +1,29 @@
 package net.ryanland.colossus.command.executor;
 
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.ISnowflake;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
+import net.dv8tion.jda.api.interactions.AutoCompleteQuery;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.command.*;
 import net.ryanland.colossus.command.CommandBuilder;
+import net.ryanland.colossus.command.arguments.Argument;
+import net.ryanland.colossus.command.arguments.ArgumentOptionData;
 import net.ryanland.colossus.command.context.ContextCommandBuilder;
 import net.ryanland.colossus.command.context.ContextCommandType;
 import net.ryanland.colossus.events.CommandEvent;
 import net.ryanland.colossus.events.ContextCommandEvent;
+import net.dv8tion.jda.api.interactions.commands.Command.Choice;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class CommandHandler {
 
@@ -106,10 +115,11 @@ public class CommandHandler {
             // Subcommands
             if (command instanceof SubCommandHolder) {
                 for (SubCommand subcommand : command.getSubCommands()) {
-                    if (subcommand instanceof SubCommandHolder)
+                    if (subcommand instanceof SubCommandHolder) {
                         slashCmdData.addSubcommandGroups(((SubCommandHolder) subcommand).getSlashCommandData());
-                    else if (subcommand instanceof SlashCommand)
+                    } else if (subcommand instanceof SlashCommand) {
                         slashCmdData.addSubcommands(subcommand.getSlashData());
+                    }
                 }
             // Regular commands
             } else {
@@ -135,8 +145,34 @@ public class CommandHandler {
         }
     }
 
+    public static void handleAutocompleteEvent(CommandAutoCompleteInteractionEvent event) {
+        Command command = getCommand(event.getName());
+        Argument<?> argument = command.getArguments().get(event.getFocusedOption().getName());
+        ArgumentOptionData optionData = argument.getArgumentOptionData();
+        if (optionData.isAutoComplete()) {
+            String text = event.getFocusedOption().getValue();
+            List<Choice> choices = optionData.getAutoCompletableChoices()
+                .stream().filter(choice -> choice.getName().startsWith(text))
+                .limit(OptionData.MAX_CHOICES)
+                .toList();
+            event.replyChoices(choices).queue();
+        }
+    }
+
+    public static List<BasicCommand> getAllCommands() {
+        return Stream.concat(getCommands().stream(), getContextCommands().stream()).toList();
+    }
+
     public static List<Command> getCommands() {
         return COMMANDS;
+    }
+
+    public static List<ContextCommand<User>> getUserContextCommands() {
+        return new ArrayList<>(USER_CONTEXT_COMMAND_MAP.values());
+    }
+
+    public static List<ContextCommand<Message>> getMessageContextCommands() {
+        return new ArrayList<>(MESSAGE_CONTEXT_COMMAND_MAP.values());
     }
 
     public static Command getCommand(String alias) {
@@ -167,11 +203,15 @@ public class CommandHandler {
         COMMAND_EXECUTOR.run(event);
     }
 
-    public static <T> void run(ContextCommandEvent<T> event) {
+    public static <T extends ISnowflake> void run(ContextCommandEvent<T> event) {
         COMMAND_EXECUTOR.run(event);
     }
 
     public static void execute(CommandEvent event) {
+        COMMAND_EXECUTOR.execute(event);
+    }
+
+    public static <T extends ISnowflake> void execute(ContextCommandEvent<T> event) {
         COMMAND_EXECUTOR.execute(event);
     }
 }

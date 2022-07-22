@@ -36,6 +36,6 @@ public class CooldownsSerializer implements Serializer<List<List>, List<Cooldown
     public List<Cooldown> deserialize(@NotNull List<List> toDeserialize) {
         return toDeserialize.stream()
             .map(list -> new Cooldown(CommandType.of((int) list.get(2)).getCommand((String) list.get(0)), (Date) list.get(1)))
-            .collect(Collectors.toList());
+            .toList();
     }
 }

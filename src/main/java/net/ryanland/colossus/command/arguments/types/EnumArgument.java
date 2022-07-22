@@ -10,8 +10,7 @@ import net.ryanland.colossus.events.CommandEvent;
 import java.util.EnumSet;
 import java.util.stream.Collectors;
 
-public class EnumArgument<E extends Enum<E> & EnumArgument.InputEnum>
-    extends ArgumentStringResolver<E> {
+public class EnumArgument<E extends Enum<E> & EnumArgument.InputEnum> extends ArgumentStringResolver<E> {
 
     private final EnumSet<E> associatedEnum;
 

@@ -8,6 +8,10 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
 public @interface ContextCommandBuilder {
+
     String name();
+
     int cooldown() default 2;
+
+    boolean canBeDisabled() default true;
 }

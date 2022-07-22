@@ -237,7 +237,7 @@ public class PresetBuilder {
      * Gets the {@link ActionRow} representatives of the added {@link ComponentRow}s
      */
     public List<ActionRow> getActionRows() {
-        return getComponentRows().stream().map(ComponentRow::toActionRow).collect(Collectors.toList());
+        return getComponentRows().stream().map(ComponentRow::toActionRow).toList();
     }
 
     public PresetBuilder addComponentRow(ComponentRow componentRow) {

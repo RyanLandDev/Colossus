@@ -36,7 +36,7 @@ public class ButtonLayout {
     }
 
     public List<ActionRow> toActionRows() {
-        return rows.stream().map(ButtonRow::toActionRow).collect(Collectors.toList());
+        return rows.stream().map(ButtonRow::toActionRow).toList();
     }
 
     public List<BaseButton> getBaseButtons() {
@@ -46,6 +46,6 @@ public class ButtonLayout {
     }
 
     public List<Button> getButtons() {
-        return getBaseButtons().stream().map(BaseButton::button).collect(Collectors.toList());
+        return getBaseButtons().stream().map(BaseButton::button).toList();
     }
 }

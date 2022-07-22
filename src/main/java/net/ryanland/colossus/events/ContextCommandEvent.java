@@ -1,15 +1,16 @@
 package net.ryanland.colossus.events;
 
+import net.dv8tion.jda.api.entities.ISnowflake;
 import net.dv8tion.jda.api.events.interaction.command.GenericContextInteractionEvent;
 import net.dv8tion.jda.api.interactions.Interaction;
 import net.dv8tion.jda.api.interactions.callbacks.IReplyCallback;
 import net.dv8tion.jda.api.interactions.commands.context.ContextInteraction;
 import net.ryanland.colossus.command.ContextCommand;
 
-public class ContextCommandEvent<T> implements InteractionRepliableEvent {
+public class ContextCommandEvent<T extends ISnowflake> implements InteractionRepliableEvent {
 
     private final GenericContextInteractionEvent<T> event;
-    private ContextCommand command;
+    private ContextCommand<T> command;
 
     public ContextCommandEvent(GenericContextInteractionEvent<T> event) {
         this.event = event;
@@ -19,11 +20,11 @@ public class ContextCommandEvent<T> implements InteractionRepliableEvent {
         return event;
     }
 
-    public ContextCommand getCommand() {
+    public ContextCommand<T> getCommand() {
         return command;
     }
 
-    public void setCommand(ContextCommand contextCommand) {
+    public void setCommand(ContextCommand<T> contextCommand) {
         command = contextCommand;
     }
 

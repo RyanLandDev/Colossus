@@ -55,7 +55,7 @@ public interface SubCommandHolder {
             .addSubcommands(getSubCommands().stream()
                 .filter(subcommand -> subcommand instanceof SlashCommand)
                 .map(SubCommand::getSlashData)
-                .collect(Collectors.toList()));
+                .toList());
     }
 
     /**

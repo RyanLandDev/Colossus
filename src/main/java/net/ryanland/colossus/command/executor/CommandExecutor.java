@@ -1,5 +1,6 @@
 package net.ryanland.colossus.command.executor;
 
+import net.dv8tion.jda.api.entities.ISnowflake;
 import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.command.*;
 import net.ryanland.colossus.command.arguments.parsing.ArgumentParser;
@@ -33,9 +34,10 @@ public class CommandExecutor {
         execute(event);
     }
 
-    public <T> void run(ContextCommandEvent<T> event) {
+    @SuppressWarnings("all")
+    public <T extends ISnowflake> void run(ContextCommandEvent<T> event) {
         ContextCommandType type = ContextCommandType.of(event.getTargetType());
-        ContextCommand<?> contextCommand = CommandHandler.getContextCommand(type, event.getName());
+        ContextCommand<T> contextCommand = (ContextCommand<T>) CommandHandler.getContextCommand(type, event.getName());
         if (contextCommand == null) return;
         event.setCommand(contextCommand);
 
@@ -159,7 +161,7 @@ public class CommandExecutor {
         }
 
         List<SubCommand> matches = command.getSubCommands().stream()
-            .filter(subcommand -> ((Command) subcommand).getName().equalsIgnoreCase(finalParameter)).collect(Collectors.toList());
+            .filter(subcommand -> ((Command) subcommand).getName().equalsIgnoreCase(finalParameter)).toList();
 
         if (matches.isEmpty()) {
             event.reply(new PresetBuilder(Colossus.getErrorPresetType(), "Invalid Subcommand",
@@ -171,7 +173,7 @@ public class CommandExecutor {
     }
 
     @SuppressWarnings("all")
-    public <T> void execute(ContextCommandEvent<T> event) {
+    public <T extends ISnowflake> void execute(ContextCommandEvent<T> event) {
         ContextCommand<T> command = event.getCommand();
 
         try {

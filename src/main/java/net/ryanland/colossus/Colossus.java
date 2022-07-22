@@ -158,10 +158,7 @@ public class Colossus {
      */
     public static LocalFile getLocalFile(String name) {
         try {
-            return getLocalFiles().stream()
-                .filter(file -> file.getName().equals(name))
-                .collect(Collectors.toList())
-                .get(0);
+            return getLocalFiles().stream().filter(file -> file.getName().equals(name)).toList().get(0);
         } catch (IndexOutOfBoundsException e) {
             throw new InvalidPathException(name, "This local file does not exist or is not registered.");
         }

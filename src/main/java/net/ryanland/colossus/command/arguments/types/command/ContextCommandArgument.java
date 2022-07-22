@@ -3,19 +3,15 @@ package net.ryanland.colossus.command.arguments.types.command;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
-import net.dv8tion.jda.api.events.interaction.component.GenericComponentInteractionCreateEvent;
-import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.command.ContextCommand;
 import net.ryanland.colossus.command.arguments.ArgumentOptionData;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.ArgumentException;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.MalformedArgumentException;
-import net.ryanland.colossus.command.arguments.types.primitive.ArgumentStringResolver;
 import net.ryanland.colossus.command.arguments.types.primitive.FutureArgumentStringResolver;
 import net.ryanland.colossus.command.executor.CommandHandler;
 import net.ryanland.colossus.events.CommandEvent;
-import net.ryanland.colossus.events.ComponentInteractionRepliableEvent;
 import net.ryanland.colossus.events.SlashCommandEvent;
 import net.ryanland.colossus.sys.interactions.button.BaseButton;
 import net.ryanland.colossus.sys.message.PresetBuilder;
@@ -23,6 +19,11 @@ import net.ryanland.colossus.sys.message.PresetBuilder;
 import java.util.concurrent.CompletableFuture;
 
 public class ContextCommandArgument extends FutureArgumentStringResolver<ContextCommand<?>> {
+
+    @Override
+    public ArgumentOptionData getArgumentOptionData() {
+        return BasicCommandArgument.getAutocompleteChoiceData(CommandHandler.getContextCommands());
+    }
 
     @Override
     public CompletableFuture<ContextCommand<?>> resolve(String arg, CommandEvent event) throws ArgumentException {

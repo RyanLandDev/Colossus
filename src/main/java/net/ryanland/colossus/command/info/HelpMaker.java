@@ -41,7 +41,7 @@ public class HelpMaker {
         } else {
             ArgumentSet arguments = command.getArguments();
             if (arguments != null) {
-                for (Argument<?> argument : arguments) {
+                for (Argument<?> argument : arguments.values()) {
                     String usage = argument.getName();
                     if (argument.isOptional())
                         usage = String.format("[%s]", usage);
@@ -49,7 +49,7 @@ public class HelpMaker {
                         usage = String.format("<%s>", usage);
 
                     // highlight check
-                    if (highlighted != null && highlighted.getId().equals(argument.getId()))
+                    if (highlighted != null && highlighted.getName().equals(argument.getName()))
                         usage = String.format("**%s**", usage);
 
                     elements.add(usage);
@@ -86,9 +86,5 @@ public class HelpMaker {
             }
         }
         return "`" + String.join("` `", commandNames) + "`";
-    }
-
-    public static CommandBuilder getInfo(Command cmd) {
-        return cmd.getClass().getAnnotation(CommandBuilder.class);
     }
 }

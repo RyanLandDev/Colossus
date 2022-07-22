@@ -24,6 +24,8 @@ public abstract sealed class BasicCommand permits Command, ContextCommand {
 
     public abstract CooldownManager getCooldownManager();
 
+    public abstract boolean canBeDisabled();
+
     public abstract boolean isDisabled();
 
     public abstract PermissionHolder getPermission();

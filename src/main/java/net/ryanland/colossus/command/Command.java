@@ -10,12 +10,14 @@ import net.ryanland.colossus.command.executor.DisabledCommandHandler;
 
 import java.util.List;
 
-import static net.ryanland.colossus.command.info.HelpMaker.getInfo;
-
 public sealed abstract class Command extends BasicCommand permits BaseCommand {
 
     private Category category;
     private List<SubCommand> subcommands;
+
+    private CommandBuilder getInfo() {
+        return getClass().getAnnotation(CommandBuilder.class);
+    }
 
     public final Command setCategory(Category category) {
         this.category = category;
@@ -38,11 +40,11 @@ public sealed abstract class Command extends BasicCommand permits BaseCommand {
 
     @Override
     public final String getName() {
-        return getInfo(this).name();
+        return getInfo().name();
     }
 
     public final String getDescription() {
-        return getInfo(this).description();
+        return getInfo().description();
     }
 
     @Override
@@ -57,11 +59,16 @@ public sealed abstract class Command extends BasicCommand permits BaseCommand {
 
     @Override
     public final int getCooldown() {
-        return getInfo(this).cooldown();
+        return getInfo().cooldown();
     }
 
     public final boolean isGuildOnly() {
-        return getInfo(this).guildOnly();
+        return getInfo().guildOnly();
+    }
+
+    @Override
+    public final boolean canBeDisabled() {
+        return getInfo().canBeDisabled();
     }
 
     @Override
@@ -70,7 +77,7 @@ public sealed abstract class Command extends BasicCommand permits BaseCommand {
     }
 
     public final OptionData[] getOptionsData() {
-        return (getArguments() == null ? new ArgumentSet() : getArguments())
+        return (getArguments() == null ? new ArgumentSet() : getArguments()).values()
             .stream().map(Argument::getOptionData).toArray(OptionData[]::new);
     }
 

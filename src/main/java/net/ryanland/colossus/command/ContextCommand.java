@@ -1,5 +1,6 @@
 package net.ryanland.colossus.command;
 
+import net.dv8tion.jda.api.entities.ISnowflake;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
@@ -18,7 +19,7 @@ import java.lang.reflect.ParameterizedType;
  * All context commands extend this class
  * @param <T> Type of context command; must be either {@link User} or {@link Message}
  */
-public abstract non-sealed class ContextCommand<T> extends BasicCommand {
+public abstract non-sealed class ContextCommand<T extends ISnowflake> extends BasicCommand {
 
     private ContextCommandBuilder getInfo() {
         return getClass().getAnnotation(ContextCommandBuilder.class);
@@ -52,6 +53,11 @@ public abstract non-sealed class ContextCommand<T> extends BasicCommand {
     @Override
     public CooldownManager getCooldownManager() {
         return MemoryCooldownManager.getInstance();
+    }
+
+    @Override
+    public boolean canBeDisabled() {
+        return getInfo().canBeDisabled();
     }
 
     @Override

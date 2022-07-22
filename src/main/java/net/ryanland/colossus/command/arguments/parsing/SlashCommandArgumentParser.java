@@ -12,12 +12,10 @@ import net.ryanland.colossus.command.arguments.parsing.exceptions.ArgumentExcept
 import net.ryanland.colossus.command.arguments.parsing.exceptions.MalformedArgumentException;
 import net.ryanland.colossus.events.CommandEvent;
 import net.ryanland.colossus.events.SlashCommandEvent;
-import net.ryanland.colossus.sys.message.DefaultPresetType;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.concurrent.CompletableFuture;
 
 public non-sealed class SlashCommandArgumentParser extends ArgumentParser {
 
@@ -53,7 +51,7 @@ public non-sealed class SlashCommandArgumentParser extends ArgumentParser {
         ArgumentSet arguments = command.getArguments();
         if (arguments == null) arguments = new ArgumentSet();
 
-        for (Argument<?> arg : arguments) {
+        for (Argument<?> arg : arguments.values()) {
             try {
                 Object parsedArg;
                 if (queue.peek() == null && arg.isOptional())
@@ -61,7 +59,7 @@ public non-sealed class SlashCommandArgumentParser extends ArgumentParser {
                 else
                     parsedArg = arg.resolveSlashCommandArgument(getEvent(), queue);
 
-                parsedArgs.put(arg.getId(), parsedArg);
+                parsedArgs.put(arg.getName(), parsedArg);
 
             } catch (MalformedArgumentException e) {
                 event.reply(embed

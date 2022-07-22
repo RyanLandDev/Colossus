@@ -1,10 +1,8 @@
 package net.ryanland.colossus.events;
 
+import net.dv8tion.jda.api.entities.ISnowflake;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
-import net.dv8tion.jda.api.events.interaction.command.GenericContextInteractionEvent;
-import net.dv8tion.jda.api.events.interaction.command.MessageContextInteractionEvent;
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.events.interaction.command.UserContextInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.command.*;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.SelectMenuInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -21,6 +19,12 @@ public class InternalEventListener extends ListenerAdapter {
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
         new Thread(() -> CommandHandler.run(new SlashCommandEvent(event))).start();
+    }
+
+    // Slash command autocomplete
+    @Override
+    public void onCommandAutoCompleteInteraction(@NotNull CommandAutoCompleteInteractionEvent event) {
+        CommandHandler.handleAutocompleteEvent(event);
     }
 
     // Execute message command
@@ -78,7 +82,7 @@ public class InternalEventListener extends ListenerAdapter {
         onContextInteraction(event);
     }
 
-    private <T> void onContextInteraction(GenericContextInteractionEvent<T> event) {
+    private <T extends ISnowflake> void onContextInteraction(GenericContextInteractionEvent<T> event) {
         CommandHandler.run(new ContextCommandEvent<>(event));
     }
 }

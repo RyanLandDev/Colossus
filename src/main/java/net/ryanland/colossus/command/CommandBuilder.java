@@ -8,8 +8,14 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
 public @interface CommandBuilder {
+
     String name();
+
     String description();
+
     int cooldown() default 2;
+
     boolean guildOnly() default true;
+
+    boolean canBeDisabled() default true;
 }

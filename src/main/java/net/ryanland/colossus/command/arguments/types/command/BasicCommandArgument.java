@@ -3,11 +3,14 @@ package net.ryanland.colossus.command.arguments.types.command;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.command.BasicCommand;
 import net.ryanland.colossus.command.Command;
+import net.ryanland.colossus.command.CommandType;
 import net.ryanland.colossus.command.ContextCommand;
+import net.ryanland.colossus.command.arguments.ArgumentOptionData;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.ArgumentException;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.MalformedArgumentException;
 import net.ryanland.colossus.command.arguments.types.primitive.FutureArgumentStringResolver;
@@ -16,14 +19,26 @@ import net.ryanland.colossus.events.CommandEvent;
 import net.ryanland.colossus.events.SlashCommandEvent;
 import net.ryanland.colossus.sys.interactions.button.BaseButton;
 import net.ryanland.colossus.sys.message.PresetBuilder;
+import net.dv8tion.jda.api.interactions.commands.Command.Choice;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class BasicCommandArgument extends FutureArgumentStringResolver<BasicCommand> {
+
+    public static <T extends BasicCommand> ArgumentOptionData getAutocompleteChoiceData(List<T> commands) {
+        List<Choice> choices = commands.stream()
+            .map(command -> new Choice(command.getCommandType() == CommandType.CONTEXT_USER || command.getCommandType() == CommandType.CONTEXT_MESSAGE ?
+                (command.getName() + " (" + command.getCommandType().getName() + ")") : command.getName(),
+                command.getName())).toList();
+        return new ArgumentOptionData(OptionType.STRING).addAutoCompletableChoices(choices);
+    }
+
+    @Override
+    public ArgumentOptionData getArgumentOptionData() {
+        return getAutocompleteChoiceData(CommandHandler.getAllCommands());
+    }
 
     private record RichCommand(BasicCommand command, BaseButton button) {}
 
@@ -58,7 +73,7 @@ public class BasicCommandArgument extends FutureArgumentStringResolver<BasicComm
 
         // create results list
         List<RichCommand> results = Stream.of(command, userContextCommand, messageContextCommand)
-            .filter(richCommand -> richCommand.command != null).collect(Collectors.toList());
+            .filter(richCommand -> richCommand.command != null).toList();
 
         // send results
         if (results.isEmpty()) {
@@ -68,7 +83,7 @@ public class BasicCommandArgument extends FutureArgumentStringResolver<BasicComm
             event.reply(new PresetBuilder(Colossus.getDefaultPresetType())
                 .setTitle("Multiple Results")
                 .setDescription("There were multiple commands found with the name `" + arg + "`, please pick one type.")
-                .addButtons(results.stream().map(RichCommand::button).collect(Collectors.toList()))
+                .addButtons(results.stream().map(RichCommand::button).toList())
             );
         }
         else {

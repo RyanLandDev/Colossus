@@ -344,7 +344,7 @@ public class ColossusBuilder {
 
     /**
      * Register {@link CommandInhibitor}s
-     * <br>Core inhibitors will be executed before custom ones. These are defined in {@code ColossusBuilder.CORE_COMMAND_INHIBITORS}
+     * <br>Core inhibitors will be executed before custom ones. These are defined in {@code ColossusBuilder#CORE_COMMAND_INHIBITORS}
      * @param commandInhibitors The command inhibitors to register
      * @return The builder
      * @see CommandInhibitor

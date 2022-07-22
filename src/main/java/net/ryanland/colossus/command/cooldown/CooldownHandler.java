@@ -39,8 +39,7 @@ public class CooldownHandler {
             return null;
         return getActiveCooldowns(manager, user).stream()
             .filter(cooldown -> cooldown.command().getName().equals(command.getName()))
-            .collect(Collectors.toList())
-            .get(0);
+            .toList().get(0);
     }
 
     public static void newCooldown(CommandEvent event) {
@@ -66,7 +65,7 @@ public class CooldownHandler {
         List<Cooldown> activeCooldowns = getActiveCooldowns(manager, user);
         List<Cooldown> cooldowns = activeCooldowns.stream()
             .filter(cooldown -> date.before(cooldown.expires()))
-            .collect(Collectors.toList());
+            .toList();
 
         if (!activeCooldowns.equals(cooldowns)) {
             if (cooldowns.isEmpty()) {
@@ -81,7 +80,7 @@ public class CooldownHandler {
         List<Cooldown> activeCooldowns = getActiveCooldowns(manager, user);
         List<Cooldown> cooldowns = activeCooldowns.stream()
             .filter(cooldown -> !cooldown.command().getName().equals(command.getName()))
-            .collect(Collectors.toList());
+            .toList();
 
         if (!activeCooldowns.equals(cooldowns)) {
             if (cooldowns.isEmpty()) {

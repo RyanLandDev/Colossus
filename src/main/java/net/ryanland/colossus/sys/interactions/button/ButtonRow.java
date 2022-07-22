@@ -41,7 +41,7 @@ public class ButtonRow extends ComponentRow {
 
     @Override
     public ActionRow toActionRow() {
-        return ActionRow.of(getButtons().stream().map(BaseButton::button).collect(Collectors.toList()));
+        return ActionRow.of(getButtons().stream().map(BaseButton::button).toList());
     }
 
     @Override

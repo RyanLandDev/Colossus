@@ -27,7 +27,7 @@ public final class DefaultHelpCommand extends DefaultCommand implements Combined
     public ArgumentSet getArguments() {
         return new ArgumentSet().addArguments(
             new CommandArgument()
-                .id("command")
+                .name("command")
                 .optional()
                 .description("Command to get information of")
         );
@@ -61,7 +61,7 @@ public final class DefaultHelpCommand extends DefaultCommand implements Combined
         // get all commands, and filter by category equal and member has sufficient permissions
         List<Command> commands = CommandHandler.getCommands().stream().filter(c ->
             c.getCategory().equals(category) && c.memberHasPermission(member)
-        ).collect(Collectors.toList());
+        ).toList();
 
         // if no commands were left after the filter, do not include this category in the menu
         if (commands.isEmpty()) return;

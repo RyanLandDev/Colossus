@@ -13,14 +13,16 @@ public class Node<T extends Node<T>> implements Iterable<T> {
     private final List<T> children = new ArrayList<>();
     private T parent;
 
+    @SuppressWarnings("all")
     private T setParent(T parent) {
         this.parent = parent;
         return (T) this;
     }
 
+    @SuppressWarnings("all")
     public T addChildren(T... children) {
         this.children.addAll(Arrays.stream(children)
-            .map(child -> ((Node<T>) child).setParent((T) this)).collect(Collectors.toList()));
+            .map(child -> ((Node<T>) child).setParent((T) this)).toList());
         return (T) this;
     }
 

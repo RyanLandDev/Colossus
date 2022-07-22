@@ -16,13 +16,12 @@ import java.util.function.Function;
 public abstract class Argument<T> {
 
     private String name;
-    private String id;
     private String description;
     private boolean optional = false;
     private Function<CommandEvent, CompletableFuture<T>> optionalFunction = event -> null;
 
-    public final Argument<T> id(String id) {
-        this.id = id;
+    public final Argument<T> name(String name) {
+        this.name = name;
         return this;
     }
 
@@ -51,18 +50,17 @@ public abstract class Argument<T> {
     }
 
     public final OptionData getOptionData() {
+        if (getName() == null || getDescription() == null) {
+            throw new IllegalStateException(getClass().getName() + " - Arguments must have at least a name and description.");
+        }
         return getArgumentOptionData()
-            .setName(name == null ? id : name)
-            .setDescription(description)
+            .setName(getName())
+            .setDescription(getDescription())
             .setRequired(!isOptional());
     }
 
     public final String getName() {
-        return name == null ? id : name;
-    }
-
-    public final String getId() {
-        return id;
+        return name;
     }
 
     public final boolean isOptional() {

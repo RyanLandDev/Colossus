@@ -64,7 +64,7 @@ public non-sealed class MessageCommandArgumentParser extends ArgumentParser {
         ArgumentSet arguments = command.getArguments();
         if (arguments == null) arguments = new ArgumentSet();
 
-        for (Argument<?> arg : arguments) {
+        for (Argument<?> arg : arguments.values()) {
             try {
                 Object parsedArg;
                 if (queue.peek() == null && arg.isOptional())
@@ -74,7 +74,7 @@ public non-sealed class MessageCommandArgumentParser extends ArgumentParser {
                 else
                     parsedArg = arg.resolveMessageCommandArgument(queue, getEvent());
 
-                parsedArgs.put(arg.getId(), parsedArg);
+                parsedArgs.put(arg.getName(), parsedArg);
 
             } catch (MissingArgumentException e) {
                 event.reply(embed

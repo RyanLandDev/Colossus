@@ -13,7 +13,7 @@ import java.util.function.Function;
  * Examples include: UserTable, MemberTable, GuildTable, GlobalTable, etc.<br>
  * Uses {@link LinkedHashMap} to store values.<br><br>
  *
- * Preserved keys: {@code _id _dc _dcc _prf}
+ * Preserved keys: {@code _id _dc _prf}
  * @param <T> The type of entity this table is for, for example {@link User}
  * @see DatabaseDriver
  */
