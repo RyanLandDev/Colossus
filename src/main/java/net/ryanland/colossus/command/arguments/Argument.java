@@ -2,6 +2,7 @@ package net.ryanland.colossus.command.arguments;
 
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import net.ryanland.colossus.command.Command;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.ArgumentException;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.InterruptedArgumentException;
 import net.ryanland.colossus.events.CommandEvent;
@@ -83,7 +84,13 @@ public abstract class Argument<T> {
         return description;
     }
 
+    // ------------------------
+
     public abstract ArgumentOptionData getArgumentOptionData();
+
+    public boolean ignoreMissingException() {
+        return false;
+    }
 
     public abstract CompletableFuture<T> resolveSlashCommandArgument(Deque<OptionMapping> args, SlashCommandEvent event) throws ArgumentException;
 

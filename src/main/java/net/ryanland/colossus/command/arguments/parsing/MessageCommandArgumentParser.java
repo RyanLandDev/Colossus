@@ -69,10 +69,10 @@ public non-sealed class MessageCommandArgumentParser extends ArgumentParser {
                 Object parsedArg;
                 if (queue.peek() == null && arg.isOptional())
                     parsedArg = arg.getOptionalFunction().apply(event);
-                else if (queue.peek() == null)
+                else if (queue.peek() == null && !arg.ignoreMissingException())
                     throw new MissingArgumentException();
                 else
-                    parsedArg = arg.resolveMessageCommandArgument(queue, getEvent());
+                    parsedArg = arg.resolveMessageCommandArgument(getEvent(), queue);
 
                 parsedArgs.put(arg.getName(), parsedArg);
 

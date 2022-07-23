@@ -10,7 +10,7 @@ public class GuildOnlyCommandInhibitor implements CommandInhibitor {
 
     @Override
     public boolean check(CommandEvent event) {
-        if (HelpMaker.getInfo(event.getCommand()).guildOnly())
+        if (event.getCommand().isGuildOnly())
             return !event.isFromGuild();
         else return false;
     }
