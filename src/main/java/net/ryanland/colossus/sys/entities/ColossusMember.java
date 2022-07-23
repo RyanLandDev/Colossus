@@ -4,6 +4,7 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.channel.unions.DefaultGuildChannelUnion;
 import net.dv8tion.jda.api.entities.emoji.RichCustomEmoji;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.jetbrains.annotations.NotNull;
@@ -509,19 +510,19 @@ public record ColossusMember(Member member) implements Member, ColossusDatabaseE
     }
 
     /**
-     * The default {@link BaseGuildMessageChannel BaseGuildMessageChannel} for a {@link Member Member}.
+     * The {@link DefaultGuildChannelUnion default channel} for a {@link net.dv8tion.jda.api.entities.Member Member}.
      * <br>This is the channel that the Discord client will default to opening when a Guild is opened for the first time
      * after joining the guild.
      * <br>The default channel is the channel with the highest position in which the member has
-     * {@link Permission#VIEW_CHANNEL Permission.VIEW_CHANNEL} permissions. If this requirement doesn't apply for
+     * {@link net.dv8tion.jda.api.Permission#VIEW_CHANNEL Permission.VIEW_CHANNEL} permissions. If this requirement doesn't apply for
      * any channel in the guild, this method returns {@code null}.
      *
-     * @return The {@link BaseGuildMessageChannel BaseGuildMessageChannel} representing the default channel for this member
-     * or null if no such channel exists.
+     * @return The {@link DefaultGuildChannelUnion channel} representing the default channel for this member
+     *         or null if no such channel exists.
      */
     @Nullable
     @Override
-    public BaseGuildMessageChannel getDefaultChannel() {
+    public DefaultGuildChannelUnion getDefaultChannel() {
         return member().getDefaultChannel();
     }
 

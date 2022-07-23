@@ -3,6 +3,7 @@ package net.ryanland.colossus.sys.entities;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.requests.RestAction;
+import net.dv8tion.jda.api.requests.restaction.CacheRestAction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -69,16 +70,18 @@ public record ColossusUser(User user) implements User, ColossusDatabaseEntity<Us
     }
 
     /**
-     * Loads the user's {@link Profile} data.
+     * Loads the user's {@link User.Profile} data.
      * Returns a completed RestAction if this User has been retrieved using {@link JDA#retrieveUserById(long)}.
+     * You can use {@link CacheRestAction#useCache(boolean) useCache(false)} to force the request for a new profile with up-to-date information.
      *
-     * @return {@link RestAction} - Type: {@link Profile}
-     * @throws UnsupportedOperationException If this User was created with {@link #fromId(long)}
-     * @since 4.3.0
+     * @throws UnsupportedOperationException
+     *         If this User was created with {@link #fromId(long)}
+     *
+     * @return {@link CacheRestAction} - Type: {@link User.Profile}
      */
     @NotNull
     @Override
-    public RestAction<Profile> retrieveProfile() {
+    public CacheRestAction<Profile> retrieveProfile() {
         return user().retrieveProfile();
     }
 
@@ -108,11 +111,13 @@ public record ColossusUser(User user) implements User, ColossusDatabaseEntity<Us
     }
 
     /**
-     * Opens a {@link PrivateChannel PrivateChannel} with this User.
+     * Opens a {@link PrivateChannel} with this User.
      * <br>If a channel has already been opened with this user, it is immediately returned in the RestAction's
      * success consumer without contacting the Discord API.
+     * You can use {@link CacheRestAction#useCache(boolean) useCache(false)} to force the request for a new channel object,
+     * which is rarely useful since the channel id never changes.
      *
-     * <h4>Examples</h4>
+     * <p><b>Examples</b><br>
      * <pre>{@code
      * // Send message without response handling
      * public void sendMessage(User user, String content) {
@@ -130,15 +135,18 @@ public record ColossusUser(User user) implements User, ColossusDatabaseEntity<Us
      * }
      * }</pre>
      *
-     * @return {@link RestAction RestAction} - Type: {@link PrivateChannel PrivateChannel}
-     * <br>Retrieves the PrivateChannel to use to directly message this User.
-     * @throws UnsupportedOperationException If the recipient User is the currently logged in account (represented by {@link SelfUser SelfUser})
-     *                                       or if the user was created with {@link #fromId(long)}
-     * @see JDA#openPrivateChannelById(long)
+     * @throws UnsupportedOperationException
+     *         If the recipient User is the currently logged in account (represented by {@link net.dv8tion.jda.api.entities.SelfUser SelfUser})
+     *         or if the user was created with {@link #fromId(long)}
+     *
+     * @return {@link CacheRestAction} - Type: {@link PrivateChannel}
+     *         <br>Retrieves the PrivateChannel to use to directly message this User.
+     *
+     * @see    JDA#openPrivateChannelById(long)
      */
     @NotNull
     @Override
-    public RestAction<PrivateChannel> openPrivateChannel() {
+    public CacheRestAction<PrivateChannel> openPrivateChannel() {
         return user().openPrivateChannel();
     }
 

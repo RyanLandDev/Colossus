@@ -101,7 +101,7 @@ public interface InteractionRepliableEvent extends RepliableEvent {
         try {
             ((IModalCallback) getCallback()).replyModal(modal).queue();
         } catch (ClassCastException e) {
-            Colossus.getLogger().error(getClass().getName() + " - This event does not support replying with modals");
+            Colossus.LOGGER.error(getClass().getName() + " - This event does not support replying with modals");
             e.printStackTrace();
         }
         ModalSubmitEvent.addListener(getUser().getIdLong(), modal.getId(), action);

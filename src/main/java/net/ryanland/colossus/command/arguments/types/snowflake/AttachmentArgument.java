@@ -36,20 +36,21 @@ public class AttachmentArgument extends Argument<Message.Attachment> {
 
     @Override
     public CompletableFuture<Message.Attachment> resolveMessageCommandArgument(Deque<String> args, MessageCommandEvent event) throws ArgumentException {
+        // get attachments
         CompletableFuture<Message.Attachment> future = new CompletableFuture<>();
-        long messageId = event.getMessage().getIdLong();
         List<Message.Attachment> attachments = event.getMessage().getAttachments();
 
-        System.out.println(messageId);
+        // get attachment position
         List<Argument<?>> arguments = event.getCommand().getArguments().values().stream()
             .filter(arg -> arg instanceof AttachmentArgument).toList();
-        System.out.println(arguments);
         int pos = IntStream.range(0, arguments.size())
             .filter(i -> arguments.get(i).getName().equals(getName()))
             .findFirst().getAsInt();
 
+        // check if missing
         if (pos+1 > attachments.size()) throw new MissingArgumentException();
 
+        // return
         future.complete(attachments.get(pos));
         return future;
     }

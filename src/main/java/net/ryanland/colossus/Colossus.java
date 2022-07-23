@@ -4,6 +4,8 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.SelfUser;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.interactions.DiscordLocale;
+import net.dv8tion.jda.api.interactions.commands.localization.LocalizationFunction;
 import net.dv8tion.jda.internal.utils.JDALogger;
 import net.ryanland.colossus.command.Category;
 import net.ryanland.colossus.command.Command;
@@ -35,8 +37,9 @@ import java.util.concurrent.TimeUnit;
  */
 public class Colossus {
 
-    private static final Logger LOGGER =
+    public static final Logger LOGGER =
         JDALogger.getLog(StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).getCallerClass());
+    public static final DiscordLocale DEFAULT_LOCALE = DiscordLocale.ENGLISH_US;
 
     private static JDA jda;
     private static Config config;
@@ -50,6 +53,7 @@ public class Colossus {
     private static PresetType defaultPresetType;
     private static PresetType errorPresetType;
     private static PresetType successPresetType;
+    private static LocalizationFunction localizationFunction;
     private static List<CommandInhibitor> commandInhibitors;
     private static List<ContextInhibitor> contextInhibitors;
     private static List<CommandFinalizer> commandFinalizers;
@@ -62,9 +66,9 @@ public class Colossus {
     public Colossus(JDABuilder builder, Config config, Set<Category> categories, List<Command> commands,
                     List<ContextCommand<?>> contextCommands, List<LocalFile> localFiles, long buttonListenerExpirationTimeAmount,
                     TimeUnit buttonListenerExpirationTimeUnit, DatabaseDriver databaseDriver, PresetType defaultPresetType,
-                    PresetType errorPresetType, PresetType successPresetType, List<CommandInhibitor> commandInhibitors,
-                    List<ContextInhibitor> contextInhibitors, List<CommandFinalizer> commandFinalizers,
-                    List<ContextFinalizer> contextFinalizers) {
+                    PresetType errorPresetType, PresetType successPresetType, LocalizationFunction localizationFunction,
+                    List<CommandInhibitor> commandInhibitors, List<ContextInhibitor> contextInhibitors,
+                    List<CommandFinalizer> commandFinalizers, List<ContextFinalizer> contextFinalizers) {
         this.builder = builder;
 
         Colossus.config = config;
@@ -78,6 +82,7 @@ public class Colossus {
         Colossus.defaultPresetType = defaultPresetType;
         Colossus.errorPresetType = errorPresetType;
         Colossus.successPresetType = successPresetType;
+        Colossus.localizationFunction = localizationFunction;
         Colossus.commandInhibitors = commandInhibitors;
         Colossus.contextInhibitors = contextInhibitors;
         Colossus.commandFinalizers = commandFinalizers;
@@ -114,10 +119,6 @@ public class Colossus {
     }
 
     // Utility methods ------------------------------
-
-    public static Logger getLogger() {
-        return LOGGER;
-    }
 
     public static JDA getJDA() {
         return jda;
@@ -216,6 +217,20 @@ public class Colossus {
 
     public static PresetType getSuccessPresetType() {
         return successPresetType;
+    }
+
+    /**
+     * Get the configured {@link LocalizationFunction}
+     * @see ColossusBuilder#setLocalizationFunction(LocalizationFunction)
+     * @see #getLocalization(DiscordLocale, String)
+     * @see LocalizationFunction
+     */
+    public static LocalizationFunction getLocalizationFunction() {
+        return localizationFunction;
+    }
+
+    public static String getLocalization(DiscordLocale locale, String key) {
+        return getLocalizationFunction().apply(key).get(locale);
     }
 
     public static List<CommandInhibitor> getCommandInhibitors() {

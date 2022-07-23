@@ -55,7 +55,7 @@ public class CommandHandler {
             if (COMMAND_MAP.containsValue(command))
                 commandError(command, "This command has already been registered.");
             if (command instanceof SubCommand) {
-                Colossus.getLogger().warn(command.getName() + " - A subcommand has been registered as a command.");
+                Colossus.LOGGER.warn(command.getName() + " - A subcommand has been registered as a command.");
                 if (command instanceof SubCommandHolder)
                     commandError(command, "Nested subcommand holders may not be registered.");
             }
@@ -110,7 +110,8 @@ public class CommandHandler {
                     continue;
             }
 
-            SlashCommandData slashCmdData = Commands.slash(command.getName(), command.getDescription());
+            SlashCommandData slashCmdData = Commands.slash(command.getName(), command.getDescription())
+                .setLocalizationFunction(command.getLocalizationFunction());
 
             // Subcommands
             if (command instanceof SubCommandHolder) {
@@ -135,7 +136,8 @@ public class CommandHandler {
 
         // Context commands
         for (ContextCommand<?> contextCommand : CONTEXT_COMMANDS) {
-            CommandData cmdData = Commands.context(contextCommand.getType().getJDAEquivalent(), contextCommand.getName());
+            CommandData cmdData = Commands.context(contextCommand.getType().getJDAEquivalent(), contextCommand.getName())
+                .setLocalizationFunction(contextCommand.getLocalizationFunction());
 
             if (Colossus.getConfig().isTesting()) {
                 testGuild.upsertCommand(cmdData).queue();

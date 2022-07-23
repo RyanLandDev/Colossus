@@ -4,6 +4,7 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.interactions.DiscordLocale;
 import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.command.Command;
 import net.ryanland.colossus.command.SubCommandHolder;
@@ -34,6 +35,19 @@ public abstract class CommandEvent implements RepliableEvent {
     public abstract MessageChannel getChannel();
 
     public abstract boolean isFromGuild();
+
+    public DiscordLocale getGuildLocale() {
+        return getGuild().getLocale();
+    }
+
+    public abstract DiscordLocale getUserLocale();
+
+    /**
+     * Gets the localization of the locale given by {@link #getUserLocale()} with the provided key
+     */
+    public String getLocalization(String key) {
+        return Colossus.getLocalization(getUserLocale(), key);
+    }
 
     public abstract JDA getJDA();
 

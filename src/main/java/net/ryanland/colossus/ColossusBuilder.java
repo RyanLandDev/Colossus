@@ -5,6 +5,9 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.SelfUser;
+import net.dv8tion.jda.api.interactions.DiscordLocale;
+import net.dv8tion.jda.api.interactions.commands.localization.LocalizationFunction;
+import net.dv8tion.jda.api.interactions.commands.localization.ResourceBundleLocalizationFunction;
 import net.ryanland.colossus.command.Category;
 import net.ryanland.colossus.command.Command;
 import net.ryanland.colossus.command.CommandException;
@@ -23,6 +26,7 @@ import net.ryanland.colossus.command.inhibitors.CommandInhibitor;
 import net.ryanland.colossus.command.inhibitors.ContextInhibitor;
 import net.ryanland.colossus.command.inhibitors.impl.*;
 import net.ryanland.colossus.events.ButtonClickEvent;
+import net.ryanland.colossus.events.CommandEvent;
 import net.ryanland.colossus.events.InternalEventListener;
 import net.ryanland.colossus.sys.file.Config;
 import net.ryanland.colossus.sys.file.LocalFile;
@@ -34,10 +38,7 @@ import net.ryanland.colossus.sys.message.PresetBuilder;
 import net.ryanland.colossus.sys.message.PresetType;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
@@ -102,6 +103,7 @@ public class ColossusBuilder {
     private PresetType defaultPresetType = DefaultPresetType.DEFAULT;
     private PresetType errorPresetType = DefaultPresetType.ERROR;
     private PresetType successPresetType = DefaultPresetType.SUCCESS;
+    private LocalizationFunction localizationFunction = s -> Map.of();
 
     /**
      * Helper class to build a new instance of {@link Colossus}.<br>
@@ -196,7 +198,8 @@ public class ColossusBuilder {
 
         return new Colossus(jdaBuilder, config, categories, commands, contextCommands, localFiles,
             buttonListenerExpirationTimeAmount, buttonListenerExpirationTimeUnit, databaseDriver, defaultPresetType,
-            errorPresetType, successPresetType, commandInhibitors, contextInhibitors, commandFinalizers, contextFinalizers);
+            errorPresetType, successPresetType, localizationFunction, commandInhibitors, contextInhibitors,
+            commandFinalizers, contextFinalizers);
     }
 
     /**
@@ -340,6 +343,21 @@ public class ColossusBuilder {
      */
     public ColossusBuilder setSuccessPresetType(PresetType presetType) {
         successPresetType = presetType;
+        return this;
+    }
+
+    /**
+     * Sets the {@link LocalizationFunction} to use for slash and context commands, and optionally custom values.
+     * <br>By default, no function is used.
+     * @param localizationFunction The {@link LocalizationFunction} to set to
+     * @return The builder
+     * @see Colossus#getLocalization(DiscordLocale, String)
+     * @see CommandEvent#getLocalization(String)
+     * @see LocalizationFunction
+     * @see ResourceBundleLocalizationFunction
+     */
+    public ColossusBuilder setLocalizationFunction(LocalizationFunction localizationFunction) {
+        this.localizationFunction = localizationFunction;
         return this;
     }
 

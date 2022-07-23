@@ -6,7 +6,10 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.interactions.DiscordLocale;
+import net.dv8tion.jda.api.interactions.commands.localization.LocalizationFunction;
 import net.dv8tion.jda.api.interactions.components.Modal;
+import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.command.Command;
 import net.ryanland.colossus.command.SubCommandHolder;
 import net.ryanland.colossus.command.arguments.ParsedArgumentMap;
@@ -88,6 +91,11 @@ public class MessageCommandEvent extends CommandEvent {
     @Override
     public boolean isFromGuild() {
         return event.isFromGuild();
+    }
+
+    @Override
+    public DiscordLocale getUserLocale() {
+        return Colossus.DEFAULT_LOCALE; // we cant get the user locale with message commands, so return the default
     }
 
     @Override

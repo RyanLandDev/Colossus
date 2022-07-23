@@ -35,7 +35,7 @@ public class GuildChannelArgument extends SnowflakeArgument<GuildChannel> {
 
     @Override
     public GuildChannel resolveSlashCommandArgument(OptionMapping arg, SlashCommandEvent event) throws ArgumentException {
-        return arg.getAsGuildChannel();
+        return arg.getAsChannel();
     }
 
     @Override

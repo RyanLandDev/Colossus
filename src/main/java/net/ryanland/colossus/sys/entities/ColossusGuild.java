@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.Region;
 import net.dv8tion.jda.api.audit.AuditLogEntry;
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.channel.unions.DefaultGuildChannelUnion;
 import net.dv8tion.jda.api.entities.emoji.RichCustomEmoji;
 import net.dv8tion.jda.api.entities.sticker.*;
 import net.dv8tion.jda.api.entities.templates.Template;
@@ -17,6 +18,7 @@ import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.exceptions.HierarchyException;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.api.exceptions.PermissionException;
+import net.dv8tion.jda.api.interactions.DiscordLocale;
 import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.PrivilegeConfig;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
@@ -68,6 +70,19 @@ public record ColossusGuild(Guild guild) implements Guild, ColossusDatabaseEntit
     @Override
     public RestAction<List<Command>> retrieveCommands() {
         return guild().retrieveCommands();
+    }
+
+    /**
+     * Retrieves the list of guild commands.
+     * <br>This list does not include global commands! Use {@link JDA#retrieveCommands()} for global commands.
+     *
+     * @param withLocalizations {@code true} if the localization data (such as name and description) should be included
+     * @return {@link RestAction} - Type: {@link List} of {@link Command}
+     */
+    @NotNull
+    @Override
+    public RestAction<List<Command>> retrieveCommands(boolean withLocalizations) {
+        return guild().retrieveCommands(withLocalizations);
     }
 
     /**
@@ -432,14 +447,15 @@ public record ColossusGuild(Guild guild) implements Guild, ColossusDatabaseEntit
      * The preferred locale for this guild.
      * <br>If the guild doesn't have the COMMUNITY feature, this returns the default.
      *
-     * <br>Default: {@link Locale#US}
+     * <br>Default: {@link DiscordLocale#ENGLISH_US}
      *
-     * @return The preferred {@link Locale} for this guild
-     * @since 4.2.1
+     * @return The preferred {@link DiscordLocale} for this guild
+     *
+     * @since  4.2.1
      */
     @NotNull
     @Override
-    public Locale getLocale() {
+    public DiscordLocale getLocale() {
         return guild().getLocale();
     }
 
@@ -1008,18 +1024,18 @@ public record ColossusGuild(Guild guild) implements Guild, ColossusDatabaseEntit
     }
 
     /**
-     * The default {@link BaseGuildMessageChannel BaseGuildMessageChannel} for a {@link Guild Guild}.
+     * The default {@link net.dv8tion.jda.api.entities.StandardGuildChannel} for a {@link net.dv8tion.jda.api.entities.Guild Guild}.
      * <br>This is the channel that the Discord client will default to opening when a Guild is opened for the first time when accepting an invite
-     * that is not directed at a specific {@link BaseGuildMessageChannel BaseGuildMessageChannel}.
+     * that is not directed at a specific {@link IInviteContainer channel}.
      *
      * <p>Note: This channel is the first channel in the guild (ordered by position) that the {@link #getPublicRole()}
-     * has the {@link Permission#VIEW_CHANNEL Permission.VIEW_CHANNEL} in.
+     * has the {@link net.dv8tion.jda.api.Permission#VIEW_CHANNEL Permission.VIEW_CHANNEL} in.
      *
-     * @return The {@link BaseGuildMessageChannel BaseGuildMessageChannel} representing the default channel for this guild
+     * @return The {@link net.dv8tion.jda.api.entities.StandardGuildChannel channel} representing the default channel for this guild
      */
     @Nullable
     @Override
-    public BaseGuildMessageChannel getDefaultChannel() {
+    public DefaultGuildChannelUnion getDefaultChannel() {
         return guild().getDefaultChannel();
     }
 
@@ -1376,8 +1392,8 @@ public record ColossusGuild(Guild guild) implements Guild, ColossusDatabaseEntit
      * <br>If the member is already loaded it will be retrieved from {@link #getMemberById(long)}
      * and immediately provided if the member information is consistent. The cache consistency directly
      * relies on the enabled {@link GatewayIntent GatewayIntents} as {@link GatewayIntent#GUILD_MEMBERS GatewayIntent.GUILD_MEMBERS}
-     * is required to keep the cache updated with the latest information. You can pass {@code update = false} to always
-     * return immediately if the member is cached regardless of cache consistency.
+     * is required to keep the cache updated with the latest information. You can use {@link CacheRestAction#useCache(boolean) useCache(false)} to always
+     * make a new request, which is the default behavior if the required intents are disabled.
      *
      * <p>Possible {@link ErrorResponseException ErrorResponseExceptions} include:
      * <ul>
@@ -1388,16 +1404,15 @@ public record ColossusGuild(Guild guild) implements Guild, ColossusDatabaseEntit
      *     <br>The specified user does not exist</li>
      * </ul>
      *
-     * @param id     The user id to load the member from
-     * @param update Whether JDA should perform a request even if the member is already cached to update properties such as the name
+     * @param id The user id to load the member from
      * @return {@link RestAction} - Type: {@link Member}
      * @see #pruneMemberCache()
      * @see #unloadMember(long)
      */
     @NotNull
     @Override
-    public RestAction<Member> retrieveMemberById(long id, boolean update) {
-        return guild().retrieveMemberById(id, update);
+    public CacheRestAction<Member> retrieveMemberById(long id) {
+        return guild().retrieveMemberById(id);
     }
 
     /**
