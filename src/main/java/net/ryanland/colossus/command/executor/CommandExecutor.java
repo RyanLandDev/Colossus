@@ -27,7 +27,7 @@ public class CommandExecutor {
 
     public void run(CommandEvent event) {
         Command command = CommandHandler.getCommand(event.getName());
-        if (command == null || (!event.isFromGuild() && command.isGuildOnly())) return;
+        if (command == null) return;
         event.setCommand(command);
 
         execute(event);
