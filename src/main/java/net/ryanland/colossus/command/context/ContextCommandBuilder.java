@@ -13,5 +13,7 @@ public @interface ContextCommandBuilder {
 
     int cooldown() default 2;
 
+    boolean guildOnly() default true;
+
     boolean canBeDisabled() default true;
 }

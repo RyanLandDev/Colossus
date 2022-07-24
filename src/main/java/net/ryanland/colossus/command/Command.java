@@ -62,6 +62,7 @@ public sealed abstract class Command extends BasicCommand permits BaseCommand {
         return getInfo().cooldown();
     }
 
+    @Override
     public final boolean isGuildOnly() {
         return getInfo().guildOnly();
     }

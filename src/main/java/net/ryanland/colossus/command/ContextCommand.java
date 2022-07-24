@@ -55,6 +55,11 @@ public abstract non-sealed class ContextCommand<T extends ISnowflake> extends Ba
     }
 
     @Override
+    public boolean isGuildOnly() {
+        return getInfo().guildOnly();
+    }
+
+    @Override
     public boolean canBeDisabled() {
         return getInfo().canBeDisabled();
     }

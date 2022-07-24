@@ -111,7 +111,8 @@ public class CommandHandler {
             }
 
             SlashCommandData slashCmdData = Commands.slash(command.getName(), command.getDescription())
-                .setLocalizationFunction(command.getLocalizationFunction());
+                .setLocalizationFunction(command.getLocalizationFunction())
+                .setGuildOnly(command.isGuildOnly());
 
             // Subcommands
             if (command instanceof SubCommandHolder) {
@@ -137,7 +138,8 @@ public class CommandHandler {
         // Context commands
         for (ContextCommand<?> contextCommand : CONTEXT_COMMANDS) {
             CommandData cmdData = Commands.context(contextCommand.getType().getJDAEquivalent(), contextCommand.getName())
-                .setLocalizationFunction(contextCommand.getLocalizationFunction());
+                .setLocalizationFunction(contextCommand.getLocalizationFunction())
+                .setGuildOnly(contextCommand.isGuildOnly());
 
             if (Colossus.getConfig().isTesting()) {
                 testGuild.upsertCommand(cmdData).queue();
