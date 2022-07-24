@@ -1,11 +1,13 @@
 package net.ryanland.colossus.command.executor;
 
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.ISnowflake;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.Command.Choice;
+import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
@@ -112,7 +114,8 @@ public class CommandHandler {
 
             SlashCommandData slashCmdData = Commands.slash(command.getName(), command.getDescription())
                 .setLocalizationFunction(command.getLocalizationFunction())
-                .setGuildOnly(command.isGuildOnly());
+                .setGuildOnly(command.isGuildOnly())
+                .setDefaultPermissions(command.getDefaultPermissions());
 
             // Subcommands
             if (command instanceof SubCommandHolder) {
@@ -139,7 +142,8 @@ public class CommandHandler {
         for (ContextCommand<?> contextCommand : CONTEXT_COMMANDS) {
             CommandData cmdData = Commands.context(contextCommand.getType().getJDAEquivalent(), contextCommand.getName())
                 .setLocalizationFunction(contextCommand.getLocalizationFunction())
-                .setGuildOnly(contextCommand.isGuildOnly());
+                .setGuildOnly(contextCommand.isGuildOnly())
+                .setDefaultPermissions(contextCommand.getDefaultPermissions());
 
             if (Colossus.getConfig().isTesting()) {
                 testGuild.upsertCommand(cmdData).queue();

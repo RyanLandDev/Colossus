@@ -1,6 +1,9 @@
 package net.ryanland.colossus.command;
 
+import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.localization.LocalizationFunction;
 import net.dv8tion.jda.api.interactions.commands.localization.ResourceBundleLocalizationFunction;
 import net.ryanland.colossus.Colossus;
@@ -49,6 +52,24 @@ public abstract sealed class BasicCommand permits Command, ContextCommand {
     }
 
     public abstract PermissionHolder getPermission();
+
+    /**
+     * Gets the {@link Permission Permissions} that a user must have in a specific channel to be able to use this command.
+     * <br>By default, everyone can use this command ({@link DefaultMemberPermissions#ENABLED})
+     * unless the command is disabled ({@link #isDisabled()}).
+     * Additionally, a command can be disabled for everyone but admins via {@link DefaultMemberPermissions#DISABLED}.
+     *
+     * <p>You can change this by overriding this method.
+     * <p>These configurations can be overwritten by moderators in each guild.
+     * See {@link net.dv8tion.jda.api.interactions.commands.Command#retrievePrivileges(Guild)} to get moderator defined overrides.
+     *
+     * @return {@link DefaultMemberPermissions} representing the default permissions of this command.
+     * @see DefaultMemberPermissions#ENABLED
+     * @see DefaultMemberPermissions#DISABLED
+     */
+    public DefaultMemberPermissions getDefaultPermissions() {
+        return isDisabled() ? DefaultMemberPermissions.DISABLED : DefaultMemberPermissions.ENABLED;
+    }
 
     public final boolean memberHasPermission(Member member) {
         return getPermission().check(member);
