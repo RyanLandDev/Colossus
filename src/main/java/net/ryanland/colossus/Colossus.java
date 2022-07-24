@@ -37,8 +37,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class Colossus {
 
-    public static final Logger LOGGER =
-        JDALogger.getLog(StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).getCallerClass());
+    public static final Logger LOGGER = JDALogger.getLog("Colossus");
     public static final DiscordLocale DEFAULT_LOCALE = DiscordLocale.ENGLISH_US;
 
     private static JDA jda;
@@ -94,6 +93,8 @@ public class Colossus {
      */
     public void initialize() {
 
+        LOGGER.info("Initializing...");
+
         // Register commands
         CommandHandler.registerCommands(commands);
         CommandHandler.registerContextCommands(contextCommands);
@@ -114,8 +115,12 @@ public class Colossus {
 
         jda.retrieveApplicationInfo().queue(appInfo -> botOwner = appInfo.getOwner());
 
-        // Upsert the registered slash commands
+        LOGGER.info("Upserting " + (commands.size() + contextCommands.size()) + " commands...");
+
+        // Upsert the registered slash and context commands
         CommandHandler.upsertAll();
+
+        LOGGER.info("Initialized!");
     }
 
     // Utility methods ------------------------------
