@@ -8,6 +8,8 @@ import net.dv8tion.jda.api.entities.SelfUser;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
 import net.dv8tion.jda.api.interactions.commands.localization.LocalizationFunction;
 import net.dv8tion.jda.api.interactions.commands.localization.ResourceBundleLocalizationFunction;
+import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import net.ryanland.colossus.command.Category;
 import net.ryanland.colossus.command.Command;
 import net.ryanland.colossus.command.CommandException;
@@ -423,6 +425,55 @@ public class ColossusBuilder {
     public ColossusBuilder registerConfigEntries(String... keys) {
         configEntries.addAll(List.of(keys));
         return this;
+    }
+
+    /**
+     * Disable the specified {@link GatewayIntent GatewayIntents}.
+     * <br>This will not enable any currently unset intents.
+     *
+     * <p>If you disable certain intents you also have to disable related {@link CacheFlag CacheFlags}.
+     * This can be achieved using {@link #disableCache(CacheFlag...)}. The required intents for each
+     * flag are documented in the {@link CacheFlag} enum.
+     *
+     * @param intents The intents to disable
+     * @return The builder
+     * @see #enableIntents(GatewayIntent...)
+     */
+    public ColossusBuilder disableIntents(GatewayIntent... intents) {
+        return setJDABuilder(builder -> builder.disableIntents(List.of(intents)));
+    }
+
+    /**
+     * Enable the specified {@link GatewayIntent GatewayIntents}.
+     * <br>This will not disable any currently set intents.
+     * @param intents The intents to enable
+     * @return The builder
+     * @see #disableIntents(GatewayIntent...)
+     */
+    public ColossusBuilder enableIntents(GatewayIntent... intents) {
+        return setJDABuilder(builder -> builder.enableIntents(List.of(intents)));
+    }
+
+    /**
+     * Disable specific cache flags.
+     * <br>This will not enable any currently unset cache flagss.
+     * @param flags The {@link CacheFlag CacheFlags} to disable
+     * @return The builder
+     * @see #enableCache(CacheFlag...)
+     */
+    public ColossusBuilder disableCache(CacheFlag... flags) {
+        return setJDABuilder(builder -> builder.disableCache(List.of(flags)));
+    }
+
+    /**
+     * Enable specific cache flags.
+     * <br>This will not disable any currently set cache flags.
+     * @param flags The {@link CacheFlag CacheFlags} to enable
+     * @return The builder
+     * @see #disableCache(CacheFlag...)
+     */
+    public ColossusBuilder enableCache(CacheFlag... flags) {
+        return setJDABuilder(builder -> builder.enableCache(List.of(flags)));
     }
 
     private void buildConfigFile() {
