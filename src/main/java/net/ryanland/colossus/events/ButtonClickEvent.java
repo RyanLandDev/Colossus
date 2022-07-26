@@ -4,7 +4,7 @@ import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.ColossusBuilder;
 import net.ryanland.colossus.command.CommandException;
-import net.ryanland.colossus.sys.ExecutorUtil;
+import net.ryanland.colossus.sys.util.ExecutorUtil;
 import net.ryanland.colossus.sys.interactions.button.BaseButton;
 import net.ryanland.colossus.sys.interactions.button.ButtonRow;
 

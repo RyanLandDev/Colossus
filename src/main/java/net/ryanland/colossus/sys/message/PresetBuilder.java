@@ -7,7 +7,7 @@ import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.sys.interactions.ComponentRow;
-import net.ryanland.colossus.sys.interactions.InteractionUtil;
+import net.ryanland.colossus.sys.util.InteractionUtil;
 import net.ryanland.colossus.sys.interactions.button.BaseButton;
 import net.ryanland.colossus.sys.interactions.button.ButtonRow;
 

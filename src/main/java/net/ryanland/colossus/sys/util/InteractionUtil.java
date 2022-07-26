@@ -1,4 +1,4 @@
-package net.ryanland.colossus.sys.interactions;
+package net.ryanland.colossus.sys.util;
 
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;

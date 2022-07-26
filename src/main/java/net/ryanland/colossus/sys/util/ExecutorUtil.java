@@ -1,4 +1,4 @@
-package net.ryanland.colossus.sys;
+package net.ryanland.colossus.sys.util;
 
 import org.jetbrains.annotations.Nullable;
 

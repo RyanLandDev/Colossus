@@ -2,7 +2,7 @@ package net.ryanland.colossus.command;
 
 import net.ryanland.colossus.ColossusBuilder;
 import net.ryanland.colossus.command.impl.DefaultHelpCommand;
-import net.ryanland.colossus.sys.Node;
+import net.ryanland.colossus.sys.util.Node;
 
 import java.util.List;
 

@@ -46,7 +46,11 @@ public class LocalFile extends File {
         if (!getExtension().equals(LocalFileType.JSON.getExtension())) {
             throw new UnsupportedOperationException();
         }
-        return JsonParser.parseString(getContent()).getAsJsonObject();
+        return parseJson(getContent());
+    }
+
+    public static JsonObject parseJson(String json) {
+        return JsonParser.parseString(json).getAsJsonObject();
     }
 
     public static JsonObject jsonOfKeys(String... keys) {

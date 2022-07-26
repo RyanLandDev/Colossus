@@ -1,7 +1,7 @@
 package net.ryanland.colossus.events;
 
 import net.dv8tion.jda.api.events.Event;
-import net.ryanland.colossus.sys.ExecutorUtil;
+import net.ryanland.colossus.sys.util.ExecutorUtil;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.TimeUnit;

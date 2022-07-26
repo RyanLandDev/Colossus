@@ -9,13 +9,13 @@ See the [wiki](https://github.com/RyanLandDev/Colossus/wiki) for various guides 
 * Slash and text (prefixed) commands
     * May be generic, which means a command can be a slash and text command simultaneously while only writing the code for it once
     * You could add more features of your own using OOP
-    * Extensive argument system
+    * Extensive **argument system**
         * Automatic parsing
         * Possibility to create **custom arguments**
         * **Optional arguments** with custom fallback functions
         * **Multi-step arguments** using `CompleteableFuture<T>`
         * Supports all Discord option features, such as autocomplete
-    * Automatic exception handling; throwing a `CommandException` in the middle of your command execution code will automatically send an error message, same for regular exceptions
+    * Automatic **exception handling**; throwing a `CommandException` in the middle of your command execution code will automatically send an error message, same for regular exceptions
     * **Subcommands** and nested subcommands
     * **Categories**
     * **Permission system**, also allows for custom permissions (e.g. bot tester)
