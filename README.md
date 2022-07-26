@@ -73,19 +73,24 @@ See the [wiki](https://github.com/RyanLandDev/Colossus/wiki) for various guides 
     * **Run once**; whether the waiter should stop listening after it has been successfully run once or not
     * Returns an `EventWaiterListener` so you can optionally stop listening for the event earlier
     * Example:
-    ```java
-    /* Await a MessageReceivedEvent.
-     * Condition: The message must contain 'cookie'
-     * Once the condition is met the bot replies with 'nom nom'
-     * The waiter does not run once, it will listen until the timeout is over
-     * The waiter will time out after 5 minutes, when it will say 'I got all the cookies!'
-     */
-     EventWaiter.awaitEvent(MessageReceivedEvent.class,
-         msgEvent -> msgEvent.getMessage().getContent().contains("cookie"),
-         (msgEvent, listener) -> msgEvent.reply("nom nom").queue(),
-         false, 5, TimeUnit.MINUTES, () -> cmdEvent.reply("I got all cookies!"));
-     ```
+      ```java
+      /* Await a MessageReceivedEvent.
+       * Condition: The message must contain 'cookie'
+       * Once the condition is met the bot replies with 'nom nom'
+       * The waiter does not run once, it will listen until the timeout is over
+       * The waiter will time out after 5 minutes, when it will say 'I got all the cookies!'
+       */
+       EventWaiter.awaitEvent(MessageReceivedEvent.class,
+           msgEvent -> msgEvent.getMessage().getContent().contains("cookie"),
+           (msgEvent, listener) -> msgEvent.reply("nom nom").queue(),
+           false, 5, TimeUnit.MINUTES, () -> cmdEvent.reply("I got all cookies!"));
+       ```
 * `RepliableEvent` interface implemented by all Colossus events to easily reply to events with strings, messages, embeds, PresetBuilders, modals or InteractionMenus. Some examples can be seen throughout this feature list
+* `WebUtil` utility class for easily retrieving data from web APIs
+  ```java
+  WebUtil.requestJson("https://some-random-api.ml/facts/dog").get("fact").getAsString();
+  ```
+* `ExecutorUtil` utility class for scheduling and cancelling tasks
 
 ## Prerequisites
 * Java 17
