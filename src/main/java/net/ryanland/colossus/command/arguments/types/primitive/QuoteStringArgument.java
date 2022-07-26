@@ -18,13 +18,42 @@ public class QuoteStringArgument extends Argument<String> {
 
     @Override
     public ArgumentOptionData getArgumentOptionData() {
-        return new ArgumentOptionData(OptionType.STRING);
+        return (ArgumentOptionData) new ArgumentOptionData(OptionType.STRING).setRequiredRange(min, max);
+    }
+
+    private int min;
+    private int max;
+
+    public QuoteStringArgument() {
+    }
+
+    public QuoteStringArgument(int min, int max) {
+        this.min = min;
+        this.max = max;
+    }
+
+    public QuoteStringArgument setMinimum(int min) {
+        this.min = min;
+        return this;
+    }
+
+    public QuoteStringArgument setMaximum(int max) {
+        this.max = max;
+        return this;
+    }
+
+    private String check(String value) throws ArgumentException {
+        if (value.length() >= min && value.length() <= max)
+            return value;
+        else
+            throw new MalformedArgumentException("Argument must be longer than " + min +
+                " characters and shorter than " + max + " characters.");
     }
 
     @Override
     public CompletableFuture<String> resolveSlashCommandArgument(Deque<OptionMapping> args, SlashCommandEvent event) throws ArgumentException {
         CompletableFuture<String> future = new CompletableFuture<>();
-        future.complete(args.pop().getAsString());
+        future.complete(check(args.pop().getAsString()));
         return future;
     }
 
@@ -50,7 +79,7 @@ public class QuoteStringArgument extends Argument<String> {
         // Join elements and remove quotes
         String result = String.join(" ", elements);
         CompletableFuture<String> future = new CompletableFuture<>();
-        future.complete(result.substring(1, result.length()-1));
+        future.complete(check(result.substring(1, result.length()-1)));
         return future;
     }
 }
