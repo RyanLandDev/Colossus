@@ -1,5 +1,6 @@
 package net.ryanland.colossus.command.arguments.types.primitive;
 
+import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.ryanland.colossus.command.arguments.ArgumentOptionData;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.ArgumentException;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.MalformedArgumentException;
@@ -9,11 +10,14 @@ public class StringArgument extends ArgumentStringResolver<String> {
 
     @Override
     public ArgumentOptionData getArgumentOptionData() {
-        return (ArgumentOptionData) super.getArgumentOptionData().setRequiredRange(min, max);
+        ArgumentOptionData data = new ArgumentOptionData(OptionType.NUMBER);
+        if (min != null) data.setMinValue(min);
+        if (max != null) data.setMaxValue(max);
+        return data;
     }
 
-    private int min;
-    private int max;
+    private Integer min;
+    private Integer max;
 
     public StringArgument() {
     }

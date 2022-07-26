@@ -20,7 +20,7 @@ public class EnumArgument<E extends Enum<E> & EnumArgument.InputEnum> extends Ar
 
     @Override
     public ArgumentOptionData getArgumentOptionData() {
-        return (ArgumentOptionData) super.getArgumentOptionData().addChoices(
+        return super.getArgumentOptionData().addAutoCompletableChoices(
             associatedEnum.stream()
                 .filter(e -> !e.isHidden())
                 .map(e -> new Command.Choice(e.getTitle(), e.getTitle()))

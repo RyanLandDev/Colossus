@@ -48,7 +48,7 @@ public class IntegerArgument extends NumberArgument<Integer> {
 
     @Override
     public Integer resolveSlashCommandArgument(SlashCommandEvent event, OptionMapping arg) throws ArgumentException {
-        return (int) arg.getAsLong();
+        return arg.getAsInt();
     }
 
     @Override

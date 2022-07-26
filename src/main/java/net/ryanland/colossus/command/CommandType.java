@@ -5,7 +5,7 @@ import net.ryanland.colossus.command.executor.CommandHandler;
 import java.util.function.Function;
 
 public enum CommandType {
-    NORMAL(0, "Normal", CommandHandler::getCommand),
+    REGULAR(0, "Regular", CommandHandler::getCommand),
     CONTEXT_USER(1, "User", CommandHandler::getUserContextCommand),
     CONTEXT_MESSAGE(2, "Message", CommandHandler::getMessageContextCommand);
 

@@ -16,11 +16,14 @@ public class EndlessStringArgument extends Argument<String> {
 
     @Override
     public ArgumentOptionData getArgumentOptionData() {
-        return (ArgumentOptionData) new ArgumentOptionData(OptionType.STRING).setRequiredRange(min, max);
+        ArgumentOptionData data = new ArgumentOptionData(OptionType.NUMBER);
+        if (min != null) data.setMinValue(min);
+        if (max != null) data.setMaxValue(max);
+        return data;
     }
 
-    private int min;
-    private int max;
+    private Integer min;
+    private Integer max;
 
     public EndlessStringArgument() {
     }

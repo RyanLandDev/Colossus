@@ -40,7 +40,7 @@ public class LongArgument extends NumberArgument<Long> {
 
     @Override
     public ArgumentOptionData getArgumentOptionData() {
-        ArgumentOptionData data = new ArgumentOptionData(OptionType.INTEGER);
+        ArgumentOptionData data = new ArgumentOptionData(OptionType.NUMBER);
         if (min != null) data.setMinValue(min);
         if (max != null) data.setMaxValue(max);
         return data;
