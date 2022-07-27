@@ -133,7 +133,7 @@ public abstract class DatabaseDriver {
     }
 
     /**
-     * Insert a new table in the database.
+     * Serializes a new table and inserts it in the database.
      * @param client The client this table is associated with
      * @param table The table to insert
      * @param <T> The type of client, e.g. {@link User}
@@ -172,7 +172,7 @@ public abstract class DatabaseDriver {
     }
     
     /**
-     * Updates a {@link Table} in the database with modified values.
+     * Serializes a {@link Table} and updates it in the database.
      * @param client The client this table is associated with
      * @param table The table to update (with)
      * @param <T> The type of client, e.g. {@link User}

@@ -11,7 +11,7 @@ import java.util.function.Function;
 /**
  * Different types of tables of data the database has.<br>
  * Examples include: UserTable, MemberTable, GuildTable, GlobalTable, etc.<br>
- * Uses {@link LinkedHashMap} to store values.<br><br>
+ * Uses {@link LinkedHashMap} to store deserialized values.<br><br>
  *
  * Preserved keys: {@code _id _dc _prf}
  * @param <T> The type of entity this table is for, for example {@link User}
@@ -25,13 +25,13 @@ public class Table<T extends ISnowflake> {
         put("_id", clientId);
     }
 
-    public Table(String clientId, Map<String, Object> data) {
-        DATA.putAll(data);
+    public Table(String clientId, Map<String, Object> deserializedData) {
+        DATA.putAll(deserializedData);
         put("_id", clientId);
     }
 
     /**
-     * Get the raw {@link LinkedHashMap} associated with this {@link Table}
+     * Get the raw {@link LinkedHashMap} associated with this {@link Table}, containing deserialized values
      */
     public final LinkedHashMap<String, Object> getRawData() {
         return DATA;

@@ -32,6 +32,7 @@ import net.ryanland.colossus.sys.file.LocalFile;
 import net.ryanland.colossus.sys.file.LocalFileBuilder;
 import net.ryanland.colossus.sys.file.LocalFileType;
 import net.ryanland.colossus.sys.file.database.DatabaseDriver;
+import net.ryanland.colossus.sys.file.database.Provider;
 import net.ryanland.colossus.sys.message.DefaultPresetType;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 import net.ryanland.colossus.sys.message.PresetType;
@@ -81,6 +82,7 @@ public class ColossusBuilder {
     private final List<String> configEntries = new ArrayList<>(List.of(CORE_CONFIG_ENTRIES));
     private final List<Inhibitor> inhibitors = new ArrayList<>();
     private final List<Finalizer> finalizers = new ArrayList<>();
+    private final HashMap<String, Provider<?, ?>> providers = new HashMap<>();
 
     private boolean disableHelpCommand = false;
     private boolean disableCommandToggleCommands = false;
@@ -182,8 +184,8 @@ public class ColossusBuilder {
         buildConfigFile();
 
         return new Colossus(jdaBuilder, config, categories, commands, contextCommands, localFiles,
-            buttonListenerExpirationTimeAmount, buttonListenerExpirationTimeUnit, databaseDriver, defaultPresetType,
-            errorPresetType, successPresetType, localizationFunction, inhibitors, finalizers);
+            buttonListenerExpirationTimeAmount, buttonListenerExpirationTimeUnit, databaseDriver, providers,
+            defaultPresetType, errorPresetType, successPresetType, localizationFunction, inhibitors, finalizers);
     }
 
     /**
@@ -283,6 +285,19 @@ public class ColossusBuilder {
      */
     public ColossusBuilder setDatabaseDriver(DatabaseDriver driver) {
         databaseDriver = driver;
+        return this;
+    }
+
+    /**
+     * Register {@link Provider Providers}
+     * @param providers The providers to register
+     * @return The builder
+     * @see Provider
+     */
+    public ColossusBuilder registerProviders(Provider<?, ?>... providers) {
+        for (Provider<?, ?> provider : providers) {
+            this.providers.put(provider.key(), provider);
+        }
         return this;
     }
 
