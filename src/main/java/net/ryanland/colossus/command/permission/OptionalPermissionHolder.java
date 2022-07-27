@@ -11,13 +11,13 @@ import java.util.stream.Collectors;
  */
 public class OptionalPermissionHolder extends PermissionHolder {
 
-    public OptionalPermissionHolder(PermissionRequirement<?>... requirements) {
+    public OptionalPermissionHolder(PermissionRequirement... requirements) {
         super(requirements);
     }
 
     @Override
     public boolean check(BasicCommandEvent event) {
-        for (PermissionRequirement<?> requirement : requirements) {
+        for (PermissionRequirement requirement : requirements) {
             if (requirement.check(event)) return true;
         }
         return false;

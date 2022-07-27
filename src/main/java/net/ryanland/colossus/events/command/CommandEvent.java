@@ -5,7 +5,7 @@ import net.ryanland.colossus.command.Command;
 import net.ryanland.colossus.command.arguments.ParsedArgumentMap;
 import net.ryanland.colossus.command.regular.SubCommandHolder;
 
-public abstract non-sealed class CommandEvent extends BasicCommandEvent {
+public abstract sealed class CommandEvent extends BasicCommandEvent permits SlashCommandEvent, MessageCommandEvent {
 
     @Override
     public abstract Command getCommand();

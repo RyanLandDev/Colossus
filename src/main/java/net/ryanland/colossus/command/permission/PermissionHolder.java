@@ -13,13 +13,13 @@ import java.util.stream.Collectors;
  */
 public class PermissionHolder {
 
-    protected final PermissionRequirement<?>[] requirements;
+    protected final PermissionRequirement[] requirements;
 
-    public PermissionHolder(PermissionRequirement<?>... requirements) {
+    public PermissionHolder(PermissionRequirement... requirements) {
         this.requirements = requirements;
     }
 
-    public PermissionRequirement<?>[] getRequirements() {
+    public PermissionRequirement[] getRequirements() {
         return requirements;
     }
 
@@ -27,7 +27,7 @@ public class PermissionHolder {
      * Check if the provided event passes all requirements in this holder
      */
     public boolean check(BasicCommandEvent event) {
-        for (PermissionRequirement<?> requirement : requirements) {
+        for (PermissionRequirement requirement : requirements) {
             if (!requirement.check(event)) return false;
         }
         return true;
