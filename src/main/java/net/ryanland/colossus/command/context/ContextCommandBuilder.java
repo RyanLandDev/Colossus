@@ -11,7 +11,7 @@ public @interface ContextCommandBuilder {
 
     String name();
 
-    int cooldown() default 2;
+    float cooldown() default 2;
 
     boolean guildOnly() default true;
 

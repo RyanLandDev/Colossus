@@ -9,10 +9,8 @@ import net.ryanland.colossus.command.arguments.parsing.ArgumentParser;
 import net.ryanland.colossus.command.arguments.parsing.MessageCommandArgumentParser;
 import net.ryanland.colossus.command.arguments.parsing.SlashCommandArgumentParser;
 import net.ryanland.colossus.command.context.ContextCommandType;
-import net.ryanland.colossus.command.finalizers.CommandFinalizer;
-import net.ryanland.colossus.command.finalizers.ContextFinalizer;
-import net.ryanland.colossus.command.inhibitors.CommandInhibitor;
-import net.ryanland.colossus.command.inhibitors.ContextInhibitor;
+import net.ryanland.colossus.command.finalizers.Finalizer;
+import net.ryanland.colossus.command.inhibitors.Inhibitor;
 import net.ryanland.colossus.command.inhibitors.InhibitorException;
 import net.ryanland.colossus.command.regular.MessageCommand;
 import net.ryanland.colossus.command.regular.SlashCommand;
@@ -109,7 +107,7 @@ public class CommandExecutor {
 
         try {
             // run inhibitors
-            for (CommandInhibitor inhibitor : Colossus.getCommandInhibitors()) {
+            for (Inhibitor inhibitor : Colossus.getInhibitors()) {
                 if (inhibitor.check(event)) {
                     event.reply(inhibitor.buildMessage(event));
                     throw new InhibitorException();
@@ -140,7 +138,7 @@ public class CommandExecutor {
                 }
 
                 // run finalizers
-                for (CommandFinalizer finalizer : Colossus.getCommandFinalizers()) {
+                for (Finalizer finalizer : Colossus.getFinalizers()) {
                     finalizer.finalize(event);
                 }
             }
@@ -183,7 +181,7 @@ public class CommandExecutor {
 
         try {
             // run inhibitors
-            for (ContextInhibitor inhibitor : Colossus.getContextInhibitors()) {
+            for (Inhibitor inhibitor : Colossus.getInhibitors()) {
                 if (inhibitor.check(event)) {
                     event.reply(inhibitor.buildMessage(event));
                     throw new InhibitorException();
@@ -204,7 +202,7 @@ public class CommandExecutor {
             }
 
             // run finalizers
-            for (ContextFinalizer finalizer : Colossus.getContextFinalizers()) {
+            for (Finalizer finalizer : Colossus.getFinalizers()) {
                 finalizer.finalize(event);
             }
         } catch (InhibitorException ignored) {}

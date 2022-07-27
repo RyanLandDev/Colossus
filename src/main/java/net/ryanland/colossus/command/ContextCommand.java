@@ -45,7 +45,7 @@ public abstract non-sealed class ContextCommand<T extends ISnowflake> extends Ba
     }
 
     @Override
-    public final int getCooldown() {
+    public final float getCooldown() {
         return getInfo().cooldown();
     }
 

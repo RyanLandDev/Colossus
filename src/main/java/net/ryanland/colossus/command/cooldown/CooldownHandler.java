@@ -1,38 +1,29 @@
 package net.ryanland.colossus.command.cooldown;
 
-import net.dv8tion.jda.api.entities.User;
 import net.ryanland.colossus.command.BasicCommand;
-import net.ryanland.colossus.events.command.CommandEvent;
-import net.ryanland.colossus.events.command.ContextCommandEvent;
+import net.ryanland.colossus.events.command.BasicCommandEvent;
+import net.ryanland.colossus.sys.entities.ColossusUser;
 
 import java.util.Date;
 import java.util.List;
 
 public class CooldownHandler {
 
-    public static boolean isCooldownActive(CommandEvent event) {
+    public static boolean isCooldownActive(BasicCommandEvent event) {
         return isCooldownActive(event.getCommand().getCooldownManager(), event.getUser(), event.getCommand());
     }
 
-    public static boolean isCooldownActive(ContextCommandEvent<?> event) {
-        return isCooldownActive(event.getCommand().getCooldownManager(), event.getUser(), event.getCommand());
-    }
-
-    public static boolean isCooldownActive(CooldownManager manager, User user, BasicCommand command) {
+    public static boolean isCooldownActive(CooldownManager manager, ColossusUser user, BasicCommand command) {
         cleanCooldowns(manager, user);
         return getActiveCooldowns(manager, user).stream()
             .anyMatch(cooldown -> cooldown.command().getName().equals(command.getName()));
     }
 
-    public static Cooldown getActiveCooldown(CommandEvent event) {
+    public static Cooldown getActiveCooldown(BasicCommandEvent event) {
         return getActiveCooldown(event.getCommand().getCooldownManager(), event.getUser(), event.getCommand());
     }
 
-    public static Cooldown getActiveCooldown(ContextCommandEvent<?> event) {
-        return getActiveCooldown(event.getCommand().getCooldownManager(), event.getUser(), event.getCommand());
-    }
-
-    public static Cooldown getActiveCooldown(CooldownManager manager, User user, BasicCommand command) {
+    public static Cooldown getActiveCooldown(CooldownManager manager, ColossusUser user, BasicCommand command) {
         if (!isCooldownActive(manager, user, command))
             return null;
         return getActiveCooldowns(manager, user).stream()
@@ -40,25 +31,21 @@ public class CooldownHandler {
             .toList().get(0);
     }
 
-    public static void newCooldown(CommandEvent event) {
+    public static void newCooldown(BasicCommandEvent event) {
         newCooldown(event.getCommand().getCooldownManager(), event.getUser(), event.getCommand());
     }
 
-    public static void newCooldown(ContextCommandEvent<?> event) {
-        newCooldown(event.getCommand().getCooldownManager(), event.getUser(), event.getCommand());
-    }
-
-    public static void newCooldown(CooldownManager manager, User user, BasicCommand command) {
+    public static void newCooldown(CooldownManager manager, ColossusUser user, BasicCommand command) {
         cleanCooldowns(manager, user);
         manager.put(user, new Cooldown(command,
             new Date(System.currentTimeMillis() + command.getCooldownInMs())));
     }
 
-    public static List<Cooldown> getActiveCooldowns(CooldownManager manager, User user) {
+    public static List<Cooldown> getActiveCooldowns(CooldownManager manager, ColossusUser user) {
         return manager.get(user);
     }
 
-    public static void cleanCooldowns(CooldownManager manager, User user) {
+    public static void cleanCooldowns(CooldownManager manager, ColossusUser user) {
         Date date = new Date();
         List<Cooldown> activeCooldowns = getActiveCooldowns(manager, user);
         List<Cooldown> cooldowns = activeCooldowns.stream()
@@ -74,7 +61,7 @@ public class CooldownHandler {
         }
     }
 
-    public static void removeCooldown(CooldownManager manager, User user, BasicCommand command) {
+    public static void removeCooldown(CooldownManager manager, ColossusUser user, BasicCommand command) {
         List<Cooldown> activeCooldowns = getActiveCooldowns(manager, user);
         List<Cooldown> cooldowns = activeCooldowns.stream()
             .filter(cooldown -> !cooldown.command().getName().equals(command.getName()))
@@ -89,7 +76,7 @@ public class CooldownHandler {
         }
     }
 
-    public static void purgeCooldowns(CooldownManager manager, User user) {
+    public static void purgeCooldowns(CooldownManager manager, ColossusUser user) {
         manager.purge(user);
     }
 }

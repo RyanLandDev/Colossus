@@ -1,10 +1,8 @@
 package net.ryanland.colossus.command.cooldown;
 
-import net.dv8tion.jda.api.entities.User;
-import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.ColossusBuilder;
+import net.ryanland.colossus.sys.entities.ColossusUser;
 import net.ryanland.colossus.sys.file.database.DatabaseDriver;
-import net.ryanland.colossus.sys.file.database.Table;
 import net.ryanland.colossus.sys.file.serializer.CooldownsSerializer;
 
 import java.util.Collections;
@@ -24,45 +22,26 @@ public class DatabaseCooldownManager implements CooldownManager {
     }
 
     @Override
-    public List<Cooldown> get(User user) {
-        return CooldownsSerializer.getInstance().deserialize(Colossus.getDatabaseDriver().get(user).get(COOLDOWNS_KEY));
+    public List<Cooldown> get(ColossusUser user) {
+        return CooldownsSerializer.getInstance().deserialize(user.getValue(COOLDOWNS_KEY));
     }
 
     @Override
-    public void purge(User user) {
-        Colossus.getDatabaseDriver().updateTable(user, Colossus.getDatabaseDriver().get(user).put(COOLDOWNS_KEY, Collections.emptyList()));
+    public void purge(ColossusUser user) {
+        user.updateValue(COOLDOWNS_KEY, Collections.emptyList());
     }
 
     @Override
-    public Cooldown remove(User user, Cooldown cooldown) {
-        Table<User> table = Colossus.getDatabaseDriver().get(user);
-
+    public Cooldown remove(ColossusUser user, Cooldown cooldown) {
         List<Cooldown> cooldowns = get(user);
         cooldowns.remove(cooldown);
-
-        table.put(COOLDOWNS_KEY, CooldownsSerializer.getInstance().serialize(cooldowns));
-        Colossus.getDatabaseDriver().updateTable(user, table);
-
+        user.updateValue(COOLDOWNS_KEY, CooldownsSerializer.getInstance().serialize(cooldowns));
         return cooldown;
     }
 
     @Override
-    public Cooldown put(User user, Cooldown cooldown) {
-        Table<User> table = Colossus.getDatabaseDriver().get(user);
-
-        List<Cooldown> cooldowns = get(user);
-        cooldowns.add(cooldown);
-
-        table.put(COOLDOWNS_KEY, CooldownsSerializer.getInstance().serialize(cooldowns));
-        Colossus.getDatabaseDriver().updateTable(user, table);
-
-        return cooldown;
-    }
-
-    @Override
-    public List<Cooldown> put(User user, List<Cooldown> cooldowns) {
-        Colossus.getDatabaseDriver().modifyTable(user, table ->
-            table.put(COOLDOWNS_KEY, CooldownsSerializer.getInstance().serialize(cooldowns)));
+    public List<Cooldown> put(ColossusUser user, List<Cooldown> cooldowns) {
+        user.updateValue(COOLDOWNS_KEY, CooldownsSerializer.getInstance().serialize(cooldowns));
         return cooldowns;
     }
 }

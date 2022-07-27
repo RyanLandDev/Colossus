@@ -61,7 +61,7 @@ public sealed abstract class Command extends BasicCommand permits BaseCommand {
     }
 
     @Override
-    public final int getCooldown() {
+    public final float getCooldown() {
         return getInfo().cooldown();
     }
 

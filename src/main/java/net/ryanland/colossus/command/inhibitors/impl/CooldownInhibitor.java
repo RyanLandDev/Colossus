@@ -2,22 +2,23 @@ package net.ryanland.colossus.command.inhibitors.impl;
 
 import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.command.cooldown.CooldownHandler;
-import net.ryanland.colossus.command.inhibitors.ContextInhibitor;
-import net.ryanland.colossus.events.command.ContextCommandEvent;
+import net.ryanland.colossus.command.inhibitors.Inhibitor;
+import net.ryanland.colossus.events.command.BasicCommandEvent;
+import net.ryanland.colossus.events.command.CommandEvent;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 import net.ryanland.colossus.sys.util.DateUtil;
 
 import java.util.Date;
 
-public class CooldownContextInhibitor implements ContextInhibitor {
+public class CooldownInhibitor implements Inhibitor {
 
     @Override
-    public boolean check(ContextCommandEvent<?> event) {
+    public boolean check(BasicCommandEvent event) {
         return event.getCommand().hasCooldown() && CooldownHandler.isCooldownActive(event);
     }
 
     @Override
-    public PresetBuilder buildMessage(ContextCommandEvent<?> event) {
+    public PresetBuilder buildMessage(BasicCommandEvent event) {
         return new PresetBuilder(Colossus.getErrorPresetType())
             .setTitle("On Cooldown")
             .setDescription("This command is currently on cooldown.\nTime left: " +

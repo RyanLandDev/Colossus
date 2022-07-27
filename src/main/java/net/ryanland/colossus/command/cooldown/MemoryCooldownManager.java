@@ -1,6 +1,7 @@
 package net.ryanland.colossus.command.cooldown;
 
 import net.dv8tion.jda.api.entities.User;
+import net.ryanland.colossus.sys.entities.ColossusUser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,26 +21,17 @@ public class MemoryCooldownManager implements CooldownManager {
     }
 
     @Override
-    public List<Cooldown> get(User user) {
+    public List<Cooldown> get(ColossusUser user) {
         return COOLDOWNS.getOrDefault(user, new ArrayList<>());
     }
 
     @Override
-    public List<Cooldown> put(User user, List<Cooldown> cooldowns) {
+    public List<Cooldown> put(ColossusUser user, List<Cooldown> cooldowns) {
         return COOLDOWNS.put(user, cooldowns);
     }
 
     @Override
-    public Cooldown put(User user, Cooldown cooldown) {
-        List<Cooldown> cooldowns = get(user);
-        cooldowns.add(cooldown);
-
-        put(user, cooldowns);
-        return cooldown;
-    }
-
-    @Override
-    public Cooldown remove(User user, Cooldown cooldown) {
+    public Cooldown remove(ColossusUser user, Cooldown cooldown) {
         List<Cooldown> cooldowns = get(user);
         cooldowns.remove(cooldown);
 
@@ -53,7 +45,7 @@ public class MemoryCooldownManager implements CooldownManager {
     }
 
     @Override
-    public void purge(User user) {
+    public void purge(ColossusUser user) {
         COOLDOWNS.remove(user);
     }
 }

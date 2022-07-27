@@ -1,6 +1,5 @@
 package net.ryanland.colossus.command.impl;
 
-import net.dv8tion.jda.api.entities.Member;
 import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.command.Category;
 import net.ryanland.colossus.command.Command;
@@ -33,8 +32,8 @@ public final class DefaultHelpCommand extends DefaultCommand implements Combined
         return new ArgumentSet().addArguments(
             new CommandArgument()
                 .name("command")
-                .optional()
                 .description("Command to get information of")
+                .optional()
         );
     }
 

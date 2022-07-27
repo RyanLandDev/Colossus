@@ -23,10 +23,10 @@ public abstract sealed class BasicCommand permits Command, ContextCommand {
 
     public abstract boolean hasCooldown();
 
-    public abstract int getCooldown();
+    public abstract float getCooldown();
 
     public final int getCooldownInMs() {
-        return getCooldown() * 1000;
+        return (int) (getCooldown() * 1000);
     }
 
     public abstract CooldownManager getCooldownManager();

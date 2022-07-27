@@ -11,10 +11,8 @@ import net.ryanland.colossus.command.Category;
 import net.ryanland.colossus.command.Command;
 import net.ryanland.colossus.command.ContextCommand;
 import net.ryanland.colossus.command.executor.CommandHandler;
-import net.ryanland.colossus.command.finalizers.CommandFinalizer;
-import net.ryanland.colossus.command.finalizers.ContextFinalizer;
-import net.ryanland.colossus.command.inhibitors.CommandInhibitor;
-import net.ryanland.colossus.command.inhibitors.ContextInhibitor;
+import net.ryanland.colossus.command.finalizers.Finalizer;
+import net.ryanland.colossus.command.inhibitors.Inhibitor;
 import net.ryanland.colossus.events.ButtonClickEvent;
 import net.ryanland.colossus.events.SelectMenuEvent;
 import net.ryanland.colossus.sys.file.Config;
@@ -53,10 +51,8 @@ public class Colossus {
     private static PresetType errorPresetType;
     private static PresetType successPresetType;
     private static LocalizationFunction localizationFunction;
-    private static List<CommandInhibitor> commandInhibitors;
-    private static List<ContextInhibitor> contextInhibitors;
-    private static List<CommandFinalizer> commandFinalizers;
-    private static List<ContextFinalizer> contextFinalizers;
+    private static List<Inhibitor> inhibitors;
+    private static List<Finalizer> finalizers;
 
     private final JDABuilder builder;
 
@@ -66,8 +62,7 @@ public class Colossus {
                     List<ContextCommand<?>> contextCommands, List<LocalFile> localFiles, long buttonListenerExpirationTimeAmount,
                     TimeUnit buttonListenerExpirationTimeUnit, DatabaseDriver databaseDriver, PresetType defaultPresetType,
                     PresetType errorPresetType, PresetType successPresetType, LocalizationFunction localizationFunction,
-                    List<CommandInhibitor> commandInhibitors, List<ContextInhibitor> contextInhibitors,
-                    List<CommandFinalizer> commandFinalizers, List<ContextFinalizer> contextFinalizers) {
+                    List<Inhibitor> inhibitors, List<Finalizer> finalizers) {
         this.builder = builder;
 
         Colossus.config = config;
@@ -82,10 +77,8 @@ public class Colossus {
         Colossus.errorPresetType = errorPresetType;
         Colossus.successPresetType = successPresetType;
         Colossus.localizationFunction = localizationFunction;
-        Colossus.commandInhibitors = commandInhibitors;
-        Colossus.contextInhibitors = contextInhibitors;
-        Colossus.commandFinalizers = commandFinalizers;
-        Colossus.contextFinalizers = contextFinalizers;
+        Colossus.inhibitors = inhibitors;
+        Colossus.finalizers = finalizers;
     }
 
     /**
@@ -238,19 +231,11 @@ public class Colossus {
         return getLocalizationFunction().apply(key).get(locale);
     }
 
-    public static List<CommandInhibitor> getCommandInhibitors() {
-        return commandInhibitors;
+    public static List<Inhibitor> getInhibitors() {
+        return inhibitors;
     }
 
-    public static List<ContextInhibitor> getContextInhibitors() {
-        return contextInhibitors;
-    }
-
-    public static List<CommandFinalizer> getCommandFinalizers() {
-        return commandFinalizers;
-    }
-
-    public static List<ContextFinalizer> getContextFinalizers() {
-        return contextFinalizers;
+    public static List<Finalizer> getFinalizers() {
+        return finalizers;
     }
 }

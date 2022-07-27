@@ -1,18 +1,38 @@
 package net.ryanland.colossus.command.cooldown;
 
-import net.dv8tion.jda.api.entities.User;
+import net.ryanland.colossus.sys.entities.ColossusUser;
 
 import java.util.List;
 
 public interface CooldownManager {
 
-    List<Cooldown> get(User user);
+    /**
+     * Gets the active list of {@link Cooldown Cooldowns} for the provided {@link ColossusUser}
+     */
+    List<Cooldown> get(ColossusUser user);
 
-    List<Cooldown> put(User user, List<Cooldown> cooldowns);
+    /**
+     * Set the {@link ColossusUser}'s active {@link Cooldown Cooldowns}
+     */
+    List<Cooldown> put(ColossusUser user, List<Cooldown> cooldowns);
 
-    Cooldown put(User user, Cooldown cooldown);
+    /**
+     * Add an active {@link Cooldown} to a {@link ColossusUser}
+     */
+    default Cooldown put(ColossusUser user, Cooldown cooldown) {
+        List<Cooldown> cooldowns = get(user);
+        cooldowns.add(cooldown);
+        put(user, cooldowns);
+        return cooldown;
+    }
 
-    Cooldown remove(User user, Cooldown cooldown);
+    /**
+     * Remove an active {@link Cooldown} from a {@link ColossusUser}
+     */
+    Cooldown remove(ColossusUser user, Cooldown cooldown);
 
-    void purge(User user);
+    /**
+     * Remove all active cooldowns from a {@link ColossusUser}
+     */
+    void purge(ColossusUser user);
 }
