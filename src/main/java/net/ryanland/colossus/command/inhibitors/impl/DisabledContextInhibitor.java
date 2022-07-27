@@ -2,7 +2,7 @@ package net.ryanland.colossus.command.inhibitors.impl;
 
 import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.command.inhibitors.ContextInhibitor;
-import net.ryanland.colossus.events.ContextCommandEvent;
+import net.ryanland.colossus.events.command.ContextCommandEvent;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 
 public class DisabledContextInhibitor implements ContextInhibitor {

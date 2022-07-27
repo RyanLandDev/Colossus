@@ -4,8 +4,8 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.ArgumentException;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.MalformedArgumentException;
 import net.ryanland.colossus.command.arguments.types.SingleArgument;
-import net.ryanland.colossus.events.MessageCommandEvent;
-import net.ryanland.colossus.events.SlashCommandEvent;
+import net.ryanland.colossus.events.command.MessageCommandEvent;
+import net.ryanland.colossus.events.command.SlashCommandEvent;
 
 public abstract class NumberArgument<T> extends SingleArgument<T> {
 

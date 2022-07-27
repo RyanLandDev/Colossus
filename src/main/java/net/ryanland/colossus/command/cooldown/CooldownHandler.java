@@ -2,8 +2,8 @@ package net.ryanland.colossus.command.cooldown;
 
 import net.dv8tion.jda.api.entities.User;
 import net.ryanland.colossus.command.BasicCommand;
-import net.ryanland.colossus.events.CommandEvent;
-import net.ryanland.colossus.events.ContextCommandEvent;
+import net.ryanland.colossus.events.command.CommandEvent;
+import net.ryanland.colossus.events.command.ContextCommandEvent;
 
 import java.util.Date;
 import java.util.List;

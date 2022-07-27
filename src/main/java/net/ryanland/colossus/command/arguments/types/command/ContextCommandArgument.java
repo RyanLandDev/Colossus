@@ -11,8 +11,8 @@ import net.ryanland.colossus.command.arguments.parsing.exceptions.ArgumentExcept
 import net.ryanland.colossus.command.arguments.parsing.exceptions.MalformedArgumentException;
 import net.ryanland.colossus.command.arguments.types.primitive.FutureArgumentStringResolver;
 import net.ryanland.colossus.command.executor.CommandHandler;
-import net.ryanland.colossus.events.CommandEvent;
-import net.ryanland.colossus.events.SlashCommandEvent;
+import net.ryanland.colossus.events.command.CommandEvent;
+import net.ryanland.colossus.events.command.SlashCommandEvent;
 import net.ryanland.colossus.sys.interactions.button.BaseButton;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 

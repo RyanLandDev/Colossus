@@ -1,19 +1,21 @@
-package net.ryanland.colossus.command.permissions;
+package net.ryanland.colossus.command.permission;
 
 import net.dv8tion.jda.api.Permission;
+import net.ryanland.colossus.command.permission.impl.JDAPermissionRequirement;
+import net.ryanland.colossus.command.permission.impl.PermissionHolderRequirement;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class PermissionBuilder {
 
-    private final List<PermissionRequirement> requirements = new ArrayList<>();
+    private final List<PermissionRequirement<?>> requirements = new ArrayList<>();
 
     public PermissionBuilder add(Permission permission) {
         return addRequirements(new JDAPermissionRequirement(permission));
     }
 
-    public PermissionBuilder addRequirements(PermissionRequirement... requirements) {
+    public PermissionBuilder addRequirements(PermissionRequirement<?>... requirements) {
         this.requirements.addAll(List.of(requirements));
         return this;
     }

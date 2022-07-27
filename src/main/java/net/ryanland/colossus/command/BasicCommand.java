@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.interactions.commands.localization.ResourceBundleLoca
 import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.ColossusBuilder;
 import net.ryanland.colossus.command.cooldown.CooldownManager;
-import net.ryanland.colossus.command.permissions.PermissionHolder;
+import net.ryanland.colossus.command.permission.PermissionHolder;
 
 public abstract sealed class BasicCommand permits Command, ContextCommand {
 
@@ -69,9 +69,5 @@ public abstract sealed class BasicCommand permits Command, ContextCommand {
      */
     public DefaultMemberPermissions getDefaultPermissions() {
         return isDisabled() ? DefaultMemberPermissions.DISABLED : DefaultMemberPermissions.ENABLED;
-    }
-
-    public final boolean memberHasPermission(Member member) {
-        return getPermission().check(member);
     }
 }

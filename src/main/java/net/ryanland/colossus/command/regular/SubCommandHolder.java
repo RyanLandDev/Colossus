@@ -1,19 +1,19 @@
-package net.ryanland.colossus.command;
+package net.ryanland.colossus.command.regular;
 
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandGroupData;
 import net.ryanland.colossus.ColossusBuilder;
+import net.ryanland.colossus.command.Command;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Interface for commands holding subcommands.
- * <br><br>
+ * Interface for commands holding subcommands.<br>
  * <ul>
- * <li>Implement this interface in {@link Command} classes to transform the command into a command with {@link SubCommand}s.</li>
- * <li>Don't implement either of the {@link MessageCommand}/{@link SlashCommand}/{@link CombinedCommand} interfaces as well.
- * <br>This will have no effect.</li>
+ * <li>Implement this interface in {@link Command} classes to transform the command into a command with {@link SubCommand SubCommands}.</li>
+ * <li>Don't implement any of the {@link MessageCommand}/{@link SlashCommand}/{@link CombinedCommand} interfaces.
+ * This will have no effect.</li>
  * <li>The {@link Command#getArguments()} method will be ignored.</li>
  * <li>Define your subcommands in the {@link #registerSubCommands()} method.</li>
  * <li>For nested subcommands (subcommand groups), implement both this and the {@link SubCommand} interface in a subcommand.</li>

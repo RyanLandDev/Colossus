@@ -6,8 +6,9 @@ import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.ColossusBuilder;
 import net.ryanland.colossus.command.CommandException;
 import net.ryanland.colossus.command.executor.functional_interface.CommandConsumer;
-import net.ryanland.colossus.sys.util.ExecutorUtil;
+import net.ryanland.colossus.events.repliable.ComponentInteractionRepliableEvent;
 import net.ryanland.colossus.sys.interactions.select.BaseSelectMenu;
+import net.ryanland.colossus.sys.util.ExecutorUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;

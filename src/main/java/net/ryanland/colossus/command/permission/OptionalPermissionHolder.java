@@ -1,6 +1,6 @@
-package net.ryanland.colossus.command.permissions;
+package net.ryanland.colossus.command.permission;
 
-import net.dv8tion.jda.api.entities.Member;
+import net.ryanland.colossus.events.command.BasicCommandEvent;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -11,15 +11,14 @@ import java.util.stream.Collectors;
  */
 public class OptionalPermissionHolder extends PermissionHolder {
 
-    public OptionalPermissionHolder(PermissionRequirement... requirements) {
+    public OptionalPermissionHolder(PermissionRequirement<?>... requirements) {
         super(requirements);
     }
 
     @Override
-    public boolean check(Member member) {
-        for (PermissionRequirement requirement : requirements) {
-            if (requirement.check(member))
-                return true;
+    public boolean check(BasicCommandEvent event) {
+        for (PermissionRequirement<?> requirement : requirements) {
+            if (requirement.check(event)) return true;
         }
         return false;
     }

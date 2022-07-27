@@ -2,18 +2,18 @@ package net.ryanland.colossus.command.impl;
 
 import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.command.BasicCommand;
-import net.ryanland.colossus.command.CombinedCommand;
-import net.ryanland.colossus.command.CommandBuilder;
 import net.ryanland.colossus.command.CommandException;
 import net.ryanland.colossus.command.arguments.ArgumentOptionData;
 import net.ryanland.colossus.command.arguments.ArgumentSet;
 import net.ryanland.colossus.command.arguments.types.command.BasicCommandArgument;
 import net.ryanland.colossus.command.executor.CommandHandler;
 import net.ryanland.colossus.command.executor.DisabledCommandHandler;
-import net.ryanland.colossus.command.permissions.BotOwnerRequirement;
-import net.ryanland.colossus.command.permissions.PermissionBuilder;
-import net.ryanland.colossus.command.permissions.PermissionHolder;
-import net.ryanland.colossus.events.CommandEvent;
+import net.ryanland.colossus.command.permission.PermissionBuilder;
+import net.ryanland.colossus.command.permission.PermissionHolder;
+import net.ryanland.colossus.command.permission.impl.BotOwnerRequirement;
+import net.ryanland.colossus.command.regular.CombinedCommand;
+import net.ryanland.colossus.command.regular.CommandBuilder;
+import net.ryanland.colossus.events.command.CommandEvent;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 
 @CommandBuilder(

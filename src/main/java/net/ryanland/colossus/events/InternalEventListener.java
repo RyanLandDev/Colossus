@@ -10,6 +10,9 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.command.CommandException;
 import net.ryanland.colossus.command.executor.CommandHandler;
+import net.ryanland.colossus.events.command.ContextCommandEvent;
+import net.ryanland.colossus.events.command.MessageCommandEvent;
+import net.ryanland.colossus.events.command.SlashCommandEvent;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 import org.jetbrains.annotations.NotNull;
 

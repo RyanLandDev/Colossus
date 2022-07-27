@@ -9,8 +9,8 @@ import net.ryanland.colossus.command.cooldown.CooldownManager;
 import net.ryanland.colossus.command.cooldown.MemoryCooldownManager;
 import net.ryanland.colossus.command.executor.CommandHandler;
 import net.ryanland.colossus.command.executor.DisabledCommandHandler;
-import net.ryanland.colossus.command.permissions.PermissionHolder;
-import net.ryanland.colossus.events.ContextCommandEvent;
+import net.ryanland.colossus.command.permission.PermissionHolder;
+import net.ryanland.colossus.events.command.ContextCommandEvent;
 
 import java.lang.reflect.ParameterizedType;
 
@@ -55,12 +55,12 @@ public abstract non-sealed class ContextCommand<T extends ISnowflake> extends Ba
     }
 
     @Override
-    public boolean isGuildOnly() {
+    public final boolean isGuildOnly() {
         return getInfo().guildOnly();
     }
 
     @Override
-    public boolean canBeDisabled() {
+    public final boolean canBeDisabled() {
         return getInfo().canBeDisabled();
     }
 

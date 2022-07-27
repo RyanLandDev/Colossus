@@ -4,7 +4,7 @@ import net.ryanland.colossus.command.arguments.Argument;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.ArgumentException;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.MalformedArgumentException;
 import net.ryanland.colossus.command.arguments.types.primitive.ArgumentStringResolver;
-import net.ryanland.colossus.events.CommandEvent;
+import net.ryanland.colossus.events.command.CommandEvent;
 
 import java.time.Duration;
 import java.util.ArrayList;

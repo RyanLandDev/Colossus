@@ -4,7 +4,7 @@ import net.dv8tion.jda.api.entities.ISnowflake;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.ArgumentException;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.MalformedArgumentException;
 import net.ryanland.colossus.command.arguments.types.primitive.ArgumentStringResolver;
-import net.ryanland.colossus.events.CommandEvent;
+import net.ryanland.colossus.events.command.CommandEvent;
 
 public abstract class PureSnowflakeArgument<T extends ISnowflake> extends ArgumentStringResolver<T> {
 

@@ -3,7 +3,7 @@ package net.ryanland.colossus.command.arguments.types;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.ArgumentException;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.MalformedArgumentException;
 import net.ryanland.colossus.command.arguments.types.primitive.ArgumentStringResolver;
-import net.ryanland.colossus.events.CommandEvent;
+import net.ryanland.colossus.events.command.CommandEvent;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

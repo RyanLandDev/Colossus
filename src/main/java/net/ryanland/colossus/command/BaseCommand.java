@@ -1,6 +1,6 @@
 package net.ryanland.colossus.command;
 
-import net.ryanland.colossus.command.permissions.PermissionHolder;
+import net.ryanland.colossus.command.permission.PermissionHolder;
 
 /**
  * All command implementation classes extend this class

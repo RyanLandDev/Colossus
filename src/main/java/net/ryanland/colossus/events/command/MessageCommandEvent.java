@@ -1,25 +1,25 @@
-package net.ryanland.colossus.events;
+package net.ryanland.colossus.events.command;
 
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
-import net.dv8tion.jda.api.interactions.commands.localization.LocalizationFunction;
 import net.dv8tion.jda.api.interactions.components.Modal;
 import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.command.Command;
-import net.ryanland.colossus.command.SubCommandHolder;
 import net.ryanland.colossus.command.arguments.ParsedArgumentMap;
 import net.ryanland.colossus.command.executor.functional_interface.CommandConsumer;
+import net.ryanland.colossus.command.regular.SubCommandHolder;
+import net.ryanland.colossus.events.ModalSubmitEvent;
+import net.ryanland.colossus.events.repliable.RepliableEvent;
 import net.ryanland.colossus.sys.entities.ColossusGuild;
 import net.ryanland.colossus.sys.entities.ColossusMember;
 import net.ryanland.colossus.sys.entities.ColossusUser;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 
-public class MessageCommandEvent extends CommandEvent {
+public final class MessageCommandEvent extends CommandEvent {
 
     private Command command;
     private SubCommandHolder headSubCommandHolder;
@@ -29,6 +29,50 @@ public class MessageCommandEvent extends CommandEvent {
 
     public MessageCommandEvent(MessageReceivedEvent event) {
         this.event = event;
+        repliableEvent = new RepliableEvent() {
+            @Override
+            public ColossusUser getUser() {
+                return new ColossusUser(event.getAuthor());
+            }
+
+            @Override
+            public ColossusMember getMember() {
+                return new ColossusMember(event.getMember());
+            }
+
+            @Override
+            public ColossusGuild getGuild() {
+                return new ColossusGuild(event.getGuild());
+            }
+
+            @Override
+            public void reply(Message message, boolean ephemeral) {
+                event.getMessage().reply(message).queue();
+            }
+
+            @Override
+            public void reply(String message, boolean ephemeral) {
+                event.getMessage().reply(message).queue();
+            }
+
+            @Override
+            public void reply(MessageEmbed embed, boolean ephemeral) {
+                event.getMessage().replyEmbeds(embed).queue();
+            }
+
+            @Override
+            public void reply(PresetBuilder embed) {
+                event.getMessage().replyEmbeds(embed.embed())
+                    .setActionRows(embed.getActionRows())
+                    .content(embed.getContent())
+                    .queue(embed::addComponentRowListeners);
+            }
+
+            @Override
+            public void reply(Modal modal, CommandConsumer<ModalSubmitEvent> action) {
+                throw new IllegalStateException("Message commands do not support replying with modals");
+            }
+        };
     }
 
     @Override
@@ -99,54 +143,6 @@ public class MessageCommandEvent extends CommandEvent {
     }
 
     @Override
-    public void reply(Message message, boolean ephemeral) {
-        event.getMessage().reply(message).queue();
-    }
-
-    @Override
-    public void reply(String message, boolean ephemeral) {
-        event.getMessage().reply(message).queue();
-    }
-
-    @Override
-    public void reply(MessageEmbed embed, boolean ephemeral) {
-        event.getMessage().replyEmbeds(embed).queue();
-    }
-
-    @Override
-    public void reply(PresetBuilder embed) {
-        // send reply
-        event.getMessage().replyEmbeds(embed.embed())
-            .setActionRows(embed.getActionRows())
-            .content(embed.getContent())
-            .queue(embed::addComponentRowListeners);
-    }
-
-    /**
-     * Reply to this event with a {@link Modal}<br>
-     * Note: When overriding this method, do not forget to add a modal submit listener!
-     *
-     * @param modal
-     * @param action
-     * @see ModalSubmitEvent
-     * @see ModalSubmitEvent#addListener(Long, String, CommandConsumer)
-     */
-    @Override
-    public void reply(Modal modal, CommandConsumer<ModalSubmitEvent> action) {
-        throw new IllegalStateException("Message commands do not support replying with modals");
-    }
-
-    @Override
-    public ColossusUser getUser() {
-        return new ColossusUser(event.getAuthor());
-    }
-
-    @Override
-    public ColossusGuild getGuild() {
-        return new ColossusGuild(event.getGuild());
-    }
-
-    @Override
     public JDA getJDA() {
         return event.getJDA();
     }
@@ -156,12 +152,18 @@ public class MessageCommandEvent extends CommandEvent {
         return event.getChannel();
     }
 
-    public ChannelType getChannelType() {
-        return event.getChannelType();
-    }
-
     public Message getMessage() {
         return event.getMessage();
+    }
+
+    @Override
+    public MessageReceivedEvent getEvent() {
+        return event;
+    }
+
+    @Override
+    public ColossusUser getUser() {
+        return new ColossusUser(event.getAuthor());
     }
 
     @Override
@@ -169,7 +171,8 @@ public class MessageCommandEvent extends CommandEvent {
         return new ColossusMember(event.getMember());
     }
 
-    public MessageReceivedEvent getEvent() {
-        return event;
+    @Override
+    public ColossusGuild getGuild() {
+        return new ColossusGuild(event.getGuild());
     }
 }

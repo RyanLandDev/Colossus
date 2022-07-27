@@ -1,7 +1,8 @@
-package net.ryanland.colossus.command.finalizers;
+package net.ryanland.colossus.command.finalizers.impl;
 
 import net.ryanland.colossus.command.cooldown.CooldownHandler;
-import net.ryanland.colossus.events.ContextCommandEvent;
+import net.ryanland.colossus.command.finalizers.ContextFinalizer;
+import net.ryanland.colossus.events.command.ContextCommandEvent;
 
 public class CooldownContextFinalizer implements ContextFinalizer {
 

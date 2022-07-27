@@ -1,6 +1,6 @@
 package net.ryanland.colossus.command.inhibitors;
 
-import net.ryanland.colossus.events.ContextCommandEvent;
+import net.ryanland.colossus.events.command.ContextCommandEvent;
 
 /**
  * Context inhibitors are run before a context command is executed.<br>

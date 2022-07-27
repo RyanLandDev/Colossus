@@ -1,8 +1,9 @@
-package net.ryanland.colossus.command;
+package net.ryanland.colossus.command.regular;
 
-import net.ryanland.colossus.events.CommandEvent;
-import net.ryanland.colossus.events.MessageCommandEvent;
-import net.ryanland.colossus.events.SlashCommandEvent;
+import net.ryanland.colossus.command.CommandException;
+import net.ryanland.colossus.events.command.CommandEvent;
+import net.ryanland.colossus.events.command.MessageCommandEvent;
+import net.ryanland.colossus.events.command.SlashCommandEvent;
 
 public interface CombinedCommand extends SlashCommand, MessageCommand {
 

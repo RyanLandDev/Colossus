@@ -3,7 +3,7 @@ package net.ryanland.colossus.command.arguments.parsing.exceptions;
 import net.ryanland.colossus.command.CommandException;
 import net.ryanland.colossus.command.arguments.Argument;
 import net.ryanland.colossus.command.info.HelpMaker;
-import net.ryanland.colossus.events.CommandEvent;
+import net.ryanland.colossus.events.command.CommandEvent;
 
 public class ArgumentException extends CommandException {
 

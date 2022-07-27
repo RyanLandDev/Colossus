@@ -1,6 +1,6 @@
 package net.ryanland.colossus.command.finalizers;
 
-import net.ryanland.colossus.events.CommandEvent;
+import net.ryanland.colossus.events.command.CommandEvent;
 
 /**
  * Command finalizers are executed when a command has finished running without errors

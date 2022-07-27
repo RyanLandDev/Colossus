@@ -2,12 +2,19 @@ package net.ryanland.colossus.command.impl;
 
 import net.dv8tion.jda.api.entities.Member;
 import net.ryanland.colossus.Colossus;
-import net.ryanland.colossus.command.*;
+import net.ryanland.colossus.command.Category;
+import net.ryanland.colossus.command.Command;
+import net.ryanland.colossus.command.CommandException;
 import net.ryanland.colossus.command.arguments.ArgumentSet;
 import net.ryanland.colossus.command.arguments.types.command.CommandArgument;
 import net.ryanland.colossus.command.executor.CommandHandler;
 import net.ryanland.colossus.command.info.HelpMaker;
-import net.ryanland.colossus.events.CommandEvent;
+import net.ryanland.colossus.command.regular.CombinedCommand;
+import net.ryanland.colossus.command.regular.CommandBuilder;
+import net.ryanland.colossus.command.regular.SubCommand;
+import net.ryanland.colossus.command.regular.SubCommandHolder;
+import net.ryanland.colossus.events.command.BasicCommandEvent;
+import net.ryanland.colossus.events.command.CommandEvent;
 import net.ryanland.colossus.sys.interactions.menu.TabMenuBuilder;
 import net.ryanland.colossus.sys.interactions.menu.TabMenuPage;
 import net.ryanland.colossus.sys.message.PresetBuilder;
@@ -48,17 +55,17 @@ public final class DefaultHelpCommand extends DefaultCommand implements Combined
 
         // build the menu pages
         for (Category category : Colossus.getCategories()) {
-            addCategoryPage(menu, null, category, event.getMember());
+            addCategoryPage(menu, null, category, event);
         }
 
         // send
         event.reply(menu.build());
     }
 
-    private void addCategoryPage(TabMenuBuilder menu, TabMenuPage page, Category category, Member member) {
+    private void addCategoryPage(TabMenuBuilder menu, TabMenuPage page, Category category, BasicCommandEvent event) {
         // get all commands, and filter by category equal and member has sufficient permissions
         List<Command> commands = CommandHandler.getCommands().stream().filter(c ->
-            c.getCategory().equals(category) && c.memberHasPermission(member)
+            c.getCategory().equals(category) && c.getPermission().check(event)
         ).toList();
 
         // if no commands were left after the filter, do not include this category in the menu
@@ -75,7 +82,7 @@ public final class DefaultHelpCommand extends DefaultCommand implements Combined
         else page.addChildren(categoryPage);
 
         // add all subcategories and its subcategories (etc.) using recursion
-        for (Category subcategory : category) addCategoryPage(menu, categoryPage, subcategory, member);
+        for (Category subcategory : category) addCategoryPage(menu, categoryPage, subcategory, event);
     }
 
     private void supplyCommandHelp(CommandEvent event, Command command) throws CommandException {

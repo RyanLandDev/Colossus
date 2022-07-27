@@ -1,11 +1,11 @@
-package net.ryanland.colossus.command;
+package net.ryanland.colossus.command.regular;
 
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 import net.ryanland.colossus.ColossusBuilder;
+import net.ryanland.colossus.command.Command;
 
 /**
- * Interface for subcommands.
- * <br><br>
+ * Interface for subcommands.<br>
  * <ul>
  * <li>Implement this interface in {@link Command} classes to make it a {@link SubCommand}
  * for an existing {@link SubCommandHolder}.</li>

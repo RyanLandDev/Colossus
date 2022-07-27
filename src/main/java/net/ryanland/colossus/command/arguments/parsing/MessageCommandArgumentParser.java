@@ -2,15 +2,15 @@ package net.ryanland.colossus.command.arguments.parsing;
 
 import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.command.Command;
-import net.ryanland.colossus.command.SubCommand;
 import net.ryanland.colossus.command.arguments.Argument;
 import net.ryanland.colossus.command.arguments.ArgumentSet;
 import net.ryanland.colossus.command.arguments.ParsedArgumentMap;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.ArgumentException;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.MalformedArgumentException;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.MissingArgumentException;
-import net.ryanland.colossus.events.CommandEvent;
-import net.ryanland.colossus.events.MessageCommandEvent;
+import net.ryanland.colossus.command.regular.SubCommand;
+import net.ryanland.colossus.events.command.CommandEvent;
+import net.ryanland.colossus.events.command.MessageCommandEvent;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 
 import java.util.ArrayDeque;

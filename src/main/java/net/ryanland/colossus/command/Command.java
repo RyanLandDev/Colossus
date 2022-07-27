@@ -7,6 +7,9 @@ import net.ryanland.colossus.command.cooldown.CooldownManager;
 import net.ryanland.colossus.command.cooldown.MemoryCooldownManager;
 import net.ryanland.colossus.command.executor.CommandHandler;
 import net.ryanland.colossus.command.executor.DisabledCommandHandler;
+import net.ryanland.colossus.command.regular.CommandBuilder;
+import net.ryanland.colossus.command.regular.SubCommand;
+import net.ryanland.colossus.command.regular.SubCommandHolder;
 
 import java.util.List;
 
@@ -49,7 +52,7 @@ public sealed abstract class Command extends BasicCommand permits BaseCommand {
 
     @Override
     public final CommandType getCommandType() {
-        return CommandType.NORMAL;
+        return CommandType.REGULAR;
     }
 
     @Override

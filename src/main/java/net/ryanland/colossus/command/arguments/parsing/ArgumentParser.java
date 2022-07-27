@@ -1,6 +1,6 @@
 package net.ryanland.colossus.command.arguments.parsing;
 
-import net.ryanland.colossus.events.CommandEvent;
+import net.ryanland.colossus.events.command.CommandEvent;
 
 public abstract sealed class ArgumentParser permits MessageCommandArgumentParser, SlashCommandArgumentParser {
 

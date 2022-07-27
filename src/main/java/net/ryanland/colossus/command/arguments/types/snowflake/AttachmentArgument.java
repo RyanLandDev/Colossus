@@ -7,8 +7,8 @@ import net.ryanland.colossus.command.arguments.Argument;
 import net.ryanland.colossus.command.arguments.ArgumentOptionData;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.ArgumentException;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.MissingArgumentException;
-import net.ryanland.colossus.events.MessageCommandEvent;
-import net.ryanland.colossus.events.SlashCommandEvent;
+import net.ryanland.colossus.events.command.MessageCommandEvent;
+import net.ryanland.colossus.events.command.SlashCommandEvent;
 
 import java.util.Deque;
 import java.util.List;
