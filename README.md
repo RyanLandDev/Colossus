@@ -10,7 +10,8 @@ See the [wiki](https://github.com/RyanLandDev/Colossus/wiki) for various guides 
     * May be generic, which means a command can be a slash and text command simultaneously while only writing the code for it once
     * You could add more features of your own using OOP
     * Extensive **argument system**
-        * Automatic parsing
+        * Automatic **parsing**
+        * Automatic **exception handling**
         * Possibility to create **custom arguments**
         * **Optional arguments** with custom fallback functions
         * **Multi-step arguments** using `CompleteableFuture<T>`
