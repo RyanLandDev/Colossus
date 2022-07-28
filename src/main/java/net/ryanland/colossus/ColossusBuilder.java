@@ -10,11 +10,11 @@ import net.dv8tion.jda.api.interactions.commands.localization.LocalizationFuncti
 import net.dv8tion.jda.api.interactions.commands.localization.ResourceBundleLocalizationFunction;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
-import net.ryanland.colossus.command.Category;
-import net.ryanland.colossus.command.Command;
-import net.ryanland.colossus.command.CommandException;
-import net.ryanland.colossus.command.ContextCommand;
+import net.ryanland.colossus.command.*;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.MalformedArgumentException;
+import net.ryanland.colossus.command.cooldown.CooldownHandler;
+import net.ryanland.colossus.command.cooldown.CooldownManager;
+import net.ryanland.colossus.command.cooldown.DatabaseCooldownManager;
 import net.ryanland.colossus.command.executor.DisabledCommandHandler;
 import net.ryanland.colossus.command.finalizers.Finalizer;
 import net.ryanland.colossus.command.finalizers.CooldownFinalizer;
@@ -33,6 +33,8 @@ import net.ryanland.colossus.sys.file.LocalFileBuilder;
 import net.ryanland.colossus.sys.file.LocalFileType;
 import net.ryanland.colossus.sys.file.database.DatabaseDriver;
 import net.ryanland.colossus.sys.file.database.Provider;
+import net.ryanland.colossus.sys.file.serializer.BasicCommandsSerializer;
+import net.ryanland.colossus.sys.file.serializer.CooldownsSerializer;
 import net.ryanland.colossus.sys.message.DefaultPresetType;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 import net.ryanland.colossus.sys.message.PresetType;
@@ -60,6 +62,11 @@ public class ColossusBuilder {
 
     private static final Finalizer[] CORE_FINALIZERS = new Finalizer[]{
         new CooldownFinalizer()
+    };
+
+    private static final Provider<?, ?>[] CORE_PROVIDERS = new Provider<?, ?>[]{
+        new Provider<>(DisabledCommandHandler.DISABLED_COMMANDS_KEY, BasicCommandsSerializer.getInstance()), // disabled commands
+        new Provider<>(DatabaseCooldownManager.COOLDOWNS_KEY, CooldownsSerializer.getInstance()) // database cooldown manager
     };
 
     private static final String[] CORE_CONFIG_ENTRIES = new String[]{
@@ -177,9 +184,10 @@ public class ColossusBuilder {
                 "⚠", defaultCommands.toArray(Command[]::new)));
         }
 
-        // add core inhibitors and finalizers
-        inhibitors.addAll(List.of(CORE_INHIBITORS));
-        finalizers.addAll(List.of(CORE_FINALIZERS));
+        // add core inhibitors, finalizers and providers
+        inhibitors.addAll(0, List.of(CORE_INHIBITORS));
+        finalizers.addAll(0, List.of(CORE_FINALIZERS));
+        registerProviders(CORE_PROVIDERS);
 
         buildConfigFile();
 

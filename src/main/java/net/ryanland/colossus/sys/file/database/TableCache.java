@@ -12,6 +12,8 @@ import java.util.WeakHashMap;
  */
 public class TableCache<T extends ISnowflake> {
 
+    private final WeakHashMap<String, Table<T>> CACHE = new WeakHashMap<>();
+
     private final Class<T> type;
 
     public TableCache(Class<T> type) {
@@ -21,8 +23,6 @@ public class TableCache<T extends ISnowflake> {
     public Class<T> getType() {
         return type;
     }
-
-    private final WeakHashMap<String, Table<T>> CACHE = new WeakHashMap<>();
 
     public Table<T> get(String id) {
         return CACHE.get(id);

@@ -15,7 +15,7 @@ import java.util.List;
 public class DatabaseCooldownManager implements CooldownManager {
 
     private static final DatabaseCooldownManager INSTANCE = new DatabaseCooldownManager();
-    private static final String COOLDOWNS_KEY = "_cd";
+    public static final String COOLDOWNS_KEY = "_cd";
 
     public static DatabaseCooldownManager getInstance() {
         return INSTANCE;
@@ -23,7 +23,7 @@ public class DatabaseCooldownManager implements CooldownManager {
 
     @Override
     public List<Cooldown> get(ColossusUser user) {
-        return CooldownsSerializer.getInstance().deserialize(user.getValue(COOLDOWNS_KEY));
+        return user.getValue(COOLDOWNS_KEY);
     }
 
     @Override
@@ -35,13 +35,13 @@ public class DatabaseCooldownManager implements CooldownManager {
     public Cooldown remove(ColossusUser user, Cooldown cooldown) {
         List<Cooldown> cooldowns = get(user);
         cooldowns.remove(cooldown);
-        user.updateValue(COOLDOWNS_KEY, CooldownsSerializer.getInstance().serialize(cooldowns));
+        user.updateValue(COOLDOWNS_KEY, cooldowns);
         return cooldown;
     }
 
     @Override
     public List<Cooldown> put(ColossusUser user, List<Cooldown> cooldowns) {
-        user.updateValue(COOLDOWNS_KEY, CooldownsSerializer.getInstance().serialize(cooldowns));
+        user.updateValue(COOLDOWNS_KEY, cooldowns);
         return cooldowns;
     }
 }
