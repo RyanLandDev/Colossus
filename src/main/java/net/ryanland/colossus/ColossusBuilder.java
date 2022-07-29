@@ -3,8 +3,10 @@ package net.ryanland.colossus;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.SelfUser;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
 import net.dv8tion.jda.api.interactions.commands.localization.LocalizationFunction;
 import net.dv8tion.jda.api.interactions.commands.localization.ResourceBundleLocalizationFunction;
@@ -455,6 +457,22 @@ public class ColossusBuilder {
      */
     public ColossusBuilder enableCache(CacheFlag... flags) {
         return setJDABuilder(builder -> builder.enableCache(List.of(flags)));
+    }
+
+    /**
+     * Adds all provided listeners to the list of listeners that will be used to populate the {@link JDA} object.
+     * <br>This uses the {@link net.dv8tion.jda.api.hooks.InterfacedEventManager InterfacedEventListener} by default.
+     * <br>To switch to the {@link net.dv8tion.jda.api.hooks.AnnotatedEventManager AnnotatedEventManager},
+     * use {@link JDABuilder#setEventManager(net.dv8tion.jda.api.hooks.IEventManager) setEventManager(new AnnotatedEventManager())}.
+     *
+     * <p><b>Note:</b> When using the {@link net.dv8tion.jda.api.hooks.InterfacedEventManager InterfacedEventListener} (default),
+     * given listener(s) <b>must</b> be instance of {@link net.dv8tion.jda.api.hooks.EventListener EventListener}!
+     *
+     * @param listeners The listener(s) to add to the list.
+     * @return The builder
+     */
+    public ColossusBuilder addEventListeners(Object... listeners) {
+        return setJDABuilder(builder -> builder.addEventListeners(List.of(listeners)));
     }
 
     private void buildConfigFile() {
