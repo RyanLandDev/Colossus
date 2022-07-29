@@ -73,7 +73,9 @@ public abstract class Argument<T> {
 
     public final T getOptionalValue(CommandEvent event) throws ArgumentException {
         try {
-            return getOptionalFunction().apply(event).get();
+            CompletableFuture<T> value = getOptionalFunction().apply(event);
+            if (value == null) return null;
+            else return value.get();
         } catch (InterruptedException | ExecutionException e) {
             throw new InterruptedArgumentException();
         }
