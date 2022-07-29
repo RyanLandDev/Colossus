@@ -35,11 +35,9 @@ public class JsonTableSerializer implements Serializer<JsonObject, Table<?>> {
 
     // (de)serialize individual json elements -----------------------------
 
-    private static final Gson GSON_BUILDER = new GsonBuilder().create();
-
     @SuppressWarnings("all")
-    public JsonElement serializeElement(String key, Object toSerialzie) {
-        return (JsonElement) Colossus.getProvider(key).serialize(GSON_BUILDER.toJsonTree(toSerialzie));
+    public JsonElement serializeElement(String key, Object toSerialize) {
+        return (JsonElement) Colossus.getProvider(key).serialize(toSerialize);
     }
 
     private final List<Function<JsonElement, Object>> elementSerializers = List.of(
