@@ -472,7 +472,7 @@ public class ColossusBuilder {
      * @return The builder
      */
     public ColossusBuilder addEventListeners(Object... listeners) {
-        return setJDABuilder(builder -> builder.addEventListeners(List.of(listeners)));
+        return setJDABuilder(builder -> builder.addEventListeners(listeners));
     }
 
     private void buildConfigFile() {
