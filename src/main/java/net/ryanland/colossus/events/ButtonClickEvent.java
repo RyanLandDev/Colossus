@@ -77,7 +77,7 @@ public class ButtonClickEvent implements ComponentInteractionRepliableEvent {
      * @see #addListener(Long, List, Runnable)
      */
     public static void removeListeners(Long msgId) {
-        MESSAGE_BUTTONS.remove(msgId).forEach(BUTTONS::remove);
+        if (MESSAGE_BUTTONS.containsKey(msgId)) MESSAGE_BUTTONS.remove(msgId).forEach(BUTTONS::remove);
     }
 
     public final ButtonInteractionEvent event;

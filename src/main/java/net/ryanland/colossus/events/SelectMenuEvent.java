@@ -76,7 +76,7 @@ public class SelectMenuEvent implements ComponentInteractionRepliableEvent {
      * @see #addListener(Long, BaseSelectMenu, Runnable)
      */
     public static void removeListeners(Long msgId) {
-        MESSAGE_SELECT_MENUS.remove(msgId).forEach(SELECT_MENUS::remove);
+        if (MESSAGE_SELECT_MENUS.containsKey(msgId)) MESSAGE_SELECT_MENUS.remove(msgId).forEach(SELECT_MENUS::remove);
     }
 
     public final SelectMenuInteractionEvent event;
