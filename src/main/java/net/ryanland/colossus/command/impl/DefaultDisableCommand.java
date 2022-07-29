@@ -17,9 +17,10 @@ import net.ryanland.colossus.events.command.CommandEvent;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 
 @CommandBuilder(
-        name = "disable",
-        description = "Disables a command globally.",
-        guildOnly = false
+    name = "disable",
+    description = "Disables a command globally.",
+    guildOnly = false,
+    canBeDisabled = false
 )
 public final class DefaultDisableCommand extends DefaultCommand implements CombinedCommand {
 
@@ -37,7 +38,7 @@ public final class DefaultDisableCommand extends DefaultCommand implements Combi
                 @Override
                 public ArgumentOptionData getArgumentOptionData() {
                     return BasicCommandArgument.getAutocompleteChoiceData(CommandHandler.getAllCommands()
-                        .stream().filter(command -> !command.isDisabled()).toList());
+                        .stream().filter(command -> !command.isDisabled() && command.canBeDisabled()).toList());
                 }
             }
                 .name("command")

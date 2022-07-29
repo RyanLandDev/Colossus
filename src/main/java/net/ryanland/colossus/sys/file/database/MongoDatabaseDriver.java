@@ -79,8 +79,10 @@ public class MongoDatabaseDriver extends DatabaseDriver {
     @Override
     public <T extends ISnowflake> void updateTable(T client, Table<T> table) {
         getCollection(client).updateOne(Filters.eq("_id", client.getId()), getUpdates(findTable(client), table));
+        // TODO serialize tables
     }
-
+    
+    //TODO use maps for data or something
     private <T extends ISnowflake> List<Bson> getUpdates(Table<T> oldTable, Table<T> newTable) {
         List<Bson> updates = new ArrayList<>();
         // repeat over every value in the new table, if it's not equal to the value in the old table, add an update

@@ -17,9 +17,10 @@ import net.ryanland.colossus.events.command.CommandEvent;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 
 @CommandBuilder(
-        name = "enable",
-        description = "Re-enables a globally disabled command.",
-        guildOnly = false
+    name = "enable",
+    description = "Re-enables a globally disabled command.",
+    guildOnly = false,
+    canBeDisabled = false
 )
 public final class DefaultEnableCommand extends DefaultCommand implements CombinedCommand {
 
