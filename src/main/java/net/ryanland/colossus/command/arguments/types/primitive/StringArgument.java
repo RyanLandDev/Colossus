@@ -10,7 +10,7 @@ public class StringArgument extends ArgumentStringResolver<String> {
 
     @Override
     public ArgumentOptionData getArgumentOptionData() {
-        ArgumentOptionData data = new ArgumentOptionData(OptionType.NUMBER);
+        ArgumentOptionData data = new ArgumentOptionData(OptionType.STRING);
         if (min != null) data.setMinValue(min);
         if (max != null) data.setMaxValue(max);
         return data;
