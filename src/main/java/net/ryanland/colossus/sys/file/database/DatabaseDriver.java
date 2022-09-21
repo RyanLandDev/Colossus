@@ -14,7 +14,6 @@ import java.util.function.Supplier;
  *
  *
  * TODO
- * - providers
  * - test json
  * - mongo providers
  * - sql providers
