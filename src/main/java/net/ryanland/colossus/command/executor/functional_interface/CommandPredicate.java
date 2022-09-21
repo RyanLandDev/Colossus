@@ -5,12 +5,7 @@ import net.ryanland.colossus.command.CommandException;
 import java.util.function.Predicate;
 
 @FunctionalInterface
-public interface CommandPredicate<T> extends Predicate<T> {
+public interface CommandPredicate<T> {
 
-    @Override
-    default boolean test(T t) {
-        throw new IllegalStateException("Use CommandPredicate#check instead");
-    }
-
-    boolean check(T t) throws CommandException;
+    boolean test(T t) throws CommandException;
 }

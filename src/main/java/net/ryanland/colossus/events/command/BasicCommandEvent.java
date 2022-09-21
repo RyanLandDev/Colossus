@@ -2,16 +2,19 @@ package net.ryanland.colossus.events.command;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
+import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 import net.dv8tion.jda.api.events.Event;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
 import net.dv8tion.jda.api.interactions.components.Modal;
+import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.command.BasicCommand;
 import net.ryanland.colossus.command.executor.functional_interface.CommandConsumer;
 import net.ryanland.colossus.events.ModalSubmitEvent;
 import net.ryanland.colossus.events.repliable.RepliableEvent;
 import net.ryanland.colossus.sys.file.database.DatabaseDriver;
-import net.ryanland.colossus.sys.file.database.Table;
+import net.ryanland.colossus.sys.file.database.Supply;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 
 public sealed abstract class BasicCommandEvent implements RepliableEvent permits CommandEvent, ContextCommandEvent {
@@ -51,30 +54,25 @@ public sealed abstract class BasicCommandEvent implements RepliableEvent permits
     }
 
     /**
-     * Get the {@link Table} of the user who executed this command.
+     * Get the {@link Supply} of the user who executed this command.
      * <br>Note: This method may produce an error if the {@link DatabaseDriver} is not properly configured.
-     * @see Table
+     * @see Supply
      * @see DatabaseDriver
      */
-    public Table<User> getUserTable() {
-        return Colossus.getDatabaseDriver().get(getUser());
+    public Supply getUserSupply() {
+        return getUser().getSupply();
     }
 
     /**
-     * Get the {@link Table} of the guild this command was executed in.
+     * Get the {@link Supply} of the guild this command was executed in.
      * This will be {@code null} if the command was executed in DMs.
      * <br>Note: This method may produce an error if the {@link DatabaseDriver} is not properly configured.
-     * @see Table
+     * @see Supply
      * @see DatabaseDriver
      */
-    public Table<Guild> getGuildTable() {
+    public Supply getGuildSupply() {
         if (getGuild() == null) return null;
-        return Colossus.getDatabaseDriver().get(getGuild());
-    }
-
-    @Override
-    public final void reply(Message message, boolean ephemeral) {
-        repliableEvent.reply(message, ephemeral);
+        return getGuild().getSupply();
     }
 
     @Override

@@ -5,12 +5,7 @@ import net.ryanland.colossus.command.CommandException;
 import java.util.function.BiPredicate;
 
 @FunctionalInterface
-public interface CommandBiPredicate<T, U> extends BiPredicate<T, U> {
+public interface CommandBiPredicate<T, U> {
 
-    @Override
-    default boolean test(T t, U u) {
-        throw new IllegalStateException("Use CommandBiPredicate#check instead");
-    }
-
-    boolean check(T t, U u) throws CommandException;
+    boolean test(T t, U u) throws CommandException;
 }

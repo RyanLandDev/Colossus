@@ -1,204 +1,164 @@
 package net.ryanland.colossus.sys.file.database;
 
-import net.dv8tion.jda.api.entities.ISnowflake;
-import net.dv8tion.jda.api.entities.User;
 import net.ryanland.colossus.ColossusBuilder;
-import org.jetbrains.annotations.NotNull;
+import net.ryanland.colossus.sys.file.database.provider.Provider;
+import org.apache.commons.collections4.map.LinkedMap;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.List;
-import java.util.Objects;
-import java.util.function.Function;
+import java.util.*;
 import java.util.function.Supplier;
 
 /**
- * Abstract class for creating database drivers.
- * <br>You can find a list of pre-made examples here: TODO
+ * Abstract class for creating "database drivers". Either use a pre-made one or create your own.<br>
+ * When creating your own, do not forget to create {@link Provider Providers} for the (default pre-defined) values.
  * @see ColossusBuilder#setDatabaseDriver(DatabaseDriver)
+ *
+ *
+ * TODO
+ * - providers
+ * - test json
+ * - mongo providers
+ * - sql providers
+ * - test mongo
+ * - test sqlite
  */
 public abstract class DatabaseDriver {
 
+    // Stock methods -----------------------
+
+    protected final HashMap<String, Stock> stockCache = new HashMap<>();
+
     /**
-     * Get all caches for all used client types.
-     * <br>You can also create your own implementation of {@link TableCache} by overriding its methods and using it here.
-     * <br>Example code:<br><br>
-     * <code>return List.of(new TableCache&lt;User&gt;, new TableCache&lt;SelfUser&gt;);</code>
+     * Attempts getting the {@link Stock} from the local cache.
+     * If this is null, tries retrieving it from the database. If the {@link Stock} was not found in the database,
+     * null is returned.
+     *
+     * <p>In other words, returns the {@link Stock} associated with the provided name in the cache,
+     * or if null, returns {@link #find(String)}.
+     *
+     * @param stockName The name of the {@link Stock}
+     * @return The result {@link Stock}. This will never be null.
      */
-    protected abstract List<TableCache<? extends ISnowflake>> getCaches();
-
-    private final List<TableCache<? extends ISnowflake>> CACHES = getCaches();
-
-    @SuppressWarnings("unchecked")
-    private <T extends ISnowflake> TableCache<T> getCache(T client) {
-        for (TableCache<? extends ISnowflake> cache : CACHES) {
-            if (cache.getType().isAssignableFrom(client.getClass()))
-                return (TableCache<T>) cache;
-        }
-        throw new IllegalArgumentException("A cache with the type " + client.getClass().getName() + " does not exist.\n" +
-            "You can add it in the getCaches() method of your DatabaseDriver implementation.");
-    }
-
-    @SuppressWarnings("unchecked")
-    private <T extends ISnowflake> Table<T> getEmptyTable(T client) {
-        try {
-            return (Table<T>) Table.class.getDeclaredConstructor(String.class).newInstance(client.getId());
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-            e.printStackTrace();
-        }
-        throw new IllegalArgumentException();
+    public Stock get(String stockName) {
+        return nullOr(getFromCache(stockName), () -> find(stockName));
     }
 
     /**
-     * Gets the {@link Table} associated with the provided client.<br>
-     * Firstly attempts getting the table from the local cache for this client.
-     * If this is null, tries retrieving it from the database. If the table was not found in the database,
-     * a new table will be inserted in the database and this table will be returned.
-     * @param client The client to get the table of
-     * @param <T> The type of client, e.g. {@link User}
-     * @return The result table. This will never be null.
-     * @see #getFromCache(ISnowflake)
-     * @see #retrieve(ISnowflake) 
-     * @see #find(ISnowflake) 
-     * @see #insert(ISnowflake) 
-     * @see #cache(ISnowflake, Table) 
+     * Gets the {@link Stock} associated with the provided name from the local cache.
+     * @param stockName The name of the {@link Stock}
+     * @return The found {@link Stock}, {@code null} if no {@link Stock} is currently in the cache with the provided name
      */
-    public <T extends ISnowflake> Table<T> get(T client) {
-        return nullOr(getFromCache(client), () -> retrieve(client));
+    public Stock getFromCache(String stockName) {
+        return stockCache.get(stockName);
     }
 
     /**
-     * Gets the {@link Table} associated with the provided client from the local cache for this client.
-     * @param client The client to get the table of
-     * @param <T> The type of client, e.g. {@link User}
-     * @return The found table, null if no table for this client is currently in the cache
-     * @see #removeFromCache(ISnowflake) 
+     * Retrieves the {@link Stock} associated with the provided name from the database and adds it to the local cache.
+     * @param stockName The name of the {@link Stock}
+     * @return The found {@link Stock}, {@code null} if it doesn't exist
      */
-    public <T extends ISnowflake> Table<T> getFromCache(T client) {
-        return getCache(client).get(client.getId());
+    public Stock find(String stockName) {
+        Stock stock = findStock(stockName);
+        if (stock == null) return null;
+        cache(stock);
+        return stock;
     }
 
     /**
-     * Retrieves the {@link Table} associated with the provided client from the database
-     * and adds it to the local cache for this client,
-     * IF the retrieved table is not null. If null, a new table will be inserted in the
-     * database and this table will be returned.
-     * <br>If you'd like the table to be null if it does not currently exist in the database,
-     * please use the method {@link #find(ISnowflake)} instead.
-     * @param client The client to get the table of
-     * @param <T> The type of client, e.g. {@link User}
-     * @return The found table, or the newly inserted table in case the found table was null
-     * @see #find(ISnowflake) 
-     * @see #insert(ISnowflake) 
-     * @see #cache(ISnowflake, Table) 
+     * Retrieves the data associated with the provided name from the database,
+     * and then deserializes it to a {@link Stock}.
+     * @param stockName The name of the {@link Stock}
+     * @return The found {@link Stock}, {@code null} if it doesn't exist
      */
-    public <T extends ISnowflake> Table<T> retrieve(T client) {
-        return nullOr(find(client), () -> insert(client));
+    protected abstract Stock findStock(String stockName);
+
+    /**
+     * Deletes the {@link Stock} associated with the provided name from the database, and the local cache.
+     * @param stockName The name of the {@link Stock}
+     */
+    public void delete(String stockName) {
+        deleteStock(stockName);
+        removeFromCache(stockName);
     }
 
     /**
-     * Retrieves the {@link Table} associated with the provided client from the database
-     * and adds it to the local cache for this client.
-     * @param client The client to get the table of
-     * @param <T> The type of client, e.g. {@link User}
-     * @return The found table, {@code null} if it doesn't exist
-     * @see #cache(ISnowflake, Table) 
+     * Deletes the {@link Stock} associated with the provided name from the database.
      */
-    public <T extends ISnowflake> Table<T> find(T client) {
-        Table<T> table = findTable(client);
-        if (table == null) return null;
-        cache(client, table);
-        return table;
+    protected abstract void deleteStock(String stockName);
+
+    /**
+     * Adds a {@link Stock} to the local cache.
+     * @param stock The {@link Stock} to cache
+     */
+    public void cache(Stock stock) {
+        stockCache.put(stock.getName(), stock);
     }
 
     /**
-     * Retrieves the data associated with the provided client from the database,
-     * and then deserializes it to a {@link Table}.
-     * @param client The client to get the table of
-     * @param <T> The type of client, e.g. {@link User}
-     * @return The found table, {@code null} if it doesn't exist
+     * Removes a {@link Stock} from the local cache.
+     * @param stockName The name of the {@link Stock}
      */
-    protected abstract <T extends ISnowflake> Table<T> findTable(T client);
+    public void removeFromCache(String stockName) {
+        stockCache.remove(stockName);
+    }
+
+    // Supply methods ---------------------------
 
     /**
-     * Inserts a new table in the database and adds it to the local cache for this client.
-     * @param client The client of the table to insert
-     * @param <T> The type of client, e.g. {@link User}
-     * @return The table inserted
-     * @see #cache(ISnowflake, Table) 
+     * Inserts a new {@link Supply} in the database and adds it to the local cache
+     * @param supply The {@link Supply} to insert
+     * @return The {@link Supply} inserted
      */
-    public <T extends ISnowflake> Table<T> insert(T client) {
-        Table<T> table = insertTable(client, getEmptyTable(client));
-        cache(client, table);
-        return table;
+    public Supply insert(Supply supply) {
+        Supply inserted = insertSupply(supply);
+        cache(inserted);
+        return inserted;
     }
 
     /**
-     * Serializes a new table and inserts it in the database.
-     * @param client The client this table is associated with
-     * @param table The table to insert
-     * @param <T> The type of client, e.g. {@link User}
-     * @return The table inserted
+     * Serializes a new {@link Supply} and inserts it in the database.
+     * @param supply The {@link Supply} to insert
+     * @return The {@link Supply} inserted
      */
-    protected abstract <T extends ISnowflake> Table<T> insertTable(T client, Table<T> table);
+    protected abstract Supply insertSupply(Supply supply);
 
     /**
-     * Deletes the table associated with the provided client from the database, and the local cache for this client.
-     * @param client The client of the table to delete
-     * @param <T> The type of client, e.g. {@link User}
-     * @see #removeFromCache(ISnowflake)
+     * Serializes the provided {@link Supply} and updates it in the provided {@link Stock} in the database.
+     * @param supply The {@link Supply} to update, must have the same pointer as the one in cache
      */
-    public <T extends ISnowflake> void delete(T client) {
-        deleteTable(client);
-        removeFromCache(client);
+    public abstract void updateSupply(Supply supply);
+
+    /**
+     * Deletes a {@link Supply} from the database and the cache
+     * @param supply The {@link Supply} to delete
+     */
+    public void delete(Supply supply) {
+        deleteSupply(supply);
+        removeFromCache(supply.getStockName(), supply.getPrimaryKey());
     }
 
     /**
-     * Deletes the table associated with the provided client from the database.
-     * @param client The client of the table to delete
-     * @param <T> The type of client, e.g. {@link User}
+     * Deletes a {@link Supply} from the database
+     * @param supply The {@link Supply} to delete
      */
-    protected abstract <T extends ISnowflake> void deleteTable(T client);
+    protected abstract void deleteSupply(Supply supply);
 
-    /**
-     * Updates a table in the database with modified values.
-     * <br>Provides the old value to help with modification.
-     * @param client The client of the table to modify
-     * @param tableModifier The table modifier function; providing the old value and returning the new value
-     * @param <T> The type of client, e.g. {@link User}
-     * @see #updateTable(ISnowflake, Table)
-     */
-    public <T extends ISnowflake> void modifyTable(T client, Function<Table<T>, Table<T>> tableModifier) {
-        updateTable(client, tableModifier.apply(get(client)));
-    }
-    
-    /**
-     * Serializes a {@link Table} and updates it in the database.
-     * @param client The client this table is associated with
-     * @param table The table to update (with)
-     * @param <T> The type of client, e.g. {@link User}
-     * @see #modifyTable(ISnowflake, Function) 
-     */
-    public abstract <T extends ISnowflake> void updateTable(T client, Table<T> table);
-
-    /**
-     * Adds a {@link Table} to the local cache for this client.
-     * @param client The client of the table to remove
-     * @param table The not-null table to cache
-     * @param <T> The type of client, e.g. {@link User}
-     * @see #getCaches()
-     */
-    public <T extends ISnowflake> void cache(T client, @NotNull Table<T> table) {
-        getCache(client).put(client.getId(), table);
+    public void cache(Supply supply) {
+        getFromCache(supply.getStock().getName()).cache(supply);
     }
 
-    /**
-     * Removes a table from the local cache for this client.
-     * @param client The client of the table to remove
-     * @param <T> The type of client, e.g. {@link User}
-     * @see #getCaches()
-     */
-    public <T extends ISnowflake> void removeFromCache(T client) {
-        getCache(client).remove(client.getId());
+    public void removeFromCache(String stockName, PrimaryKey key) {
+        getFromCache(stockName).removeFromCache(key);
+    }
+
+    // Misc methods ------------------
+
+    public Map<String, List<String>> getPrimaryKeys() {
+        return Map.of("global", List.of("_bot_id"),
+            "guilds", List.of("_guild_id"),
+            "users", List.of("_user_id"),
+            "members", List.of("_user_id", "_guild_id"),
+            "cooldowns", List.of("user_id", "command_name", "command_type"),
+            "disabled_commands", List.of("command_name", "command_type"));
     }
 
     /**
@@ -208,5 +168,4 @@ public abstract class DatabaseDriver {
     private static <T> T nullOr(T object, Supplier<T> compareTo) {
         return object != null ? object : compareTo.get();
     }
-
 }

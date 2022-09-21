@@ -93,7 +93,7 @@ public class SelectMenuEvent implements ComponentInteractionRepliableEvent {
     public void handle() throws CommandException {
         CommandConsumer<SelectMenuEvent> action = SELECT_MENUS.remove(selectMenuIdentifier).getOnSubmit();
         if (action == null) return;
-        action.consume(this);
+        action.accept(this);
     }
 
     @Override

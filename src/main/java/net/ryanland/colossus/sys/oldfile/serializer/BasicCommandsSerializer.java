@@ -1,4 +1,4 @@
-package net.ryanland.colossus.sys.file.serializer;
+package net.ryanland.colossus.sys.oldfile.serializer;
 
 import net.ryanland.colossus.command.BasicCommand;
 import net.ryanland.colossus.command.CommandType;

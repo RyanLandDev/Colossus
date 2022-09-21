@@ -23,8 +23,8 @@ public record BaseButton(Button button, CommandConsumer<ButtonClickEvent> onClic
                                        CommandConsumer<ButtonClickEvent> ifFalse, Button button,
                                        CommandConsumer<ButtonClickEvent> onClick) {
         return new BaseButton(button, event -> {
-            if (!predicate.check(event)) ifFalse.consume(event);
-            else if (onClick != null) onClick.consume(event);
+            if (!predicate.test(event)) ifFalse.accept(event);
+            else if (onClick != null) onClick.accept(event);
         });
     }
 

@@ -1,18 +1,20 @@
-package net.ryanland.colossus.sys.file.database;
+package net.ryanland.colossus.sys.oldfile.provider;
 
 import net.dv8tion.jda.api.entities.ISnowflake;
 import net.ryanland.colossus.sys.entities.ColossusDatabaseEntity;
-import net.ryanland.colossus.sys.file.serializer.Serializer;
+import net.ryanland.colossus.sys.oldfile.database.DatabaseDriver;
+import net.ryanland.colossus.sys.oldfile.database.Table;
+import net.ryanland.colossus.sys.oldfile.serializer.Serializer;
 
 import java.util.function.Function;
 
 /**
  * A provider is used in a {@link DatabaseDriver} to help retrieve values by setting a {@link Serializer} for it.<br>
- * Register {@link Provider Providers} using {@link net.ryanland.colossus.ColossusBuilder#registerProviders(Provider...)}
+ * Register {@link dProvider Providers} using {@link net.ryanland.colossus.ColossusBuilder#registerProviders(dProvider...)}
  * @param <S> The serialized type (e.g. String)
  * @param <D> The deserialized type (e.g. Command)
  */
-public record Provider<S, D>(String key, Serializer<S, D> serializer) {
+public record dProvider<S, D>(String key, Serializer<S, D> serializer) {
 
     private <T extends ISnowflake> ColossusDatabaseEntity<T> databaseEntityOf(T client) {
         return () -> client;

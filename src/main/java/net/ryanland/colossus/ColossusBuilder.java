@@ -6,7 +6,6 @@ import com.google.gson.JsonObject;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.SelfUser;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
 import net.dv8tion.jda.api.interactions.commands.localization.LocalizationFunction;
 import net.dv8tion.jda.api.interactions.commands.localization.ResourceBundleLocalizationFunction;
@@ -14,9 +13,6 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import net.ryanland.colossus.command.*;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.MalformedArgumentException;
-import net.ryanland.colossus.command.cooldown.CooldownHandler;
-import net.ryanland.colossus.command.cooldown.CooldownManager;
-import net.ryanland.colossus.command.cooldown.DatabaseCooldownManager;
 import net.ryanland.colossus.command.executor.DisabledCommandHandler;
 import net.ryanland.colossus.command.finalizers.Finalizer;
 import net.ryanland.colossus.command.finalizers.CooldownFinalizer;
@@ -33,10 +29,15 @@ import net.ryanland.colossus.sys.file.Config;
 import net.ryanland.colossus.sys.file.LocalFile;
 import net.ryanland.colossus.sys.file.LocalFileBuilder;
 import net.ryanland.colossus.sys.file.LocalFileType;
-import net.ryanland.colossus.sys.file.database.DatabaseDriver;
-import net.ryanland.colossus.sys.file.database.Provider;
-import net.ryanland.colossus.sys.file.serializer.BasicCommandsSerializer;
-import net.ryanland.colossus.sys.file.serializer.CooldownsSerializer;
+import net.ryanland.colossus.sys.file.database.*;
+import net.ryanland.colossus.sys.file.database.premade.JsonDatabaseDriver;
+import net.ryanland.colossus.sys.file.database.premade.MongoDatabaseDriver;
+import net.ryanland.colossus.sys.file.database.premade.SQLDatabaseDriver;
+import net.ryanland.colossus.sys.file.database.provider.Provider;
+import net.ryanland.colossus.sys.file.database.provider.json.JsonGlobalProvider;
+import net.ryanland.colossus.sys.file.database.provider.json.JsonGuildsProvider;
+import net.ryanland.colossus.sys.file.database.provider.json.JsonMembersProvider;
+import net.ryanland.colossus.sys.file.database.provider.json.JsonUsersProvider;
 import net.ryanland.colossus.sys.message.DefaultPresetType;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 import net.ryanland.colossus.sys.message.PresetType;
@@ -66,11 +67,6 @@ public class ColossusBuilder {
         new CooldownFinalizer()
     };
 
-    private static final Provider<?, ?>[] CORE_PROVIDERS = new Provider<?, ?>[]{
-        new Provider<>(DisabledCommandHandler.DISABLED_COMMANDS_KEY, BasicCommandsSerializer.getInstance()), // disabled commands
-        new Provider<>(DatabaseCooldownManager.COOLDOWNS_KEY, CooldownsSerializer.getInstance()) // database cooldown manager
-    };
-
     private static final String[] CORE_CONFIG_ENTRIES = new String[]{
         "token",
         "client_id",
@@ -91,7 +87,7 @@ public class ColossusBuilder {
     private final List<String> configEntries = new ArrayList<>(List.of(CORE_CONFIG_ENTRIES));
     private final List<Inhibitor> inhibitors = new ArrayList<>();
     private final List<Finalizer> finalizers = new ArrayList<>();
-    private final HashMap<String, Provider<?, ?>> providers = new HashMap<>();
+    private final HashMap<String, Provider<?>> providers = new HashMap<>();
 
     private boolean disableHelpCommand = false;
     private boolean disableCommandToggleCommands = false;
@@ -186,10 +182,18 @@ public class ColossusBuilder {
                 "⚠", defaultCommands.toArray(Command[]::new)));
         }
 
-        // add core inhibitors, finalizers and providers
+        // add core inhibitors and finalizers
         inhibitors.addAll(0, List.of(CORE_INHIBITORS));
         finalizers.addAll(0, List.of(CORE_FINALIZERS));
-        registerProviders(CORE_PROVIDERS);
+
+        // register core providers
+        if (databaseDriver instanceof JsonDatabaseDriver) {
+            registerProviders(new JsonGlobalProvider(), new JsonGuildsProvider(), new JsonMembersProvider(), new JsonUsersProvider());
+        } else if (databaseDriver instanceof MongoDatabaseDriver) {
+            //TODO
+        } else if (databaseDriver instanceof SQLDatabaseDriver) {
+            //TODO
+        }
 
         buildConfigFile();
 
@@ -304,9 +308,9 @@ public class ColossusBuilder {
      * @return The builder
      * @see Provider
      */
-    public ColossusBuilder registerProviders(Provider<?, ?>... providers) {
-        for (Provider<?, ?> provider : providers) {
-            this.providers.put(provider.key(), provider);
+    public ColossusBuilder registerProviders(Provider<?>... providers) {
+        for (Provider<?> provider : providers) {
+            this.providers.put(provider.getStockName(), provider);
         }
         return this;
     }
@@ -486,12 +490,7 @@ public class ColossusBuilder {
             .buildFile();
 
         // Parse the config file's JSON
-        JsonObject configJson = new JsonObject();
-        try {
-            configJson = configFile.parseJson();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        JsonObject configJson = configFile.parseJson();
 
         // Check for missing config keys, and if they are found, add them and modify the file
         boolean changed = false;

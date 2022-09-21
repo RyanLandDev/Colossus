@@ -17,13 +17,12 @@ import net.ryanland.colossus.events.ButtonClickEvent;
 import net.ryanland.colossus.events.SelectMenuEvent;
 import net.ryanland.colossus.sys.file.Config;
 import net.ryanland.colossus.sys.file.LocalFile;
+import net.ryanland.colossus.sys.file.database.Supply;
+import net.ryanland.colossus.sys.file.database.premade.SQLDatabaseDriver;
+import net.ryanland.colossus.sys.file.database.provider.Provider;
 import net.ryanland.colossus.sys.file.database.DatabaseDriver;
-import net.ryanland.colossus.sys.file.database.Provider;
-import net.ryanland.colossus.sys.file.database.Table;
-import net.ryanland.colossus.sys.file.serializer.Serializer;
 import net.ryanland.colossus.sys.interactions.select.BaseSelectMenu;
 import net.ryanland.colossus.sys.message.PresetType;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
 import javax.security.auth.login.LoginException;
@@ -51,7 +50,7 @@ public class Colossus {
     private static long componentListenerExpirationTimeAmount;
     private static TimeUnit componentListenerExpirationTimeUnit;
     private static DatabaseDriver databaseDriver;
-    private static HashMap<String, Provider<?, ?>> providers;
+    private static HashMap<String, Provider<?>> providers;
     private static PresetType defaultPresetType;
     private static PresetType errorPresetType;
     private static PresetType successPresetType;
@@ -66,7 +65,7 @@ public class Colossus {
     public Colossus(JDABuilder builder, Config config, Set<Category> categories, List<Command> commands,
                     List<ContextCommand<?>> contextCommands, List<LocalFile> localFiles, long buttonListenerExpirationTimeAmount,
                     TimeUnit buttonListenerExpirationTimeUnit, DatabaseDriver databaseDriver,
-                    HashMap<String, Provider<?, ?>> providers, PresetType defaultPresetType, PresetType errorPresetType,
+                    HashMap<String, Provider<?>> providers, PresetType defaultPresetType, PresetType errorPresetType,
                     PresetType successPresetType, LocalizationFunction localizationFunction, List<Inhibitor> inhibitors,
                     List<Finalizer> finalizers) {
         this.builder = builder;
@@ -195,6 +194,7 @@ public class Colossus {
      * Get the configured {@link DatabaseDriver}
      * @see ColossusBuilder#setDatabaseDriver(DatabaseDriver)
      * @see DatabaseDriver
+     * @see #getSQLDatabaseDriver()
      */
     public static DatabaseDriver getDatabaseDriver() {
         if (databaseDriver == null) throw new IllegalStateException("A database driver has not been defined.");
@@ -202,47 +202,41 @@ public class Colossus {
     }
 
     /**
+     * Casts the result of {@link #getDatabaseDriver()} to a {@link SQLDatabaseDriver}
+     * @see ColossusBuilder#setDatabaseDriver(DatabaseDriver)
+     * @see DatabaseDriver
+     * @see #getDatabaseDriver()
+     */
+    public static SQLDatabaseDriver getSQLDatabaseDriver() {
+        return (SQLDatabaseDriver) getDatabaseDriver();
+    }
+
+    /**
      * Get the configured {@link Provider Providers}
      * @see ColossusBuilder#registerProviders(Provider...)
      * @see Provider
      */
-    public static HashMap<String, Provider<?, ?>> getProviders() {
+    public static HashMap<String, Provider<?>> getProviders() {
         return providers;
     }
 
     /**
-     * Get one of the configured {@link Provider Providers} using its key,
-     * and if it does not exist, return a new provider for the key with a {@link Serializer} that does not change values
+     * Get one of the configured {@link Provider Providers} using its stock name
      * @see ColossusBuilder#registerProviders(Provider...)
      * @see Provider
      */
-    @SuppressWarnings("all")
-    public static <S, D> Provider<S, D> getProvider(String key) {
-        Provider<S, D> provider = (Provider<S, D>) getProviders().get(key);
-        if (provider == null) { // if no provider exists for this key, return a provider which does not change the values
-            return new Provider<>(key, new Serializer<S, D>() {
-                @Override
-                public S serialize(@NotNull D toSerialize) {
-                    return (S) toSerialize;
-                }
-
-                @Override
-                public D deserialize(@NotNull S toDeserialize) {
-                    return (D) toDeserialize;
-                }
-            });
-        }
-        else return provider;
+    @SuppressWarnings("unchecked")
+    public static <R extends Provider<S>, S> R getProvider(String stockName) {
+        return (R) providers.get(stockName);
     }
 
     /**
-     * Get the {@link SelfUser} (global) table from the database
-     * @see Table
+     * Get the global {@link Supply} from the database
+     * @see Supply
      * @see DatabaseDriver
-     * @see SelfUser
      */
-    public static Table<SelfUser> getGlobalTable() {
-        return getDatabaseDriver().get(getSelfUser());
+    public static Supply getGlobalSupply() {
+        return getDatabaseDriver().get("global").get(getSelfUser().getId());
     }
 
     public static PresetType getDefaultPresetType() {

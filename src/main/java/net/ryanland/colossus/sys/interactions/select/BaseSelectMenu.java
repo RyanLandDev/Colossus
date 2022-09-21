@@ -43,8 +43,8 @@ public class BaseSelectMenu extends ComponentRow {
                                            CommandConsumer<SelectMenuEvent> ifFalse, SelectMenu selectMenu,
                                            CommandConsumer<SelectMenuEvent> onClick) {
         return new BaseSelectMenu(selectMenu, event -> {
-            if (!predicate.check(event)) ifFalse.consume(event);
-            else if (onClick != null) onClick.consume(event);
+            if (!predicate.test(event)) ifFalse.accept(event);
+            else if (onClick != null) onClick.accept(event);
         });
     }
 

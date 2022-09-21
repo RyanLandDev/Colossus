@@ -33,7 +33,7 @@ public record ConfirmMenu(String description, String confirmedDescription, Comma
             BaseButton.user(userId, Button.success("confirm", "Confirm").withEmoji(Emoji.fromUnicode("✅")),
                 evt -> {
                     evt.reply(embed.setDescription(confirmedDescription).clearComponentRows());
-                    confirmAction.consume(evt);
+                    confirmAction.accept(evt);
                 }),
             BaseButton.user(userId, Button.danger("dismiss", "Cancel").withEmoji(Emoji.fromUnicode("❎")),
                 evt -> evt.reply(embed.setDescription("Action canceled.").clearComponentRows()))

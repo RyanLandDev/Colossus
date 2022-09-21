@@ -3,7 +3,6 @@ package net.ryanland.colossus.command.cooldown;
 import net.ryanland.colossus.ColossusBuilder;
 import net.ryanland.colossus.sys.entities.ColossusUser;
 import net.ryanland.colossus.sys.file.database.DatabaseDriver;
-import net.ryanland.colossus.sys.file.serializer.CooldownsSerializer;
 
 import java.util.Collections;
 import java.util.List;
@@ -15,7 +14,7 @@ import java.util.List;
 public class DatabaseCooldownManager implements CooldownManager {
 
     private static final DatabaseCooldownManager INSTANCE = new DatabaseCooldownManager();
-    public static final String COOLDOWNS_KEY = "_cd";
+    public static final String COOLDOWNS_KEY = "cooldowns";
 
     public static DatabaseCooldownManager getInstance() {
         return INSTANCE;

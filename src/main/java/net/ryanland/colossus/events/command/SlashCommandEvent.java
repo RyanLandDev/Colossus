@@ -1,10 +1,11 @@
 package net.ryanland.colossus.events.command;
 
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.ChannelType;
-import net.dv8tion.jda.api.entities.GuildChannel;
-import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.channel.ChannelType;
+import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
+import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
 import net.dv8tion.jda.api.interactions.Interaction;
@@ -88,7 +89,7 @@ public final class SlashCommandEvent extends CommandEvent {
         if (actionRows == null) actionRows = new ArrayList<>();
         event.replyEmbeds(embed)
             .setEphemeral(ephemeral)
-            .addActionRows(actionRows)
+            .setComponents(actionRows)
             .queue();
     }
 
@@ -145,7 +146,7 @@ public final class SlashCommandEvent extends CommandEvent {
     }
 
     @Override
-    public MessageChannel getChannel() {
+    public MessageChannelUnion getChannel() {
         return event.getChannel();
     }
 

@@ -1,4 +1,4 @@
-package net.ryanland.colossus.sys.file.database;
+package net.ryanland.colossus.sys.oldfile.database;
 
 import net.dv8tion.jda.api.entities.ISnowflake;
 import net.dv8tion.jda.api.entities.User;
@@ -12,9 +12,9 @@ import java.util.function.Function;
 /**
  * Different types of tables of data the database has.<br>
  * Examples include: UserTable, MemberTable, GuildTable, GlobalTable, etc.<br>
- * Uses {@link LinkedHashMap} to store deserialized values.<br><br>
+ * Uses {@link LinkedHashMap} to store deserialized values.
  *
- * Preserved keys: {@code _id _dc _prf}
+ * <p>Preserved keys: {@code _id _dc _prf}
  * @param <T> The type of entity this table is for, for example {@link User}
  * @see DatabaseDriver
  */

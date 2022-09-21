@@ -125,15 +125,7 @@ public class CommandExecutor {
                     else if (event instanceof MessageCommandEvent)
                         ((MessageCommand) cmdClass.getDeclaredConstructor().newInstance()).run(eventAsMessageCommand);
                 } catch (NoSuchMethodException | CommandException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
-                    if (!(e instanceof CommandException))
-                        e.printStackTrace();
-
-                    event.reply(
-                        new PresetBuilder(Colossus.getErrorPresetType(),
-                            e instanceof CommandException ?
-                                e.getMessage() :
-                                "Unknown error, please report it to a developer."
-                        ));
+                    CommandHandler.handleCommandException(e, event);
                     return;
                 }
 
@@ -192,12 +184,7 @@ public class CommandExecutor {
             try {
                 command.run(event);
             } catch (Exception e) {
-                if (!(e instanceof CommandException)) {
-                    e.printStackTrace();
-                }
-
-                event.reply(new PresetBuilder(Colossus.getErrorPresetType(),
-                    e instanceof CommandException ? e.getMessage() : "Unknown error, please report it to a developer."));
+                CommandHandler.handleCommandException(e, event);
                 return;
             }
 

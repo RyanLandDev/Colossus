@@ -1,8 +1,8 @@
-package net.ryanland.colossus.sys.file.serializer;
+package net.ryanland.colossus.sys.oldfile.serializer;
 
 import com.google.gson.*;
 import net.ryanland.colossus.Colossus;
-import net.ryanland.colossus.sys.file.database.Table;
+import net.ryanland.colossus.sys.oldfile.database.Table;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;

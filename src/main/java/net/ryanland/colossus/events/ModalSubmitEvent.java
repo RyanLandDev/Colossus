@@ -38,7 +38,7 @@ public class ModalSubmitEvent implements InteractionRepliableEvent {
     public void handle() throws CommandException {
         CommandConsumer<ModalSubmitEvent> action = MODAL_ACTIONS.remove(modalIdentifier);
         if (action == null) return;
-        action.consume(this);
+        action.accept(this);
     }
 
     public ModalInteractionEvent getEvent() {

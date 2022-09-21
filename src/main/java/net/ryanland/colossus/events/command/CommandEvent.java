@@ -30,11 +30,7 @@ public abstract sealed class CommandEvent extends BasicCommandEvent permits Slas
     }
 
     public String getGuildPrefix() {
-        String prefix = getGuildTable().get("_prf");
-        if (prefix != null)
-            return prefix;
-        else
-            return Colossus.getConfig().getPrefix();
+        return getGuild().getPrefix();
     }
 
     public abstract <T> T getArgument(String id);

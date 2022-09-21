@@ -5,6 +5,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.interactions.callbacks.IModalCallback;
 import net.dv8tion.jda.api.interactions.callbacks.IReplyCallback;
 import net.dv8tion.jda.api.interactions.components.Modal;
+import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.command.executor.functional_interface.CommandConsumer;
 import net.ryanland.colossus.events.ButtonClickEvent;
@@ -34,17 +35,6 @@ public interface InteractionRepliableEvent extends RepliableEvent {
     @Override
     default ColossusGuild getGuild() {
         return new ColossusGuild(getCallback().getGuild());
-    }
-
-    /**
-     * Reply to this event with a {@link Message} object
-     *
-     * @param message
-     * @param ephemeral If true, make this reply ephemeral when possible
-     */
-    @Override
-    default void reply(Message message, boolean ephemeral) {
-        getCallback().reply(message).setEphemeral(ephemeral).queue();
     }
 
     /**
@@ -84,7 +74,7 @@ public interface InteractionRepliableEvent extends RepliableEvent {
         // send reply and set hook
         getCallback().replyEmbeds(message.embed())
             .setEphemeral(message.isEphemeral())
-            .addActionRows(message.getActionRows())
+            .setComponents(message.getActionRows())
             .setContent(message.getContent())
             .queue(message::addComponentRowListeners);
     }

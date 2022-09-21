@@ -3,6 +3,7 @@ package net.ryanland.colossus.events.repliable;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.interactions.components.Modal;
+import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 import net.ryanland.colossus.command.CommandException;
 import net.ryanland.colossus.command.executor.functional_interface.CommandConsumer;
 import net.ryanland.colossus.events.ButtonClickEvent;
@@ -26,19 +27,6 @@ public interface RepliableEvent {
     ColossusMember getMember();
 
     ColossusGuild getGuild();
-
-    /**
-     * Reply to this event with a {@link Message} object
-     */
-    default void reply(Message message) {
-        reply(message, false);
-    }
-
-    /**
-     * Reply to this event with a {@link Message} object
-     * @param ephemeral If true, make this reply ephemeral when possible
-     */
-    void reply(Message message, boolean ephemeral);
 
     /**
      * Reply to this event with a plain text message

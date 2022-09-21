@@ -2,11 +2,13 @@ package net.ryanland.colossus.events.command;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
 import net.dv8tion.jda.api.interactions.components.Modal;
+import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
+import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.command.Command;
 import net.ryanland.colossus.command.arguments.ParsedArgumentMap;
@@ -46,11 +48,6 @@ public final class MessageCommandEvent extends CommandEvent {
             }
 
             @Override
-            public void reply(Message message, boolean ephemeral) {
-                event.getMessage().reply(message).queue();
-            }
-
-            @Override
             public void reply(String message, boolean ephemeral) {
                 event.getMessage().reply(message).queue();
             }
@@ -63,8 +60,8 @@ public final class MessageCommandEvent extends CommandEvent {
             @Override
             public void reply(PresetBuilder embed) {
                 event.getMessage().replyEmbeds(embed.embed())
-                    .setActionRows(embed.getActionRows())
-                    .content(embed.getContent())
+                    .setComponents(embed.getActionRows())
+                    .setContent(embed.getContent())
                     .queue(embed::addComponentRowListeners);
             }
 

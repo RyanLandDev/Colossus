@@ -5,12 +5,7 @@ import net.ryanland.colossus.command.CommandException;
 import java.util.function.Function;
 
 @FunctionalInterface
-public interface CommandFunction<T, R> extends Function<T, R> {
+public interface CommandFunction<T, R> {
 
-    @Override
-    default R apply(T t) {
-        throw new IllegalStateException("Use CommandFunction#run instead");
-    }
-
-    R run(T t) throws CommandException;
+    R apply(T t) throws CommandException;
 }

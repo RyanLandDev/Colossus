@@ -1,6 +1,5 @@
 package net.ryanland.colossus.events.repliable;
 
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.component.GenericComponentInteractionCreateEvent;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
@@ -42,21 +41,10 @@ public interface ComponentInteractionRepliableEvent extends RepliableEvent {
     }
 
     @Override
-    default void reply(Message message, boolean ephemeral) {
-        if (!ephemeral) {
-            getEvent().editMessage(message).queue();
-        } else {
-            getEvent().reply(message)
-                .setEphemeral(true)
-                .queue();
-        }
-    }
-
-    @Override
     default void reply(String message, boolean ephemeral) {
         if (!ephemeral) {
             getEvent().editMessageEmbeds(Collections.emptyList())
-                .setActionRows(Collections.emptyList())
+                .setComponents(Collections.emptyList())
                 .setContent(message)
                 .queue();
         } else {
@@ -70,7 +58,7 @@ public interface ComponentInteractionRepliableEvent extends RepliableEvent {
     default void reply(MessageEmbed message, boolean ephemeral) {
         if (!ephemeral) {
             getEvent().editMessageEmbeds(message)
-                .setActionRows(Collections.emptyList())
+                .setComponents(Collections.emptyList())
                 .setContent("")
                 .queue();
         } else {
@@ -93,13 +81,13 @@ public interface ComponentInteractionRepliableEvent extends RepliableEvent {
             }
             // send reply and set hook
             getEvent().editMessageEmbeds(message.embed())
-                .setActionRows(actionRows)
+                .setComponents(actionRows)
                 .setContent(message.getContent())
                 .queue(message::addComponentRowListeners);
         } else {
             // send reply and set hook
             getEvent().replyEmbeds(message.embed())
-                .addActionRows(actionRows)
+                .setComponents(actionRows)
                 .setContent(message.getContent())
                 .setEphemeral(true)
                 .queue(message::addComponentRowListeners);

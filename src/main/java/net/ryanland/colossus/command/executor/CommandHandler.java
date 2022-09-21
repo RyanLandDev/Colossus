@@ -13,6 +13,7 @@ import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.command.BasicCommand;
 import net.ryanland.colossus.command.Command;
+import net.ryanland.colossus.command.CommandException;
 import net.ryanland.colossus.command.ContextCommand;
 import net.ryanland.colossus.command.arguments.Argument;
 import net.ryanland.colossus.command.arguments.ArgumentOptionData;
@@ -24,6 +25,8 @@ import net.ryanland.colossus.command.regular.SubCommand;
 import net.ryanland.colossus.command.regular.SubCommandHolder;
 import net.ryanland.colossus.events.command.CommandEvent;
 import net.ryanland.colossus.events.command.ContextCommandEvent;
+import net.ryanland.colossus.events.repliable.RepliableEvent;
+import net.ryanland.colossus.sys.message.PresetBuilder;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -162,13 +165,20 @@ public class CommandHandler {
         Argument<?> argument = command.getArguments().get(event.getFocusedOption().getName());
         ArgumentOptionData optionData = argument.getArgumentOptionData();
         if (optionData.isAutoComplete()) {
-            String text = event.getFocusedOption().getValue();
-            List<Choice> choices = optionData.getAutoCompletableChoices()
-                .stream().filter(choice -> choice.getName().startsWith(text))
-                .limit(OptionData.MAX_CHOICES)
-                .toList();
-            event.replyChoices(choices).queue();
+            optionData.getAutocompleteConsumer().accept(event, argument);
         }
+    }
+
+    public static void handleCommandException(Exception exception, RepliableEvent event) {
+        if (!(exception instanceof CommandException)) {
+            exception.printStackTrace();
+        }
+
+        event.reply(new PresetBuilder(Colossus.getErrorPresetType(),
+            exception instanceof CommandException ?
+                exception.getMessage() :
+                "Unknown error, please report it to a developer."
+        ));
     }
 
     public static List<BasicCommand> getAllCommands() {

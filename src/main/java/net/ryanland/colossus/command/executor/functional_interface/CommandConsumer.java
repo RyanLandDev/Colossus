@@ -5,12 +5,7 @@ import net.ryanland.colossus.command.CommandException;
 import java.util.function.Consumer;
 
 @FunctionalInterface
-public interface CommandConsumer<T> extends Consumer<T> {
+public interface CommandConsumer<T> {
 
-    @Override
-    default void accept(T t) {
-        throw new IllegalStateException("Use CommandConsumer#consume instead");
-    }
-
-    void consume(T t) throws CommandException;
+    void accept(T t) throws CommandException;
 }

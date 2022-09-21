@@ -11,7 +11,6 @@ mainClassName = 'net.ryanland.colossus.Colossus'
 
 repositories {
     mavenCentral()
-    jcenter()
     maven {
         name 'm2-dv8tion'
         url 'https://m2.dv8tion.net/releases'
@@ -24,12 +23,13 @@ dependencies {
     implementation 'ch.qos.logback:logback-classic:1.2.11'
 
     // jda
-    implementation 'net.dv8tion:JDA:5.0.0-alpha.17'
+    implementation 'net.dv8tion:JDA:5.0.0-alpha.20'
 
     // database
-    // note: this package is unnecessary for users not using the MongoDatabaseDriver,
+    // note: these packages are unnecessary for users not using the MongoDatabaseDriver/SQLiteDatabaseDriver,
     // unnecessarily increasing the size of colossus. is this a problem? if so, solution?
     implementation 'org.mongodb:mongodb-driver-sync:4.6.0'
+    implementation 'org.xerial:sqlite-jdbc:3.36.0.3'
 
     // json
     implementation 'org.json:json:20220320'

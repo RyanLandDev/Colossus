@@ -1,4 +1,4 @@
-package net.ryanland.colossus.sys.file.serializer;
+package net.ryanland.colossus.sys.oldfile.serializer;
 
 import net.ryanland.colossus.command.CommandType;
 import net.ryanland.colossus.command.cooldown.Cooldown;
@@ -9,19 +9,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/*
-                    COOLDOWN DATABASE STRUCTURE
-                      List with sublists, containing:
-                        0 - command name (String)
-                        1 - cooldown expire (Date)
-                        2 - command type (int)
+/**
+ * See {@link net.ryanland.colossus.sys.oldfile.database.SQLDatabaseDriver} for the data model
  */
-@SuppressWarnings("all")
-public class CooldownsSerializer implements Serializer<List<List>, List<Cooldown>> {
+public class CooldownsSQLSerializer implements Serializer<String, List<Cooldown>> {
 
-    private static final CooldownsSerializer INSTANCE = new CooldownsSerializer();
+    private static final CooldownsSQLSerializer INSTANCE = new CooldownsSQLSerializer();
 
-    public static CooldownsSerializer getInstance() {
+    public static CooldownsSQLSerializer getInstance() {
         return INSTANCE;
     }
 

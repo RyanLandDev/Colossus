@@ -1,5 +1,6 @@
 package net.ryanland.colossus.sys.file;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.jetbrains.annotations.NotNull;
@@ -34,7 +35,7 @@ public class LocalFile extends File {
         write(content.getBytes());
     }
 
-    public void write(JsonObject json) {
+    public void write(JsonElement json) {
         write(json.toString());
     }
 
@@ -42,15 +43,20 @@ public class LocalFile extends File {
         return getPath().replaceFirst("^.*\\.", "");
     }
 
-    public JsonObject parseJson() throws IOException {
+    @SuppressWarnings("unchecked")
+    public <R extends JsonElement> R parseJson() {
         if (!getExtension().equals(LocalFileType.JSON.getExtension())) {
             throw new UnsupportedOperationException();
         }
-        return parseJson(getContent());
+        try {
+            return (R) parseJson(getContent());
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
-    public static JsonObject parseJson(String json) {
-        return JsonParser.parseString(json).getAsJsonObject();
+    public static JsonElement parseJson(String json) {
+        return JsonParser.parseString(json);
     }
 
     public static JsonObject jsonOfKeys(String... keys) {

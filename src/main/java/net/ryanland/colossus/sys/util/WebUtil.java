@@ -34,6 +34,6 @@ public class WebUtil {
      * @throws com.google.gson.JsonParseException if the response is not valid JSON
      */
     public static JsonObject requestJson(String url) {
-        return LocalFile.parseJson(request(url));
+        return LocalFile.parseJson(request(url)).getAsJsonObject();
     }
 }

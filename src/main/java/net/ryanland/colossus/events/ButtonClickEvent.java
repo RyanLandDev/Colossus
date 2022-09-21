@@ -93,7 +93,7 @@ public class ButtonClickEvent implements ComponentInteractionRepliableEvent {
      */
     public void handle() throws CommandException {
         if (button == null) return;
-        if (button.onClick() != null) button.onClick().consume(this);
+        if (button.onClick() != null) button.onClick().accept(this);
     }
 
     public BaseButton getButton() {
