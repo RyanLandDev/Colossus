@@ -31,6 +31,6 @@ public class JsonMembersProvider extends JsonProvider {
         values.put("_user_id", data.get("_user_id").getAsString());
         values.put("_guild_id", data.get("_guild_id").getAsString());
 
-        return new Supply(values);
+        return new Supply(getStockName(), values);
     }
 }

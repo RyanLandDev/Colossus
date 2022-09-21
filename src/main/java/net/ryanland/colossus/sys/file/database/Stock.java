@@ -1,10 +1,14 @@
 package net.ryanland.colossus.sys.file.database;
 
 import net.ryanland.colossus.Colossus;
+import net.ryanland.colossus.sys.file.database.provider.Provider;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+
+import static net.ryanland.colossus.sys.file.database.DatabaseDriver.nullOr;
 
 public class Stock {
 
@@ -24,21 +28,37 @@ public class Stock {
         return suppliers;
     }
 
+    public Provider<?> getProvider() {
+        return Colossus.getProvider(getName());
+    }
+
     /**
-     * Gets the {@link Supply} associated with the provided {@link PrimaryKey} in this {@link Stock}
+     * Gets the {@link Supply} associated with the provided {@link PrimaryKey} in this {@link Stock}.<br>
+     * Attempts getting the {@link Supply} from the locally cached {@link Stock}.
+     * If this is null, a new {@link Supply} will be inserted into the database and this {@link Supply} will be returned.
      * @param key The {@link PrimaryKey}
+     * @return The result {@link Supply}. This will never be null.
+     * @see #get(String)
      */
     public Supply get(PrimaryKey key) {
-        return suppliers.get(key);
+        return nullOr(suppliers.get(key), () -> insert(new Supply(getName(), key.keys())));
     }
 
     /**
      * Gets the {@link Supply} in this {@link Stock} associated with the provided key.
+     * Attempts getting the {@link Supply} from the locally cached {@link Stock}.
+     * If this is null, a new {@link Supply} will be inserted into the database and this {@link Supply} will be returned.
      * <p>The {@link PrimaryKey} for this {@link Stock} must consist of 1 {@link String} to use this method.
      * @param key The {@link Supply} key
+     * @return The result {@link Supply}. This will never be null.
+     * @see #get(PrimaryKey)
      */
     public Supply get(String key) {
-        return get(new PrimaryKey(Map.of(suppliers.keySet().iterator().next().keys().keySet().iterator().next(), key)));
+        List<String> primaryKeys = Colossus.getDatabaseDriver().getPrimaryKeys().get(getName());
+        if (primaryKeys.size() > 1) {
+            throw new IllegalArgumentException("The PrimaryKey for this Stock must consist of 1 String to use this method.");
+        }
+        return get(new PrimaryKey(Map.of(primaryKeys.get(0), key)));
     }
 
     /**

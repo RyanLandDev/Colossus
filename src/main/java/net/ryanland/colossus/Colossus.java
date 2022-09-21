@@ -4,6 +4,7 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.SelfUser;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.exceptions.InvalidTokenException;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
 import net.dv8tion.jda.api.interactions.commands.localization.LocalizationFunction;
 import net.dv8tion.jda.internal.utils.JDALogger;
@@ -101,7 +102,7 @@ public class Colossus {
         // Build the bot
         try {
             jda = builder.build();
-        } catch (LoginException e) {
+        } catch (InvalidTokenException e) {
             e.printStackTrace();
             LOGGER.error("Please put a valid token in the config.json file!");
             System.exit(0);

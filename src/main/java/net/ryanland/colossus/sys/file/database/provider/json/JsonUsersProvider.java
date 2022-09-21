@@ -25,7 +25,7 @@ public class JsonUsersProvider extends JsonProvider {
 
         // serializers
         json.add("_user_id", serializeElement(supply.get("_user_id")));
-        json.add("cooldowns", serializeElement(((List<Cooldown>) supply.get("cooldowns"))
+        json.add("cooldowns", serializeElement(((List<Cooldown>) supply.get("cooldowns", List.of()))
             .stream().map(cooldown -> {
                 JsonObject obj = new JsonObject();
                 obj.addProperty("command_name", cooldown.command().getName());
@@ -56,6 +56,6 @@ public class JsonUsersProvider extends JsonProvider {
         }
         values.put("cooldowns", cooldowns);
 
-        return new Supply(values);
+        return new Supply(getStockName(), values);
     }
 }

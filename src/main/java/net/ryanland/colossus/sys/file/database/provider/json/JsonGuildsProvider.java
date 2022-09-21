@@ -9,7 +9,7 @@ public class JsonGuildsProvider extends JsonProvider {
 
     @Override
     public String getStockName() {
-        return "members";
+        return "guilds";
     }
 
     @Override
@@ -31,6 +31,6 @@ public class JsonGuildsProvider extends JsonProvider {
         values.put("_guild_id", data.get("_guild_id").getAsString());
         if (data.get("prefix") != null) values.put("prefix", data.get("prefix").getAsString());
 
-        return new Supply(values);
+        return new Supply(getStockName(), values);
     }
 }

@@ -5,6 +5,7 @@ import net.ryanland.colossus.Colossus;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 public class Supply {
@@ -15,8 +16,9 @@ public class Supply {
 
     private List<String> modifiedKeys = new ArrayList<>();
 
-    public Supply(HashMap<String, Object> values) {
-        this.values = values;
+    public Supply(String stockName, Map<String, Object> values) {
+        this.stockName = stockName;
+        this.values = new HashMap<>(values);
 
         List<String> primaryKeys = Colossus.getDatabaseDriver().getPrimaryKeys().get(stockName);
         HashMap<String, Object> primaryKeyMap = new HashMap<>();
@@ -26,10 +28,10 @@ public class Supply {
         primaryKey = new PrimaryKey(primaryKeyMap);
     }
 
-    public Supply(PrimaryKey primaryKey, String stockName, HashMap<String, Object> values) {
+    public Supply(PrimaryKey primaryKey, String stockName, Map<String, Object> values) {
         this.primaryKey = primaryKey;
         this.stockName = stockName;
-        this.values = values;
+        this.values = new HashMap<>(values);
     }
 
     public Supply setStockName(String stockName) {
@@ -74,7 +76,7 @@ public class Supply {
      * Gets the value associated with the provided key, or if null, returns the provided default value
      */
     @SuppressWarnings("unchecked")
-    public <R> R get(String key, R defaultValue) {
+    public <R> R get(String key, Object defaultValue) {
         return (R) values.getOrDefault(key, defaultValue);
     }
 

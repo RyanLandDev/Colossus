@@ -164,7 +164,7 @@ public abstract class DatabaseDriver {
      * Alternative to {@link Objects#requireNonNullElse(Object, Object)} with the use of a {@link Supplier},
      * allowing the second value's code to be executed only if the first value is null.
      */
-    private static <T> T nullOr(T object, Supplier<T> compareTo) {
+    public static <T> T nullOr(T object, Supplier<T> compareTo) {
         return object != null ? object : compareTo.get();
     }
 }

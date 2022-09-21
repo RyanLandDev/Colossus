@@ -16,7 +16,7 @@ public class DisabledCommandHandler {
     }
 
     public List<BasicCommand> getDisabledCommands() {
-        return Colossus.getGlobalSupply().get(DISABLED_COMMANDS_KEY);
+        return Colossus.getGlobalSupply().get(DISABLED_COMMANDS_KEY, List.of());
     }
 
     public boolean isDisabled(BasicCommand command) {

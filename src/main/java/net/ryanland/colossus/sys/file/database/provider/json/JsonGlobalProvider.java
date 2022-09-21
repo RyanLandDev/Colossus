@@ -2,12 +2,10 @@ package net.ryanland.colossus.sys.file.database.provider.json;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 import net.ryanland.colossus.command.BasicCommand;
 import net.ryanland.colossus.command.CommandType;
 import net.ryanland.colossus.sys.file.database.Supply;
 
-import javax.annotation.Signed;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,7 +24,7 @@ public class JsonGlobalProvider extends JsonProvider {
 
         // serializers
         json.add("_bot_id", serializeElement(supply.get("_bot_id")));
-        json.add("disabled_commands", serializeElement(((List<BasicCommand>) supply.get("disabled_commands"))
+        json.add("disabled_commands", serializeElement(((List<BasicCommand>) supply.get("disabled_commands", List.of()))
             .stream().map(command -> {
                 JsonObject obj = new JsonObject();
                 obj.addProperty("command_name", command.getName());
@@ -51,6 +49,6 @@ public class JsonGlobalProvider extends JsonProvider {
         }
         values.put("disabled_commands", disabledCommands);
 
-        return new Supply(values);
+        return new Supply(getStockName(), values);
     }
 }

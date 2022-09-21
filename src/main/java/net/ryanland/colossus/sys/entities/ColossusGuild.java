@@ -72,7 +72,7 @@ public record ColossusGuild(Guild guild) implements Guild, ColossusDatabaseEntit
     }
 
     public String getPrefix() {
-        String prefix = getValue("_prf");
+        String prefix = getValue("prefix");
         if (prefix != null) return prefix;
         else return Colossus.getConfig().getPrefix();
     }
