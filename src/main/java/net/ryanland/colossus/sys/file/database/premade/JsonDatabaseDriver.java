@@ -72,7 +72,8 @@ public class JsonDatabaseDriver extends DatabaseDriver {
         JsonElement json = file.parseJson();
 
         if (isArray(supply.getStockName())) {
-            json.getAsJsonArray().remove(findStock(supply.getStockName()).get(supply.getPrimaryKey()).serialize());
+            Supply oldSupply = findStock(supply.getStockName()).get(supply.getPrimaryKey());
+            if (oldSupply != null) json.getAsJsonArray().remove(oldSupply.serialize());
             json.getAsJsonArray().add(obj);
         } else {
             String firstKey = getPrimaryKeys().get(supply.getStockName()).get(0);

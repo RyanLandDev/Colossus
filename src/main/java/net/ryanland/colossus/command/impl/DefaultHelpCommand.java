@@ -26,6 +26,7 @@ import java.util.List;
     guildOnly = false,
     canBeDisabled = false
 )
+// TODO: account for default slash command permissions
 public final class DefaultHelpCommand extends DefaultCommand implements CombinedCommand {
 
     @Override
