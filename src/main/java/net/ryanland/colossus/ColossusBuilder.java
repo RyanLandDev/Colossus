@@ -188,7 +188,7 @@ public class ColossusBuilder {
 
         // register core providers
         if (databaseDriver instanceof JsonDatabaseDriver) {
-            registerProviders(new JsonGlobalProvider(), new JsonGuildsProvider(), new JsonMembersProvider(), new JsonUsersProvider());
+            registerCoreProviders(new JsonGlobalProvider(), new JsonGuildsProvider(), new JsonMembersProvider(), new JsonUsersProvider());
         } else if (databaseDriver instanceof MongoDatabaseDriver) {
             //TODO
         } else if (databaseDriver instanceof SQLDatabaseDriver) {
@@ -200,6 +200,14 @@ public class ColossusBuilder {
         return new Colossus(jdaBuilder, config, categories, commands, contextCommands, localFiles,
             buttonListenerExpirationTimeAmount, buttonListenerExpirationTimeUnit, databaseDriver, providers,
             defaultPresetType, errorPresetType, successPresetType, localizationFunction, inhibitors, finalizers);
+    }
+
+    private void registerCoreProviders(Provider<?>... providers) {
+        for (Provider<?> provider : providers) {
+            if (!this.providers.containsKey(provider.getStockName())) {
+                registerProviders(provider);
+            }
+        }
     }
 
     /**
