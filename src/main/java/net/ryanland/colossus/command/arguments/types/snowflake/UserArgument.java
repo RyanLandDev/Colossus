@@ -8,6 +8,7 @@ import net.ryanland.colossus.command.arguments.ArgumentOptionData;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.ArgumentException;
 import net.ryanland.colossus.events.command.MessageCommandEvent;
 import net.ryanland.colossus.events.command.SlashCommandEvent;
+import net.ryanland.colossus.sys.entities.ColossusUser;
 
 public class UserArgument extends SnowflakeArgument<User> {
 
@@ -17,12 +18,12 @@ public class UserArgument extends SnowflakeArgument<User> {
     }
 
     @Override
-    public User resolveSlashCommandArgument(OptionMapping arg, SlashCommandEvent event) throws ArgumentException {
-        return arg.getAsUser();
+    public ColossusUser resolveSlashCommandArgument(OptionMapping arg, SlashCommandEvent event) throws ArgumentException {
+        return new ColossusUser(arg.getAsUser());
     }
 
     @Override
-    public User resolveMessageCommandArgument(MessageCommandEvent event, String id) throws ArgumentException {
-        return Colossus.getJDA().retrieveUserById(id).complete();
+    public ColossusUser resolveMessageCommandArgument(MessageCommandEvent event, String id) throws ArgumentException {
+        return new ColossusUser(Colossus.getJDA().retrieveUserById(id).complete());
     }
 }

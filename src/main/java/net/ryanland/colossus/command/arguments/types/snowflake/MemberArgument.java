@@ -7,6 +7,7 @@ import net.ryanland.colossus.command.arguments.ArgumentOptionData;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.ArgumentException;
 import net.ryanland.colossus.events.command.MessageCommandEvent;
 import net.ryanland.colossus.events.command.SlashCommandEvent;
+import net.ryanland.colossus.sys.entities.ColossusMember;
 
 public class MemberArgument extends SnowflakeArgument<Member> {
 
@@ -16,16 +17,16 @@ public class MemberArgument extends SnowflakeArgument<Member> {
     }
 
     @Override
-    public Member resolveSlashCommandArgument(OptionMapping arg, SlashCommandEvent event) throws ArgumentException {
+    public ColossusMember resolveSlashCommandArgument(OptionMapping arg, SlashCommandEvent event) throws ArgumentException {
         Member member = arg.getAsMember();
         if (member == null)
             throw new ArgumentException("The provided user must be a member of this server.");
-        return member;
+        return new ColossusMember(member);
     }
 
     @Override
-    public Member resolveMessageCommandArgument(MessageCommandEvent event, String id) throws ArgumentException {
-        return event.getGuild().getMemberById(id);
+    public ColossusMember resolveMessageCommandArgument(MessageCommandEvent event, String id) throws ArgumentException {
+        return new ColossusMember(event.getGuild().getMemberById(id));
     }
 
 }
