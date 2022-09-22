@@ -1,6 +1,7 @@
 package net.ryanland.colossus.sys.file.database;
 
 import net.ryanland.colossus.Colossus;
+import net.ryanland.colossus.sys.file.database.provider.Provider;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,6 +50,10 @@ public class Supply {
 
     public Stock getStock() {
         return Colossus.getDatabaseDriver().get(stockName);
+    }
+
+    public Provider<?> getProvider() {
+        return getStock().getProvider();
     }
 
     public HashMap<String, Object> getValues() {

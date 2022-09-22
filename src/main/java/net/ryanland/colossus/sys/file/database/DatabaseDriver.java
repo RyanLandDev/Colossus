@@ -108,7 +108,7 @@ public abstract class DatabaseDriver {
      * @return The {@link Supply} inserted
      */
     public Supply insert(Supply supply) {
-        Supply inserted = insertSupply(supply);
+        Supply inserted = insertSupply(supply.getProvider().deserialize(supply.serialize()));
         cache(inserted);
         return inserted;
     }
