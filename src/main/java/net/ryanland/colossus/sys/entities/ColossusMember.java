@@ -35,15 +35,15 @@ public record ColossusMember(Member member) implements Member, ColossusDatabaseE
     
     @NotNull
     @Override
-    public User getUser() {
-        return member().getUser();
+    public ColossusUser getUser() {
+        return new ColossusUser(member().getUser());
     }
 
     
     @NotNull
     @Override
-    public Guild getGuild() {
-        return member().getGuild();
+    public ColossusGuild getGuild() {
+        return new ColossusGuild(member().getGuild());
     }
 
     
