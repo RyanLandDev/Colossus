@@ -16,7 +16,7 @@ public class StringArgument extends ArgumentStringResolver<String> {
         return data;
     }
 
-    private Integer min = 0;
+    private Integer min = 1;
     private Integer max = 4000;
 
     public StringArgument() {
