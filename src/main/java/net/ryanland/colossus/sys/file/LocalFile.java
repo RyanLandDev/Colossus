@@ -17,8 +17,12 @@ public class LocalFile extends File {
         super(pathname);
     }
 
-    public String getContent() throws IOException {
-        return new String(Files.readAllBytes(toPath()));
+    public String getContent() {
+        try {
+            return new String(Files.readAllBytes(toPath()));
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
     public void write(byte[] content) {
@@ -48,11 +52,7 @@ public class LocalFile extends File {
         if (!getExtension().equals(LocalFileType.JSON.getExtension())) {
             throw new UnsupportedOperationException();
         }
-        try {
-            return (R) parseJson(getContent());
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
-        }
+        return (R) parseJson(getContent());
     }
 
     public static JsonElement parseJson(String json) {
