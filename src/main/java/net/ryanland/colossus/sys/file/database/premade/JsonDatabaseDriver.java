@@ -78,7 +78,7 @@ public class JsonDatabaseDriver extends DatabaseDriver {
         } else {
             String firstKey = getPrimaryKeys().get(supply.getStockName()).get(0);
             json.getAsJsonObject().remove(firstKey);
-            json.getAsJsonObject().add(firstKey, obj);
+            json.getAsJsonObject().add(supply.get(firstKey), obj);
         }
 
         file.write(json);
