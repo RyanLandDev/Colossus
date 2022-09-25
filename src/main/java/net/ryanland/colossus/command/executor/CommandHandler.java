@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
+import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
 import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.command.BasicCommand;
 import net.ryanland.colossus.command.Command;
@@ -107,8 +108,8 @@ public class CommandHandler {
         if (testGuild == null)
             throw new IllegalStateException("The bot is not in the provided test guild, or the ID is invalid.");
 
-        // remove commands that were previously registered but not anymore
-        Colossus.getJDA().updateCommands().queue();
+        // set updater
+        CommandListUpdateAction updater = Colossus.getConfig().isTesting() ? testGuild.updateCommands() : Colossus.getJDA().updateCommands();
 
         // normal commands
         for (Command command : COMMANDS) {
@@ -138,11 +139,7 @@ public class CommandHandler {
                 slashCmdData.addOptions(command.getOptionsData());
             }
 
-            if (Colossus.getConfig().isTesting()) {
-                testGuild.upsertCommand(slashCmdData).queue();
-            } else {
-                Colossus.getJDA().upsertCommand(slashCmdData).queue();
-            }
+            updater.addCommands(slashCmdData);
         }
 
         // Context commands
@@ -152,12 +149,11 @@ public class CommandHandler {
                 .setGuildOnly(contextCommand.isGuildOnly())
                 .setDefaultPermissions(contextCommand.getDefaultPermissions());
 
-            if (Colossus.getConfig().isTesting()) {
-                testGuild.upsertCommand(cmdData).queue();
-            } else {
-                Colossus.getJDA().upsertCommand(cmdData).queue();
-            }
+            updater.addCommands(cmdData);
         }
+
+        // upsert
+        updater.queue();
     }
 
     public static void handleAutocompleteEvent(CommandAutoCompleteInteractionEvent event) {
