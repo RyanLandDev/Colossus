@@ -5,7 +5,6 @@ import net.ryanland.colossus.command.permission.PermissionBuilder;
 import net.ryanland.colossus.command.permission.PermissionHolder;
 import net.ryanland.colossus.command.permission.PermissionRequirement;
 import net.ryanland.colossus.events.command.BasicCommandEvent;
-import net.ryanland.colossus.sys.entities.ColossusMember;
 
 /**
  * Helper implementation of {@link PermissionRequirement} for checking if a member has a {@link Permission}.

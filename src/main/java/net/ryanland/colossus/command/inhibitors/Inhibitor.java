@@ -1,7 +1,6 @@
 package net.ryanland.colossus.command.inhibitors;
 
 import net.ryanland.colossus.events.command.BasicCommandEvent;
-import net.ryanland.colossus.events.repliable.RepliableEvent;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 
 /**

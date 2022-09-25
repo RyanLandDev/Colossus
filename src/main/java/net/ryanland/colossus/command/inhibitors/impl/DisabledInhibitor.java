@@ -3,7 +3,6 @@ package net.ryanland.colossus.command.inhibitors.impl;
 import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.command.inhibitors.Inhibitor;
 import net.ryanland.colossus.events.command.BasicCommandEvent;
-import net.ryanland.colossus.events.command.CommandEvent;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 
 public class DisabledInhibitor implements Inhibitor {

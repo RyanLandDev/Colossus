@@ -1,9 +1,9 @@
 package net.ryanland.colossus.sys.entities;
 
+import net.ryanland.colossus.sys.file.database.DatabaseDriver;
 import net.ryanland.colossus.sys.file.database.PrimaryKey;
 import net.ryanland.colossus.sys.file.database.Stock;
 import net.ryanland.colossus.sys.file.database.Supply;
-import net.ryanland.colossus.sys.file.database.DatabaseDriver;
 
 import java.util.function.Function;
 

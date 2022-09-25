@@ -2,7 +2,6 @@ package net.ryanland.colossus.command.permission;
 
 import net.ryanland.colossus.command.BasicCommand;
 import net.ryanland.colossus.events.command.BasicCommandEvent;
-import net.ryanland.colossus.sys.entities.ColossusEntity;
 import net.ryanland.colossus.sys.entities.ColossusUser;
 
 /**

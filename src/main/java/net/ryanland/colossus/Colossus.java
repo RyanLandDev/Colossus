@@ -18,15 +18,14 @@ import net.ryanland.colossus.events.ButtonClickEvent;
 import net.ryanland.colossus.events.SelectMenuEvent;
 import net.ryanland.colossus.sys.file.Config;
 import net.ryanland.colossus.sys.file.LocalFile;
+import net.ryanland.colossus.sys.file.database.DatabaseDriver;
 import net.ryanland.colossus.sys.file.database.Supply;
 import net.ryanland.colossus.sys.file.database.premade.SQLDatabaseDriver;
 import net.ryanland.colossus.sys.file.database.provider.Provider;
-import net.ryanland.colossus.sys.file.database.DatabaseDriver;
 import net.ryanland.colossus.sys.interactions.select.BaseSelectMenu;
 import net.ryanland.colossus.sys.message.PresetType;
 import org.slf4j.Logger;
 
-import javax.security.auth.login.LoginException;
 import java.nio.file.InvalidPathException;
 import java.util.HashMap;
 import java.util.List;

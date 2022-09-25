@@ -3,7 +3,6 @@ package net.ryanland.colossus.command.permission.impl;
 import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.command.permission.PermissionRequirement;
 import net.ryanland.colossus.events.command.BasicCommandEvent;
-import net.ryanland.colossus.sys.entities.ColossusUser;
 
 public class BotOwnerRequirement implements PermissionRequirement {
 

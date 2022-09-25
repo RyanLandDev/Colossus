@@ -1,6 +1,5 @@
 package net.ryanland.colossus.events.command;
 
-import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.command.Command;
 import net.ryanland.colossus.command.arguments.ParsedArgumentMap;
 import net.ryanland.colossus.command.regular.SubCommandHolder;

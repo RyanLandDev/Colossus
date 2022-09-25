@@ -34,6 +34,7 @@ public class InternalEventListener extends ListenerAdapter {
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         if (!event.getAuthor().isBot()) {
+            if (Colossus.getConfig().getPrefix() == null) return;
             new Thread(() -> CommandHandler.run(new MessageCommandEvent(event))).start();
         }
     }
