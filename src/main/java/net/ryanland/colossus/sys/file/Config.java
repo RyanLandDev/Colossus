@@ -1,5 +1,6 @@
 package net.ryanland.colossus.sys.file;
 
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import org.apache.commons.collections4.map.LinkedMap;
@@ -44,7 +45,7 @@ public class Config {
 
     public JsonPrimitive get(String key) {
         Object value = values.get(key);
-        if (value == null) return null;
+        if (value instanceof JsonNull || value == null) return null;
         else return (JsonPrimitive) value;
     }
 
