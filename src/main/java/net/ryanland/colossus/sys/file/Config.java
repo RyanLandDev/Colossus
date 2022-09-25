@@ -50,15 +50,21 @@ public class Config {
     }
 
     public String getString(String key) {
-        return get(key).getAsString();
+        JsonPrimitive value = get(key);
+        if (value == null) return null;
+        return value.getAsString();
     }
 
-    public int getInt(String key) {
-        return get(key).getAsInt();
+    public Integer getInt(String key) {
+        JsonPrimitive value = get(key);
+        if (value == null) return null;
+        return value.getAsInt();
     }
 
-    public boolean getBoolean(String key) {
-        return get(key).getAsBoolean();
+    public Boolean getBoolean(String key) {
+        JsonPrimitive value = get(key);
+        if (value == null) return null;
+        return value.getAsBoolean();
     }
 
     public String getToken() {
