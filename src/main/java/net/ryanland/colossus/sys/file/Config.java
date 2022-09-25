@@ -43,7 +43,9 @@ public class Config {
     }
 
     public JsonPrimitive get(String key) {
-        return (JsonPrimitive) values.get(key);
+        Object value = values.get(key);
+        if (value == null) return null;
+        else return (JsonPrimitive) value;
     }
 
     public String getString(String key) {
