@@ -58,11 +58,16 @@ public class CommandExecutor {
         SlashCommandEvent eventAsSlashCommand = null;
         ArgumentParser argumentParser = null;
         if (event instanceof SlashCommandEvent) {
+            if (!(command instanceof SlashCommand) && !(command instanceof SubCommandHolder)) return;
+
             eventAsSlashCommand = (SlashCommandEvent) event;
             argumentParser = new SlashCommandArgumentParser(event);
 
             // Applying a different command if a subcommand is used
             if (eventAsSlashCommand.getSubCommandName() != null) {
+                // return if 0 subcommands are slash commands
+                if (command.getSubCommands().stream().filter(subcommand -> subcommand instanceof SlashCommand).toList().size() == 0) return;
+
                 SlashCommandEvent finalEventAsSlashCommand = eventAsSlashCommand;
                 // if a subcommand group is used, define this first before finding the actual subcommand,
                 // to prevent subcommands with duplicate names
@@ -88,6 +93,9 @@ public class CommandExecutor {
 
             // Find the subcommand if one is used
             if (command instanceof SubCommandHolder) {
+                // return if 0 subcommands are message commands
+                if (command.getSubCommands().stream().filter(subcommand -> subcommand instanceof MessageCommand).toList().size() == 0) return;
+                // get args
                 Deque<String> queue = ((MessageCommandArgumentParser) argumentParser).getRawArgumentQueue();
                 try {
                     event.setHeadSubCommandHolder((SubCommandHolder) command);
@@ -99,7 +107,7 @@ public class CommandExecutor {
                 } catch (IllegalArgumentException e) {
                     return;
                 }
-            }
+            } else if (!(command instanceof MessageCommand)) return;
         }
 
         event.setCommand(command);

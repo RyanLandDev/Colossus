@@ -28,9 +28,11 @@ public non-sealed class MessageCommandArgumentParser extends ArgumentParser {
         return (MessageCommandEvent) event;
     }
 
+    /**
+     * Create a queue of arguments, based on the message content split by spaces,
+     * with the prefix and first word (command name) removed
+     */
     public Deque<String> getRawArgumentQueue() {
-        // Create a queue of arguments, based on the message content split by spaces,
-        // with the prefix and first word (command name) removed
         String content = getEvent().getMessage().getContentRaw();
         Deque<String> queue = new ArrayDeque<>(List.of(
             content.replaceFirst("(^<@(!|)" + Colossus.getSelfUser().getId() + ">\\s*)|(^" +
