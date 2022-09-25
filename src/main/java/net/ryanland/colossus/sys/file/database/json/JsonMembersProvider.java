@@ -1,4 +1,4 @@
-package net.ryanland.colossus.sys.file.database.provider.json;
+package net.ryanland.colossus.sys.file.database.json;
 
 import com.google.gson.JsonObject;
 import net.ryanland.colossus.sys.file.database.Supply;
@@ -13,7 +13,7 @@ public class JsonMembersProvider extends JsonProvider {
     }
 
     @Override
-    public Object serialize(Supply supply) {
+    public JsonObject serialize(Supply supply) {
         JsonObject json = new JsonObject();
 
         // serializers

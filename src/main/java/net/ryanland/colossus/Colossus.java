@@ -19,9 +19,9 @@ import net.ryanland.colossus.events.SelectMenuEvent;
 import net.ryanland.colossus.sys.file.Config;
 import net.ryanland.colossus.sys.file.LocalFile;
 import net.ryanland.colossus.sys.file.database.DatabaseDriver;
+import net.ryanland.colossus.sys.file.database.Provider;
 import net.ryanland.colossus.sys.file.database.Supply;
-import net.ryanland.colossus.sys.file.database.premade.SQLDatabaseDriver;
-import net.ryanland.colossus.sys.file.database.provider.Provider;
+import net.ryanland.colossus.sys.file.database.sql.SQLDatabaseDriver;
 import net.ryanland.colossus.sys.interactions.select.BaseSelectMenu;
 import net.ryanland.colossus.sys.message.PresetType;
 import org.slf4j.Logger;
@@ -50,7 +50,7 @@ public class Colossus {
     private static long componentListenerExpirationTimeAmount;
     private static TimeUnit componentListenerExpirationTimeUnit;
     private static DatabaseDriver databaseDriver;
-    private static HashMap<String, Provider<?>> providers;
+    private static HashMap<String, Provider<?, ?>> providers;
     private static PresetType defaultPresetType;
     private static PresetType errorPresetType;
     private static PresetType successPresetType;
@@ -65,7 +65,7 @@ public class Colossus {
     public Colossus(JDABuilder builder, Config config, Set<Category> categories, List<Command> commands,
                     List<ContextCommand<?>> contextCommands, List<LocalFile> localFiles, long buttonListenerExpirationTimeAmount,
                     TimeUnit buttonListenerExpirationTimeUnit, DatabaseDriver databaseDriver,
-                    HashMap<String, Provider<?>> providers, PresetType defaultPresetType, PresetType errorPresetType,
+                    HashMap<String, Provider<?, ?>> providers, PresetType defaultPresetType, PresetType errorPresetType,
                     PresetType successPresetType, LocalizationFunction localizationFunction, List<Inhibitor> inhibitors,
                     List<Finalizer> finalizers) {
         this.builder = builder;
@@ -216,7 +216,7 @@ public class Colossus {
      * @see ColossusBuilder#registerProviders(Provider...)
      * @see Provider
      */
-    public static HashMap<String, Provider<?>> getProviders() {
+    public static HashMap<String, Provider<?, ?>> getProviders() {
         return providers;
     }
 
@@ -226,7 +226,7 @@ public class Colossus {
      * @see Provider
      */
     @SuppressWarnings("unchecked")
-    public static <R extends Provider<S>, S> R getProvider(String stockName) {
+    public static <R extends Provider<S1, S2>, S1, S2> R getProvider(String stockName) {
         return (R) providers.get(stockName);
     }
 

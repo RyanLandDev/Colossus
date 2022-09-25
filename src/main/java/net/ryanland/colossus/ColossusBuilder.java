@@ -36,14 +36,10 @@ import net.ryanland.colossus.sys.file.LocalFile;
 import net.ryanland.colossus.sys.file.LocalFileBuilder;
 import net.ryanland.colossus.sys.file.LocalFileType;
 import net.ryanland.colossus.sys.file.database.DatabaseDriver;
-import net.ryanland.colossus.sys.file.database.premade.JsonDatabaseDriver;
-import net.ryanland.colossus.sys.file.database.premade.MongoDatabaseDriver;
-import net.ryanland.colossus.sys.file.database.premade.SQLDatabaseDriver;
-import net.ryanland.colossus.sys.file.database.provider.Provider;
-import net.ryanland.colossus.sys.file.database.provider.json.JsonGlobalProvider;
-import net.ryanland.colossus.sys.file.database.provider.json.JsonGuildsProvider;
-import net.ryanland.colossus.sys.file.database.provider.json.JsonMembersProvider;
-import net.ryanland.colossus.sys.file.database.provider.json.JsonUsersProvider;
+import net.ryanland.colossus.sys.file.database.Provider;
+import net.ryanland.colossus.sys.file.database.json.*;
+import net.ryanland.colossus.sys.file.database.mongo.MongoDatabaseDriver;
+import net.ryanland.colossus.sys.file.database.sql.*;
 import net.ryanland.colossus.sys.message.DefaultPresetType;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 import net.ryanland.colossus.sys.message.PresetType;
@@ -92,7 +88,7 @@ public class ColossusBuilder {
     private final List<String> configEntries = new ArrayList<>(List.of(CORE_CONFIG_ENTRIES));
     private final List<Inhibitor> inhibitors = new ArrayList<>();
     private final List<Finalizer> finalizers = new ArrayList<>();
-    private final HashMap<String, Provider<?>> providers = new HashMap<>();
+    private final HashMap<String, Provider<?, ?>> providers = new HashMap<>();
 
     private boolean disableHelpCommand = false;
     private boolean disableCommandToggleCommands = false;
@@ -197,7 +193,8 @@ public class ColossusBuilder {
         } else if (databaseDriver instanceof MongoDatabaseDriver) {
             //TODO
         } else if (databaseDriver instanceof SQLDatabaseDriver) {
-            //TODO
+            registerCoreProviders(new SQLGlobalProvider(), new SQLGlobalProvider.DisabledCommandsProvider(),
+                new SQLGuildsProvider(), new SQLMembersProvider(), new SQLUsersProvider(), new SQLUsersProvider.CooldownsProvider());
         }
 
         buildConfigFile();
@@ -207,8 +204,8 @@ public class ColossusBuilder {
             defaultPresetType, errorPresetType, successPresetType, localizationFunction, inhibitors, finalizers);
     }
 
-    private void registerCoreProviders(Provider<?>... providers) {
-        for (Provider<?> provider : providers) {
+    private void registerCoreProviders(Provider<?, ?>... providers) {
+        for (Provider<?, ?> provider : providers) {
             if (!this.providers.containsKey(provider.getStockName())) {
                 registerProviders(provider);
             }
@@ -321,8 +318,8 @@ public class ColossusBuilder {
      * @return The builder
      * @see Provider
      */
-    public ColossusBuilder registerProviders(Provider<?>... providers) {
-        for (Provider<?> provider : providers) {
+    public ColossusBuilder registerProviders(Provider<?, ?>... providers) {
+        for (Provider<?, ?> provider : providers) {
             this.providers.put(provider.getStockName(), provider);
         }
         return this;

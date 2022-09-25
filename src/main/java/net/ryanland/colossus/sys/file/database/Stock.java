@@ -1,7 +1,6 @@
 package net.ryanland.colossus.sys.file.database;
 
 import net.ryanland.colossus.Colossus;
-import net.ryanland.colossus.sys.file.database.provider.Provider;
 
 import java.util.HashMap;
 import java.util.List;
@@ -28,7 +27,7 @@ public class Stock {
         return suppliers;
     }
 
-    public Provider<?> getProvider() {
+    public Provider<?, ?> getProvider() {
         return Colossus.getProvider(getName());
     }
 

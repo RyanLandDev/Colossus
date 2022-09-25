@@ -1,4 +1,4 @@
-package net.ryanland.colossus.sys.file.database.premade;
+package net.ryanland.colossus.sys.file.database.sql;
 
 import net.ryanland.colossus.Colossus;
 

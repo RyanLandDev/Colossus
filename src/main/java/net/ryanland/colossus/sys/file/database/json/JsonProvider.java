@@ -1,12 +1,12 @@
-package net.ryanland.colossus.sys.file.database.provider.json;
+package net.ryanland.colossus.sys.file.database.json;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.ryanland.colossus.sys.file.database.provider.Provider;
+import net.ryanland.colossus.sys.file.database.Provider;
 
-public abstract class JsonProvider extends Provider<JsonObject> {
+public abstract class JsonProvider extends Provider<JsonObject, JsonObject> {
 
     private static final Gson GSON_BUILDER = new GsonBuilder().create();
 

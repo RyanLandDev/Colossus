@@ -1,4 +1,4 @@
-package net.ryanland.colossus.sys.file.database.premade;
+package net.ryanland.colossus.sys.file.database.mongo;
 
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;

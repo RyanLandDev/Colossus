@@ -1,7 +1,6 @@
 package net.ryanland.colossus.sys.file.database;
 
 import net.ryanland.colossus.ColossusBuilder;
-import net.ryanland.colossus.sys.file.database.provider.Provider;
 
 import java.util.HashMap;
 import java.util.List;
@@ -16,7 +15,6 @@ import java.util.function.Supplier;
  *
  *
  * TODO
- * - test json
  * - mongo providers
  * - sql providers
  * - test mongo
@@ -110,7 +108,7 @@ public abstract class DatabaseDriver {
      * @return The {@link Supply} inserted
      */
     public Supply insert(Supply supply) {
-        Supply inserted = insertSupply(supply.getProvider().deserialize(supply.serialize()));
+        Supply inserted = insertSupply(supply);
         cache(inserted);
         return inserted;
     }

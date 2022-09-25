@@ -1,4 +1,4 @@
-package net.ryanland.colossus.sys.file.database.provider.json;
+package net.ryanland.colossus.sys.file.database.json;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -20,7 +20,7 @@ public class JsonUsersProvider extends JsonProvider {
 
     @Override
     @SuppressWarnings("unchecked")
-    public Object serialize(Supply supply) {
+    public JsonObject serialize(Supply supply) {
         JsonObject json = new JsonObject();
 
         // serializers

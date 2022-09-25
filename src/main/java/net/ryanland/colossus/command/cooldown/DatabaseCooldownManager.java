@@ -4,6 +4,7 @@ import net.ryanland.colossus.ColossusBuilder;
 import net.ryanland.colossus.sys.entities.ColossusUser;
 import net.ryanland.colossus.sys.file.database.DatabaseDriver;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class DatabaseCooldownManager implements CooldownManager {
 
     @Override
     public List<Cooldown> get(ColossusUser user) {
-        return user.getValue(COOLDOWNS_KEY);
+        return user.getValue(COOLDOWNS_KEY, new ArrayList<>());
     }
 
     @Override

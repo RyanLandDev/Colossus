@@ -1,4 +1,4 @@
-package net.ryanland.colossus.sys.file.database.premade;
+package net.ryanland.colossus.sys.file.database.json;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -67,6 +67,8 @@ public class JsonDatabaseDriver extends DatabaseDriver {
 
     @Override
     protected Supply insertSupply(Supply supply) {
+        supply = supply.getProvider().deserialize(supply.serialize());
+
         JsonObject obj = supply.serialize();
         LocalFile file = files.get(supply.getStockName());
         JsonElement json = file.parseJson();

@@ -1,7 +1,6 @@
 package net.ryanland.colossus.sys.file.database;
 
 import net.ryanland.colossus.Colossus;
-import net.ryanland.colossus.sys.file.database.provider.Provider;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,7 +51,7 @@ public class Supply {
         return Colossus.getDatabaseDriver().get(stockName);
     }
 
-    public Provider<?> getProvider() {
+    public Provider<?, ?> getProvider() {
         return getStock().getProvider();
     }
 
@@ -62,6 +61,10 @@ public class Supply {
 
     public List<String> getModifiedKeys() {
         return modifiedKeys;
+    }
+
+    public void setModifiedKeys(List<String> modifiedKeys) {
+        this.modifiedKeys = modifiedKeys;
     }
 
     @SuppressWarnings("unchecked")

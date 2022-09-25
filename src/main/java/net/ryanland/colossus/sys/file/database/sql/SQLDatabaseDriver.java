@@ -1,4 +1,4 @@
-package net.ryanland.colossus.sys.file.database.premade;
+package net.ryanland.colossus.sys.file.database.sql;
 
 import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.sys.file.database.DatabaseDriver;
@@ -10,10 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * SQL implementation of {@link DatabaseDriver}.<br>
@@ -43,8 +40,8 @@ import java.util.Map;
  *     <ul>
  *         <li>{@code user_id - PK NN varchar(25)}</li>
  *         <li>{@code command_name - PK NN varchar(32)}</li>
- *         <li>{@code expires - NN datetime}</li>
  *         <li>{@code command_type - PK NN tinyint}</li>
+ *         <li>{@code expires - NN datetime}</li>
  *     </ul></li>
  * <li>{@code disabled_commands}
  *     <ul>
@@ -69,11 +66,20 @@ public abstract class SQLDatabaseDriver extends DatabaseDriver {
         try {
             return statement.executeQuery();
         } catch (SQLException e) {
-            throw new IllegalArgumentException(e);
+            try {
+                statement.executeUpdate();
+                return null;
+            } catch (SQLException ex) {
+                throw new IllegalArgumentException(ex);
+            }
         }
     }
 
     public final ResultSet query(String query, Object... params) {
+        return query(query, List.of(params));
+    }
+
+    private PreparedStatement prepareStatement(String query, Collection<Object> params) {
         try {
             PreparedStatement ps = getConnection().prepareStatement(query);
             int i = 0;
@@ -81,9 +87,22 @@ public abstract class SQLDatabaseDriver extends DatabaseDriver {
                 i++;
                 ps.setObject(i, param);
             }
-            return ps.executeQuery();
+            return ps;
         } catch (SQLException e) {
             throw new IllegalArgumentException(e);
+        }
+    }
+
+    public final ResultSet query(String query, Collection<Object> params) {
+        try {
+            return prepareStatement(query, params).executeQuery();
+        } catch (SQLException e) {
+            try {
+                prepareStatement(query, params).executeUpdate();
+                return null;
+            } catch (SQLException ex) {
+                throw new IllegalArgumentException(ex);
+            }
         }
     }
 
@@ -113,7 +132,7 @@ public abstract class SQLDatabaseDriver extends DatabaseDriver {
 
     @Override
     protected Stock findStock(String stockName) {
-        ResultSet result = query("SELECT * FROM ?", stockName);
+        ResultSet result = query("SELECT * FROM " + stockName);
         try {
             getConnection().getMetaData().getPrimaryKeys(null, null, stockName);
             final HashMap<PrimaryKey, Supply> suppliers = new HashMap<>();
@@ -132,18 +151,16 @@ public abstract class SQLDatabaseDriver extends DatabaseDriver {
 
     @Override
     protected void deleteStock(String stockName) {
-        query("DROP TABLE ?", stockName);
+        query("DROP TABLE " + stockName);
     }
 
     @Override
     protected Supply insertSupply(Supply supply) {
         Map<String, Object> data = supply.serialize();
+        supply.setModifiedKeys(new ArrayList<>());
+        List<Object> params = new ArrayList<>(data.values());
 
-        List<Object> params = new ArrayList<>();
-        params.add(supply.getStockName());
-        params.addAll(data.values());
-
-        query("INSERT INTO ? (" + String.join(", ", data.keySet()) + ") VALUES" +
+        query("INSERT INTO " + supply.getStockName() + " (" + String.join(", ", data.keySet()) + ") VALUES" +
                 "(" + "?, ".repeat(data.size()-1) + "?)", params);
         return supply;
     }
@@ -160,18 +177,19 @@ public abstract class SQLDatabaseDriver extends DatabaseDriver {
 
     @Override
     public void updateSupply(Supply supply) {
-        List<String> modifiedKeys = supply.getModifiedKeys();
         PrimaryKey pk = supply.getPrimaryKey();
 
         List<Object> params = new ArrayList<>();
-        params.add(supply.getStockName());
         Map<String, Object> data = supply.serialize();
+
+        List<String> modifiedKeys = supply.getModifiedKeys();
+        if (modifiedKeys.size() == 0) return;
 
         modifiedKeys.forEach(key -> params.add(data.get(key)));
         List<String> keys = new ArrayList<>(pk.keys().keySet());
         keys.forEach(key -> params.add(data.get(key)));
 
-        query("UPDATE ? SET " + String.join(" = ?, ", modifiedKeys) + " = ? " + getWhereClause(keys), params);
+        query("UPDATE " + supply.getStockName() + " SET " + String.join(" = ?, ", modifiedKeys) + " = ? " + getWhereClause(keys), params);
     }
 
     @Override
@@ -180,11 +198,8 @@ public abstract class SQLDatabaseDriver extends DatabaseDriver {
         List<String> keys = new ArrayList<>(pk.keys().keySet());
 
         Map<String, Object> data = supply.serialize();
-        List<Object> params = new ArrayList<>();
+        List<Object> params = keys.stream().map(data::get).toList();
 
-        params.add(supply.getStockName());
-        keys.forEach(key -> params.add(data.get(key)));
-
-        query("DELETE FROM ? " + getWhereClause(keys), params);
+        query("DELETE FROM " + supply.getStockName() + " " + getWhereClause(keys), params);
     }
 }
