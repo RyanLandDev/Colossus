@@ -14,6 +14,7 @@ import net.ryanland.colossus.sys.util.InteractionUtil;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 public class PresetBuilder {
@@ -254,9 +255,9 @@ public class PresetBuilder {
 
     /**
      * Creates one or more {@link ButtonRow}s and adds them to this {@link PresetBuilder} based on the buttons provided.
-     * @see #addButtons(List)
+     * @see #addButtons(Collection)
      * @see #addComponentRow(ComponentRow)
-     * @see InteractionUtil#ofBase(List)
+     * @see InteractionUtil#ofBase(Collection)
      */
     public PresetBuilder addButtons(BaseButton... buttons) {
         return addButtons(List.of(buttons));
@@ -266,9 +267,9 @@ public class PresetBuilder {
      * Creates one or more {@link ButtonRow}s and adds them to this {@link PresetBuilder} based on the buttons provided.
      * @see #addButtons(BaseButton...)
      * @see #addComponentRow(ComponentRow)
-     * @see InteractionUtil#ofBase(List)
+     * @see InteractionUtil#ofBase(Collection)
      */
-    public PresetBuilder addButtons(List<BaseButton> buttons) {
+    public PresetBuilder addButtons(Collection<BaseButton> buttons) {
         componentRows.addAll(InteractionUtil.ofBase(buttons));
         return this;
     }

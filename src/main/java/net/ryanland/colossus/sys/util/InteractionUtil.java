@@ -5,10 +5,7 @@ import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.ryanland.colossus.sys.interactions.button.BaseButton;
 import net.ryanland.colossus.sys.interactions.button.ButtonRow;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.List;
+import java.util.*;
 
 public class InteractionUtil {
 
@@ -31,7 +28,7 @@ public class InteractionUtil {
         return rows;
     }
 
-    public static List<ButtonRow> ofBase(List<BaseButton> components) {
+    public static List<ButtonRow> ofBase(Collection<BaseButton> components) {
         Deque<BaseButton> buttons = new ArrayDeque<>(components);
         List<BaseButton> queue = new ArrayList<>();
         List<ButtonRow> rows = new ArrayList<>();
