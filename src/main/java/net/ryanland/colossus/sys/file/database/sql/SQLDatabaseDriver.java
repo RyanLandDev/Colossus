@@ -155,7 +155,7 @@ public abstract class SQLDatabaseDriver extends DatabaseDriver {
     }
 
     @Override
-    protected Supply insertSupply(Supply supply) {
+    public Supply insertSupply(Supply supply) {
         Map<String, Object> data = supply.serialize();
         supply.setModifiedKeys(new ArrayList<>());
         List<Object> params = new ArrayList<>(data.values());

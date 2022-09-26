@@ -114,11 +114,13 @@ public abstract class DatabaseDriver {
     }
 
     /**
-     * Serializes a new {@link Supply} and inserts it in the database.
+     * Serializes a new {@link Supply} and inserts it in the database.<br>
+     * Note: Does not update the cache. Use {@link #insert(Supply)} or {@link #cache(Supply)} instead.
      * @param supply The {@link Supply} to insert
      * @return The {@link Supply} inserted
+     * @see #insert(Supply)
      */
-    protected abstract Supply insertSupply(Supply supply);
+    public abstract Supply insertSupply(Supply supply);
 
     /**
      * Serializes the provided {@link Supply} and updates it in the provided {@link Stock} in the database.

@@ -64,7 +64,7 @@ public class MongoDatabaseDriver extends DatabaseDriver {
     }
 
     @Override
-    protected Supply insertSupply(Supply supply) {
+    public Supply insertSupply(Supply supply) {
         collections.get(supply.getStockName()).insertOne(supply.serialize());
         return supply;
     }

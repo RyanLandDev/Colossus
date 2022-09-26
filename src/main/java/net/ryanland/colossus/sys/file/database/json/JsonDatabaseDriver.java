@@ -66,7 +66,7 @@ public class JsonDatabaseDriver extends DatabaseDriver {
     }
 
     @Override
-    protected Supply insertSupply(Supply supply) {
+    public Supply insertSupply(Supply supply) {
         supply = supply.getProvider().deserialize(supply.serialize());
 
         JsonObject obj = supply.serialize();
