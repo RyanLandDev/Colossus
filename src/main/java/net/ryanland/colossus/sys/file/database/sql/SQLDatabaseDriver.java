@@ -79,6 +79,34 @@ public abstract class SQLDatabaseDriver extends DatabaseDriver {
         return query(query, List.of(params));
     }
 
+    @SuppressWarnings("unchecked")
+    public final <R> R queryValue(String query, Object... params) {
+        try {
+            return (R) query(query, params).getObject(1);
+        } catch (SQLException e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
+
+    public final List<Supply> querySupplies(String query, Object... params) {
+        List<Supply> supplies = new ArrayList<>();
+        String stockName = query.replaceFirst("^SELECT .+ FROM ", "").replaceFirst(" .+$", "");
+        ResultSet data = query(query, params);
+        try {
+            while (data.next()) {
+                Supply supply = Colossus.getProvider(stockName).deserialize(data);
+                supplies.add(supply);
+            }
+        } catch (SQLException e) {
+            throw new IllegalArgumentException(e);
+        }
+        return supplies;
+    }
+
+    public final Supply querySupply(String query, Object... params) {
+        return querySupplies(query, params).get(0);
+    }
+
     private PreparedStatement prepareStatement(String query, Collection<Object> params) {
         try {
             PreparedStatement ps = getConnection().prepareStatement(query);

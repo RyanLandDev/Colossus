@@ -50,7 +50,9 @@ public class ButtonClickEvent implements ComponentInteractionRepliableEvent {
                                    Runnable actionRowEmptier, long timeAmount, TimeUnit timeUnit) {
         addListener(msgId, buttonRows);
         ExecutorUtil.schedule(msgId.toString(), () -> {
-            actionRowEmptier.run();
+            try {
+                actionRowEmptier.run();
+            } catch (Exception ignored) {}
             removeListeners(msgId);
         }, timeAmount, timeUnit);
     }
