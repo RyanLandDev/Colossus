@@ -197,7 +197,7 @@ public class ColossusBuilder {
                 new SQLGuildsProvider(), new SQLMembersProvider(), new SQLUsersProvider(), new SQLUsersProvider.CooldownsProvider());
         }
 
-        buildConfigFile();
+        if (configDirectory != null) buildConfigFile();
 
         return new Colossus(jdaBuilder, config, categories, commands, contextCommands, localFiles,
             buttonListenerExpirationTimeAmount, buttonListenerExpirationTimeUnit, databaseDriver, providers,
