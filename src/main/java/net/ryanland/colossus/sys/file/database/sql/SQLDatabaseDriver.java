@@ -104,7 +104,9 @@ public abstract class SQLDatabaseDriver extends DatabaseDriver {
     }
 
     public final Supply querySupply(String query, Object... params) {
-        return querySupplies(query, params).get(0);
+        List<Supply> result = querySupplies(query, params);
+        if (result.size() == 0) return null;
+        else return result.get(0);
     }
 
     private PreparedStatement prepareStatement(String query, Collection<Object> params) {
