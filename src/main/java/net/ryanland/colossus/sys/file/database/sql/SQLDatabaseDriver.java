@@ -84,7 +84,7 @@ public abstract class SQLDatabaseDriver extends DatabaseDriver {
         try {
             return (R) query(query, params).getObject(1);
         } catch (SQLException e) {
-            throw new IllegalArgumentException(e);
+            return null;
         }
     }
 
