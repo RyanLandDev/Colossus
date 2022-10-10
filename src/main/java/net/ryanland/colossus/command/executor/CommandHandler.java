@@ -102,12 +102,17 @@ public class CommandHandler {
     }
 
     public static void upsertAll() {
-        Guild testGuild = Colossus.getJDA().getGuildById(Colossus.getConfig().getTestGuildId());
-        if (testGuild == null)
+        if (!Colossus.getConfig().getBoolean("slash_commands.enabled")) return;
+
+        boolean global = Colossus.getConfig().getBoolean("slash_commands.global");
+        Guild privateGuild = Colossus.getJDA().getGuildById(Colossus.getConfig().getString("slash_commands.guild_id"));
+
+        if (!global && privateGuild == null) {
             throw new IllegalStateException("The bot is not in the provided test guild, or the ID is invalid.");
+        }
 
         // set updater
-        CommandListUpdateAction updater = Colossus.getConfig().isTesting() ? testGuild.updateCommands() : Colossus.getJDA().updateCommands();
+        CommandListUpdateAction updater = global ? Colossus.getJDA().updateCommands() : privateGuild.updateCommands();
 
         // normal commands
         for (Command command : COMMANDS) {

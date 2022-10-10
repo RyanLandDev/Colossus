@@ -8,6 +8,7 @@ import net.ryanland.colossus.command.arguments.types.primitive.ArgumentStringRes
 import net.ryanland.colossus.events.command.CommandEvent;
 
 import java.util.EnumSet;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class EnumArgument<E extends Enum<E> & EnumArgument.InputEnum> extends ArgumentStringResolver<E> {
@@ -20,12 +21,15 @@ public class EnumArgument<E extends Enum<E> & EnumArgument.InputEnum> extends Ar
 
     @Override
     public ArgumentOptionData getArgumentOptionData() {
-        return super.getArgumentOptionData().addAutoCompletableChoices(
-            associatedEnum.stream()
-                .filter(e -> !e.isHidden())
-                .map(e -> new Command.Choice(e.getTitle(), e.getTitle()))
-                .toArray(Command.Choice[]::new)
-        );
+        List<Command.Choice> choices = associatedEnum.stream()
+            .filter(e -> !e.isHidden())
+            .map(e -> new Command.Choice(e.getTitle(), e.getTitle()))
+            .toList();
+        if (choices.size() > 25) {
+            return super.getArgumentOptionData().addAutoCompletableChoices(choices);
+        } else {
+            return super.getArgumentOptionData().addChoices(choices);
+        }
     }
 
     @Override

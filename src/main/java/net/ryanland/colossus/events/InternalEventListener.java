@@ -21,6 +21,7 @@ public class InternalEventListener extends ListenerAdapter {
     // Execute slash command
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
+        if (!Colossus.getConfig().getBoolean("slash_commands.enabled")) return;
         new Thread(() -> CommandHandler.run(new SlashCommandEvent(event))).start();
     }
 
@@ -34,7 +35,8 @@ public class InternalEventListener extends ListenerAdapter {
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         if (!event.getAuthor().isBot()) {
-            if (Colossus.getConfig().getPrefix() == null) return;
+            if (!Colossus.getConfig().getBoolean("message_commands.enabled") ||
+                Colossus.getConfig().getString("message_commands.prefix") == null) return;
             new Thread(() -> CommandHandler.run(new MessageCommandEvent(event))).start();
         }
     }

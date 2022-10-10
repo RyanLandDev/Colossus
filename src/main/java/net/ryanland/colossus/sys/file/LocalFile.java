@@ -3,6 +3,8 @@ package net.ryanland.colossus.sys.file;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
+import net.ryanland.colossus.sys.file.database.json.JsonProvider;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -10,6 +12,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.StandardOpenOption;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.stream.Collectors;
 
 public class LocalFile extends File {
 
@@ -59,10 +66,45 @@ public class LocalFile extends File {
         return JsonParser.parseString(json);
     }
 
-    public static JsonObject jsonOfKeys(String... keys) {
+    public static JsonObject jsonOfEntries(Map<String, Object> entries) {
         JsonObject json = new JsonObject();
-        for (String key : keys) json.addProperty(key, "");
+        for (String key : entries.keySet()) {
+            if (key.contains(".")) {
+                key = key.replaceFirst("\\..+$", "");
+                if (!json.has(key)) {
+                    String finalKey = key;
+                    // add a json object using recursion, with all members of the object as parameters (keys starting with "key.")
+                    // dont use a stream to preserve the LinkedHashMap order
+                    LinkedHashMap<String, Object> newEntries = new LinkedHashMap<>();
+                    entries.forEach((eKey, eValue) -> {
+                        if (eKey.startsWith(finalKey + ".")) {
+                            newEntries.put(eKey.replaceFirst("^" + Matcher.quoteReplacement(finalKey) + "\\.", ""), eValue);
+                        }
+                    });
+                    JsonObject obj = jsonOfEntries(newEntries);
+                    json.add(key, obj);
+                }
+            } else {
+                json.add(key, JsonProvider.serializeElement(entries.get(key)));
+            }
+        }
         return json;
+    }
+
+    public static LinkedHashMap<String, Object> mapOfJson(JsonObject json) {
+        LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+        addJsonToMap(map, json, "");
+        return map;
+    }
+
+    private static void addJsonToMap(LinkedHashMap<String, Object> map, JsonObject json, String keyPrefix) {
+        for (Map.Entry<String, JsonElement> entry : json.entrySet()) {
+            if (entry.getValue() instanceof JsonObject) {
+                addJsonToMap(map, (JsonObject) entry.getValue(), keyPrefix + entry.getKey() + ".");
+            } else {
+                map.put(keyPrefix + entry.getKey(), JsonProvider.deserializeElement(entry.getValue()));
+            }
+        }
     }
 
     public static LocalFile validateDirectoryPath(String path) {

@@ -1,8 +1,6 @@
 package net.ryanland.colossus;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
+import com.google.gson.*;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.SelfUser;
@@ -47,6 +45,7 @@ import net.ryanland.colossus.sys.message.PresetType;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * A helper class for making a {@link Colossus} bot ready for startup
@@ -68,24 +67,28 @@ public class ColossusBuilder {
         new CooldownFinalizer()
     };
 
-    private static final String[] CORE_CONFIG_ENTRIES = new String[]{
-        "token",
-        "client_id",
-        "prefix",
+    private static final LinkedHashMap<String, Object> CORE_CONFIG_ENTRIES = new LinkedHashMap<>();
 
-        "support_guild",
-        "test_guild",
-        "testing"
-    };
+    static {
+        CORE_CONFIG_ENTRIES.put("token", "");
+        CORE_CONFIG_ENTRIES.put("client_id", "");
+
+        CORE_CONFIG_ENTRIES.put("slash_commands.enabled", true);
+        CORE_CONFIG_ENTRIES.put("slash_commands.global", false);
+        CORE_CONFIG_ENTRIES.put("slash_commands.guild_id", "");
+
+        CORE_CONFIG_ENTRIES.put("message_commands.enabled", false);
+        CORE_CONFIG_ENTRIES.put("message_commands.prefix", "!");
+    }
 
     private JDABuilder jdaBuilder;
     private Config config;
     private String configDirectory;
-    private final Set<Category> categories = new HashSet<>();
+    private final Set<Category> categories = new LinkedHashSet<>();
     private final List<Command> commands = new ArrayList<>();
     private final List<ContextCommand<?>> contextCommands = new ArrayList<>();
     private final List<LocalFile> localFiles = new ArrayList<>();
-    private final List<String> configEntries = new ArrayList<>(List.of(CORE_CONFIG_ENTRIES));
+    private final LinkedHashMap<String, Object> configEntries = CORE_CONFIG_ENTRIES;
     private final List<Inhibitor> inhibitors = new ArrayList<>();
     private final List<Finalizer> finalizers = new ArrayList<>();
     private final HashMap<String, Provider<?, ?>> providers = new HashMap<>();
@@ -107,8 +110,8 @@ public class ColossusBuilder {
      *                        This directory should be created manually before running your bot. When running, a config file<br>
      *                        will be automatically generated with empty fields for you to fill in.<br><br>
      *
-     *                        <strong>WARNING:</strong> It is recommended to {@code .gitignore} your config.json to prevent
-     *                        your bot token getting in hands of the wrong people.
+     *                        <strong>WARNING:</strong> It is recommended to {@code .gitignore} your config.json
+     *                        if your code is public to prevent your bot token getting in hands of the wrong people.
      * @see Colossus
      */
     public ColossusBuilder(String configDirectory) {
@@ -118,7 +121,7 @@ public class ColossusBuilder {
 
         // Prepare the builder
         buildConfigFile();
-        jdaBuilder = JDABuilder.createDefault(config.getToken())
+        jdaBuilder = JDABuilder.createDefault(config.getString("token"))
             .addEventListeners(CORE_EVENTS);
     }
 
@@ -149,7 +152,7 @@ public class ColossusBuilder {
      *
      * @param prefix The prefix of the bot, used for message commands.
      *               In addition to this prefix, the bot will also listen for mentions.
-     * @param testGuild The ID of the Discord server you are testing your bot in.<br><br>
+     * @param guildId The ID of the Discord server you are running your bot in.<br><br>
      *
      *                  Your server's ID can be retrieved by:<br>
      *                  - Open Discord<br>
@@ -158,10 +161,26 @@ public class ColossusBuilder {
      *                  - Paste it here<br>
      * @see Colossus
      */
-    public ColossusBuilder(String token, String clientId, String prefix, String testGuild) {
-        config = new Config(token, clientId, prefix, "", testGuild, true);
-        jdaBuilder = JDABuilder.createDefault(config.getToken())
+    public ColossusBuilder(String token, String clientId, String prefix, String guildId) {
+        Map<String, JsonPrimitive> values = new LinkedHashMap<>();
+
+        values.put("token", toPrimitive(token));
+        values.put("client_id", toPrimitive(clientId));
+
+        values.put("slash_commands.enabled", toPrimitive(guildId != null));
+        values.put("slash_commands.global", toPrimitive(false));
+        values.put("slash_commands.guild_id", toPrimitive(guildId));
+
+        values.put("message_commands.enabled", toPrimitive(prefix != null));
+        values.put("message_commands.prefix", toPrimitive(prefix));
+
+        config = new Config(values);
+        jdaBuilder = JDABuilder.createDefault(config.getString("token"))
             .addEventListeners(CORE_EVENTS);
+    }
+
+    private static JsonPrimitive toPrimitive(Object value) {
+        return (JsonPrimitive) JsonProvider.serializeElement(value);
     }
 
     /**
@@ -197,7 +216,7 @@ public class ColossusBuilder {
                 new SQLGuildsProvider(), new SQLMembersProvider(), new SQLUsersProvider(), new SQLUsersProvider.CooldownsProvider());
         }
 
-        if (configDirectory != null) buildConfigFile();
+        buildConfigFile();
 
         return new Colossus(jdaBuilder, config, categories, commands, contextCommands, localFiles,
             buttonListenerExpirationTimeAmount, buttonListenerExpirationTimeUnit, databaseDriver, providers,
@@ -411,7 +430,8 @@ public class ColossusBuilder {
     /**
      * Register custom entries that will appear in the {@code config.json} file.<br>
      * These can be retrieved later using the {@link Config} class.
-     * @param keys The keys to register
+     * <p>For sub-objects, use dots (e.g. "message_commands.prefix").
+     * @param entries The entries to register (key-defaultValue pairs)
      * @return The builder
      * @see Config
      * @see Config#get(String)
@@ -419,8 +439,25 @@ public class ColossusBuilder {
      * @see Config#getInt(String)
      * @see Config#getBoolean(String)
      */
-    public ColossusBuilder registerConfigEntries(String... keys) {
-        configEntries.addAll(List.of(keys));
+    public ColossusBuilder registerConfigEntries(Map<String, Object> entries) {
+        configEntries.putAll(entries);
+        return this;
+    }
+
+    /**
+     * Register custom entries that will appear in the {@code config.json} file.<br>
+     * These can be retrieved later using the {@link Config} class.
+     * @param key The config key. For sub-objects, use dots (e.g. "message_commands.prefix").
+     * @param defaultValue The default config value
+     * @return The builder
+     * @see Config
+     * @see Config#get(String)
+     * @see Config#getString(String)
+     * @see Config#getInt(String)
+     * @see Config#getBoolean(String)
+     */
+    public ColossusBuilder registerConfigEntry(String key, Object defaultValue) {
+        configEntries.put(key, defaultValue);
         return this;
     }
 
@@ -496,24 +533,21 @@ public class ColossusBuilder {
         LocalFile configFile = new LocalFileBuilder()
             .setName(configDirectory + "/config")
             .setFileType(LocalFileType.JSON)
-            .setDefaultContent(gson.toJson(LocalFile.jsonOfKeys(configEntries.toArray(new String[0]))))
             .buildFile();
 
         // Parse the config file's JSON
         JsonObject configJson = configFile.parseJson();
 
-        // Check for missing config keys, and if they are found, add them and modify the file
-        boolean changed = false;
-        for (String key : configEntries) {
-            if (!configJson.has(key)) {
-                configJson.addProperty(key, "");
-                changed = true;
-            }
-        }
-        if (changed) configFile.write(gson.toJson(configJson));
+        LinkedHashMap<String, Object> entries = new LinkedHashMap<>(configEntries); // set entries to default entries
+        LinkedHashMap<String, Object> currentEntries = LocalFile.mapOfJson(configJson);
+        entries.putAll(currentEntries); // put all current entries and thus overwrite default entries
+
+        configJson = LocalFile.jsonOfEntries(entries);
+        configFile.write(gson.toJson(configJson));
 
         // Create a new Config and set it
-        config = new Config(configJson);
+        config = new Config(entries.entrySet().stream()
+            .collect(Collectors.toMap(Map.Entry::getKey, entry -> (JsonPrimitive) JsonProvider.serializeElement(entry.getValue()))));
     }
 
     /**

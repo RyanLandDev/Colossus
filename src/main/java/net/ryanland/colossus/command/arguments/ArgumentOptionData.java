@@ -65,4 +65,34 @@ public class ArgumentOptionData extends OptionData {
     public BiConsumer<CommandAutoCompleteInteractionEvent, Argument<?>> getAutocompleteConsumer() {
         return autocompleteConsumer;
     }
+
+    @NotNull
+    @Override
+    public ArgumentOptionData addChoice(@NotNull String name, double value) {
+        return (ArgumentOptionData) super.addChoice(name, value);
+    }
+
+    @NotNull
+    @Override
+    public ArgumentOptionData addChoice(@NotNull String name, long value) {
+        return (ArgumentOptionData) super.addChoice(name, value);
+    }
+
+    @NotNull
+    @Override
+    public ArgumentOptionData addChoice(@NotNull String name, @NotNull String value) {
+        return (ArgumentOptionData) super.addChoice(name, value);
+    }
+
+    @NotNull
+    @Override
+    public ArgumentOptionData addChoices(@NotNull Command.Choice... choices) {
+        return (ArgumentOptionData) super.addChoices(choices);
+    }
+
+    @NotNull
+    @Override
+    public ArgumentOptionData addChoices(@NotNull Collection<? extends Command.Choice> choices) {
+        return (ArgumentOptionData) super.addChoices(choices);
+    }
 }

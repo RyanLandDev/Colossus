@@ -66,7 +66,7 @@ public record ColossusGuild(Guild guild) implements Guild, ColossusDatabaseEntit
     public String getPrefix() {
         String prefix = getValue("prefix");
         if (prefix != null) return prefix;
-        else return Colossus.getConfig().getPrefix();
+        else return Colossus.getConfig().getString("message_commands.prefix");
     }
 
     
