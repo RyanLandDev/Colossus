@@ -26,7 +26,6 @@ import java.util.List;
     guildOnly = false,
     canBeDisabled = false
 )
-// TODO: account for default slash command permissions
 public final class DefaultHelpCommand extends DefaultCommand implements CombinedCommand {
 
     @Override
@@ -65,25 +64,27 @@ public final class DefaultHelpCommand extends DefaultCommand implements Combined
 
     private void addCategoryPage(TabMenuBuilder menu, TabMenuPage page, Category category, BasicCommandEvent event) {
         // get all commands, and filter by category equal and member has sufficient permissions
-        List<Command> commands = CommandHandler.getCommands().stream().filter(c ->
-            c.getCategory().equals(category) && c.getPermission().check(event)
-        ).toList();
+        //event.getGuild().retrieveCommandPrivileges().queue(privilegeConfig -> {
+            List<Command> commands = CommandHandler.getCommands().stream().filter(c ->
+                c.getCategory().equals(category) && c.getPermission().check(event)
+            ).toList();
 
-        // if no commands were left after the filter, do not include this category in the menu
-        if (commands.isEmpty()) return;
+            // if no commands were left after the filter, do not include this category in the menu
+            if (commands.isEmpty()) return;
 
-        // create page object
-        TabMenuPage categoryPage = new TabMenuPage(category.getName(), new PresetBuilder(category.getName(),
-            category.getDescription() + "\n\n" + HelpMaker.formattedQuickCommandList(commands))
+            // create page object
+            TabMenuPage categoryPage = new TabMenuPage(category.getName(), new PresetBuilder(category.getName(),
+                category.getDescription() + "\n\n" + HelpMaker.formattedQuickCommandList(commands))
                 .addLogo(), category.getEmoji(), false);
 
-        // if page is null, this is a root category, so add it to the base menu
-        // else, this is a subcategory, so add this page as a subpage to the parent category page
-        if (page == null) menu.addPages(categoryPage);
-        else page.addChildren(categoryPage);
+            // if page is null, this is a root category, so add it to the base menu
+            // else, this is a subcategory, so add this page as a subpage to the parent category page
+            if (page == null) menu.addPages(categoryPage);
+            else page.addChildren(categoryPage);
 
-        // add all subcategories and its subcategories (etc.) using recursion
-        for (Category subcategory : category) addCategoryPage(menu, categoryPage, subcategory, event);
+            // add all subcategories and its subcategories (etc.) using recursion
+            for (Category subcategory : category) addCategoryPage(menu, categoryPage, subcategory, event);
+        //});
     }
 
     private void supplyCommandHelp(CommandEvent event, Command command) throws CommandException {

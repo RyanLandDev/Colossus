@@ -1,6 +1,6 @@
 package net.ryanland.colossus.events;
 
-import net.dv8tion.jda.api.events.interaction.component.SelectMenuInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
 import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.ColossusBuilder;
@@ -79,10 +79,10 @@ public class SelectMenuEvent implements ComponentInteractionRepliableEvent {
         if (MESSAGE_SELECT_MENUS.containsKey(msgId)) MESSAGE_SELECT_MENUS.remove(msgId).forEach(SELECT_MENUS::remove);
     }
 
-    public final SelectMenuInteractionEvent event;
+    public final StringSelectInteractionEvent event;
     public final SelectMenuIdentifier selectMenuIdentifier;
 
-    public SelectMenuEvent(SelectMenuInteractionEvent event) {
+    public SelectMenuEvent(StringSelectInteractionEvent event) {
         this.event = event;
         this.selectMenuIdentifier = new SelectMenuIdentifier(event.getMessageIdLong(), event.getComponentId());
     }
@@ -97,7 +97,7 @@ public class SelectMenuEvent implements ComponentInteractionRepliableEvent {
     }
 
     @Override
-    public SelectMenuInteractionEvent getEvent() {
+    public StringSelectInteractionEvent getEvent() {
         return event;
     }
 

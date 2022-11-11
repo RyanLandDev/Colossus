@@ -15,10 +15,7 @@ import java.util.function.Supplier;
  *
  *
  * TODO
- * - mongo providers
- * - sql providers
  * - test mongo
- * - test sqlite
  */
 public abstract class DatabaseDriver {
 

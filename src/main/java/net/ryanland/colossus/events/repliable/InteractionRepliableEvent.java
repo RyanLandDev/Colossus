@@ -3,7 +3,7 @@ package net.ryanland.colossus.events.repliable;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.interactions.callbacks.IModalCallback;
 import net.dv8tion.jda.api.interactions.callbacks.IReplyCallback;
-import net.dv8tion.jda.api.interactions.components.Modal;
+import net.dv8tion.jda.api.interactions.modals.Modal;
 import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.command.executor.functional_interface.CommandConsumer;
 import net.ryanland.colossus.events.ButtonClickEvent;

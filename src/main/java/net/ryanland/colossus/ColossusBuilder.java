@@ -36,7 +36,7 @@ import net.ryanland.colossus.sys.file.LocalFileType;
 import net.ryanland.colossus.sys.file.database.DatabaseDriver;
 import net.ryanland.colossus.sys.file.database.Provider;
 import net.ryanland.colossus.sys.file.database.json.*;
-import net.ryanland.colossus.sys.file.database.mongo.MongoDatabaseDriver;
+import net.ryanland.colossus.sys.file.database.mongo.*;
 import net.ryanland.colossus.sys.file.database.sql.*;
 import net.ryanland.colossus.sys.message.DefaultPresetType;
 import net.ryanland.colossus.sys.message.PresetBuilder;
@@ -210,7 +210,7 @@ public class ColossusBuilder {
         if (databaseDriver instanceof JsonDatabaseDriver) {
             registerCoreProviders(new JsonGlobalProvider(), new JsonGuildsProvider(), new JsonMembersProvider(), new JsonUsersProvider());
         } else if (databaseDriver instanceof MongoDatabaseDriver) {
-            //TODO
+            registerCoreProviders(new MongoGlobalProvider(), new MongoGuildsProvider(), new MongoMembersProvider(), new MongoUsersProvider());
         } else if (databaseDriver instanceof SQLDatabaseDriver) {
             registerCoreProviders(new SQLGlobalProvider(), new SQLGlobalProvider.DisabledCommandsProvider(),
                 new SQLGuildsProvider(), new SQLMembersProvider(), new SQLUsersProvider(), new SQLUsersProvider.CooldownsProvider());

@@ -12,7 +12,17 @@ import net.ryanland.colossus.command.permission.PermissionHolder;
 
 public abstract sealed class BasicCommand permits Command, ContextCommand {
 
+    private String id;
+
     public abstract String getName();
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public final String getUppercaseName() {
         return getName().substring(0, 1).toUpperCase() + getName().substring(1);

@@ -42,9 +42,7 @@ public class MongoDatabaseDriver extends DatabaseDriver {
             "members", database.getCollection("members"),
             "users", database.getCollection("users"),
             "guilds", database.getCollection("guilds"),
-            "global", database.getCollection("global"),
-            "cooldowns", database.getCollection("cooldowns"),
-            "disabled_commands", database.getCollection("disabled_commands")
+            "global", database.getCollection("global")
         );
     }
 

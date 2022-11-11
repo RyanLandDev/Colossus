@@ -156,7 +156,7 @@ public class CommandHandler {
         }
 
         // upsert
-        updater.queue();
+        updater.queue(commands -> commands.forEach(command -> COMMAND_MAP.get(command.getName()).setId(command.getId())));
     }
 
     public static void handleAutocompleteEvent(CommandAutoCompleteInteractionEvent event) {

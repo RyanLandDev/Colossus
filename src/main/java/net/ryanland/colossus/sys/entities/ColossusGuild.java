@@ -46,6 +46,7 @@ import net.ryanland.colossus.sys.file.database.PrimaryKey;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.time.OffsetDateTime;
 import java.time.temporal.TemporalAccessor;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -354,6 +355,11 @@ public record ColossusGuild(Guild guild) implements Guild, ColossusDatabaseEntit
         return guild().getMemberCache();
     }
 
+    @Override
+    public SortedSnowflakeCacheView<ScheduledEvent> getScheduledEventCache() {
+        return guild().getScheduledEventCache();
+    }
+
     @NotNull
     @Override
     public SortedSnowflakeCacheView<StageChannel> getStageChannelCache() {
@@ -641,6 +647,11 @@ public record ColossusGuild(Guild guild) implements Guild, ColossusDatabaseEntit
     @Override
     public RestAction<List<ThreadChannel>> retrieveActiveThreads() {
         return guild().retrieveActiveThreads();
+    }
+
+    @Override
+    public CacheRestAction<ScheduledEvent> retrieveScheduledEventById(String id) {
+        return guild().retrieveScheduledEventById(id);
     }
 
     /**
@@ -1154,6 +1165,16 @@ public record ColossusGuild(Guild guild) implements Guild, ColossusDatabaseEntit
     @Override
     public AuditableRestAction<Void> deleteSticker(StickerSnowflake id) {
         return guild().deleteSticker(id);
+    }
+
+    @Override
+    public ScheduledEventAction createScheduledEvent(String name, String location, OffsetDateTime startTime, OffsetDateTime endTime) {
+        return guild().createScheduledEvent(name, location, startTime, endTime);
+    }
+
+    @Override
+    public ScheduledEventAction createScheduledEvent(String name, GuildChannel channel, OffsetDateTime startTime) {
+        return guild().createScheduledEvent(name, channel, startTime);
     }
 
     /**
