@@ -162,7 +162,7 @@ public class ColossusBuilder {
      * @see Colossus
      */
     public ColossusBuilder(String token, String clientId, String prefix, String guildId) {
-        Map<String, JsonPrimitive> values = new LinkedHashMap<>();
+        Map<String, JsonElement> values = new LinkedHashMap<>();
 
         values.put("token", toPrimitive(token));
         values.put("client_id", toPrimitive(clientId));
@@ -547,7 +547,7 @@ public class ColossusBuilder {
 
         // Create a new Config and set it
         config = new Config(entries.entrySet().stream()
-            .collect(Collectors.toMap(Map.Entry::getKey, entry -> (JsonPrimitive) JsonProvider.serializeElement(entry.getValue()))));
+            .collect(Collectors.toMap(Map.Entry::getKey, entry -> JsonProvider.serializeElement(entry.getValue()))));
     }
 
     /**

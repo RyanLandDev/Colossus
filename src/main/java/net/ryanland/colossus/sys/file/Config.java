@@ -1,5 +1,6 @@
 package net.ryanland.colossus.sys.file;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import org.apache.commons.collections4.map.LinkedMap;
 
@@ -7,13 +8,13 @@ import java.util.Map;
 
 public class Config {
 
-    private final Map<String, JsonPrimitive> values = new LinkedMap<>();
+    private final Map<String, JsonElement> values = new LinkedMap<>();
 
-    public Config(Map<String, JsonPrimitive> values) {
+    public Config(Map<String, JsonElement> values) {
         this.values.putAll(values);
     }
 
-    public JsonPrimitive get(String key) {
+    public JsonElement get(String key) {
         return values.get(key);
     }
 
