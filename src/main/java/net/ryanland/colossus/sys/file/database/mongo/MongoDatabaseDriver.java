@@ -46,10 +46,14 @@ public class MongoDatabaseDriver extends DatabaseDriver {
         );
     }
 
+    public MongoCollection<Document> getCollection(String name) {
+        return collections.get(name);
+    }
+
     @Override
     protected Stock findStock(String stockName) {
         HashMap<PrimaryKey, Supply> suppliers = new HashMap<>();
-        for (Document document : collections.get(stockName).find()) {
+        for (Document document : getCollection(stockName).find()) {
             Supply supply = Colossus.getProvider(stockName).deserialize(document).setStockName(stockName);
             suppliers.put(supply.getPrimaryKey(), supply);
         }
@@ -63,7 +67,7 @@ public class MongoDatabaseDriver extends DatabaseDriver {
 
     @Override
     public Supply insertSupply(Supply supply) {
-        collections.get(supply.getStockName()).insertOne(supply.serialize());
+        getCollection(supply.getStockName()).insertOne(supply.serialize());
         return supply;
     }
 
@@ -77,11 +81,11 @@ public class MongoDatabaseDriver extends DatabaseDriver {
     public void updateSupply(Supply supply) {
         Document document = supply.serialize();
         List<Bson> updates = supply.getModifiedKeys().stream().map(key -> Updates.set(key, document.get(key))).toList();
-        collections.get(supply.getStockName()).updateOne(toFilter(supply), updates);
+        getCollection(supply.getStockName()).updateOne(toFilter(supply), updates);
     }
 
     @Override
     protected void deleteSupply(Supply supply) {
-        collections.get(supply.getStockName()).deleteOne(toFilter(supply));
+        getCollection(supply.getStockName()).deleteOne(toFilter(supply));
     }
 }
