@@ -12,10 +12,6 @@ import java.util.function.Supplier;
  * Abstract class for creating "database drivers". Either use a pre-made one or create your own.<br>
  * When creating your own, do not forget to create {@link Provider Providers} for the (default pre-defined) values.
  * @see ColossusBuilder#setDatabaseDriver(DatabaseDriver)
- *
- *
- * TODO
- * - test mongo
  */
 public abstract class DatabaseDriver {
 
@@ -105,9 +101,12 @@ public abstract class DatabaseDriver {
      * @return The {@link Supply} inserted
      */
     public Supply insert(Supply supply) {
-        Supply inserted = insertSupply(supply);
-        cache(inserted);
-        return inserted;
+        insertSupply(supply);
+        // serialize + deserialize for default values
+        Supply newSupply = get(supply.getStockName()).get(supply.getPrimaryKey());
+        cache(newSupply);
+
+        return newSupply;
     }
 
     /**
