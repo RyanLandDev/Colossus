@@ -32,7 +32,6 @@ dependencies {
     implementation 'org.xerial:sqlite-jdbc:3.36.0.3'
 
     // json
-    implementation 'org.json:json:20220320'
     implementation 'com.google.code.gson:gson:2.9.0'
 }
 
