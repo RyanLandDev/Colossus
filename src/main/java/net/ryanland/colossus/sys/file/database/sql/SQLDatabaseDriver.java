@@ -49,6 +49,51 @@ import java.util.*;
  *         <li>{@code command_type - PK NN tinyint}</li>
  *     </ul></li>
  * </ul>
+ *
+ * <p><b>SQL statement to create empty tables (without guild prefix):</b><br>
+ * <code>
+ *     create table global<br>
+ * (<br>
+ *     _bot_id varchar(25)<br>
+ *         constraint global_pk<br>
+ *             primary key<br>
+ * );<br>
+ * create table guilds<br>
+ * (<br>
+ *     _guild_id varchar(25)<br>
+ *         constraint guilds_pk<br>
+ *             primary key<br>
+ * );<br>
+ * create table members<br>
+ * (<br>
+ *     _user_id varchar(25) not null,<br>
+ *     _guild_id varchar(25) not null,<br>
+ *         constraint members_pk<br>
+ *             primary key (_guild_id, _user_id)<br>
+ * );<br>
+ * create table users<br>
+ * (<br>
+ *     _user_id varchar(25)<br>
+ *         constraint users_pk<br>
+ *             primary key<br>
+ * );<br>
+ * create table cooldowns<br>
+ * (<br>
+ *     user_id varchar(25) not null,<br>
+ *     command_name varchar(32) not null,<br>
+ *     command_type tinyint not null,<br>
+ *     expires datetime not null,<br>
+ *     constraint cooldowns_pk<br>
+ *         primary key (user_id, command_name, command_type)<br>
+ * );<br>
+ * create table disabled_commands<br>
+ * (<br>
+ *     command_name varchar(32) not null,<br>
+ *     command_type tinyint not null,<br>
+ *         constraint disabled_commands_pk<br>
+ *             primary key (command_name, command_type)<br>
+ * );
+ * </code>
  */
 public abstract class SQLDatabaseDriver extends DatabaseDriver {
 
