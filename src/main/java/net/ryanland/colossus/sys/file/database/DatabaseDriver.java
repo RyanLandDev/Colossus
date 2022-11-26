@@ -103,7 +103,7 @@ public abstract class DatabaseDriver {
     public Supply insert(Supply supply) {
         insertSupply(supply);
         // serialize + deserialize for default values
-        Supply newSupply = get(supply.getStockName()).get(supply.getPrimaryKey());
+        Supply newSupply = findStock(supply.getStockName()).get(supply.getPrimaryKey());
         cache(newSupply);
 
         return newSupply;
