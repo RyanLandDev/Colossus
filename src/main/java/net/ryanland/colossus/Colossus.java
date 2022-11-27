@@ -87,16 +87,20 @@ public class Colossus {
         Colossus.finalizers = finalizers;
     }
 
+    // for sharding
+    private static boolean initialized = false;
+
     /**
      * Initialize the bot
      */
     public void initialize() {
+        if (!initialized) {
+            LOGGER.info("Initializing...");
 
-        LOGGER.info("Initializing...");
-
-        // Register commands
-        CommandHandler.registerCommands(commands);
-        CommandHandler.registerContextCommands(contextCommands);
+            // Register commands
+            CommandHandler.registerCommands(commands);
+            CommandHandler.registerContextCommands(contextCommands);
+        }
 
         // Build the bot
         try {
@@ -112,14 +116,17 @@ public class Colossus {
             e.printStackTrace();
         }
 
-        jda.retrieveApplicationInfo().queue(appInfo -> botOwner = appInfo.getOwner());
+        if (!initialized) {
+            jda.retrieveApplicationInfo().queue(appInfo -> botOwner = appInfo.getOwner());
 
-        LOGGER.info("Upserting " + (commands.size() + contextCommands.size()) + " commands...");
+            LOGGER.info("Upserting " + (commands.size() + contextCommands.size()) + " commands...");
 
-        // Upsert the registered slash and context commands
-        CommandHandler.upsertAll();
+            // Upsert the registered slash and context commands
+            CommandHandler.upsertAll();
 
-        LOGGER.info("Initialized!");
+            LOGGER.info("Initialized!");
+            initialized = true;
+        }
     }
 
     // Utility methods ------------------------------
