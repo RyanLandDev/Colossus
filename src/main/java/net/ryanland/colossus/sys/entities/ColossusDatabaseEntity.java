@@ -90,4 +90,14 @@ public interface ColossusDatabaseEntity extends ColossusEntity {
         return newValue;
     }
 
+    /**
+     * Increases a value of type integer of the {@link Supply} of this entity in the database by a provided amount.
+     * @param incrementer The amount to increment by
+     * @return The new value
+     * @see #modifyValue(String, Function)
+     */
+    default int increaseValue(String key, int incrementer) {
+        return modifyValue(key, value -> value + incrementer);
+    }
+
 }
