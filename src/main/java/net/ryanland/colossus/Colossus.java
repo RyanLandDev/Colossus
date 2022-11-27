@@ -88,48 +88,54 @@ public class Colossus {
     }
 
     /**
-     * Initialize the bot
+     * Initialize the bot without sharding
      */
     public void initialize() {
-        initialize(config.getInt("shard_amount"));
+        initialize(-1);
     }
 
     /**
-     * Initialize the bot with the provided amount of shards
+     * Initialize the bot with sharding
      */
-    private void initialize(int shardTotal) {
+    public void initialize(int shard) {
+        // check if sharding is disabled
+        if (!config.getBoolean("sharding.enabled")) shard = -1;
 
-        LOGGER.info("Initializing...");
+        if (shard == -1) LOGGER.info("Initializing...");
+        else LOGGER.info("Initializing shard #" + shard + "...");
 
-        // Register commands
-        CommandHandler.registerCommands(commands);
-        CommandHandler.registerContextCommands(contextCommands);
-
-        // Build the bot
-        for (int i = 0; i < shardTotal; i++) {
-            try {
-                if (shardTotal > 1) builder.useSharding(i, shardTotal);
-                jda = builder.build();
-            } catch (InvalidTokenException e) {
-                e.printStackTrace();
-                LOGGER.error("Please put a valid token in the config.json file!");
-                System.exit(0);
-            }
-            try {
-                jda.awaitReady();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+        // only register commands if sharding is not used (-1) or if this is the first shard
+        if (shard == -1 || shard == 0) {
+            // Register commands
+            CommandHandler.registerCommands(commands);
+            CommandHandler.registerContextCommands(contextCommands);
         }
 
-        jda.retrieveApplicationInfo().queue(appInfo -> botOwner = appInfo.getOwner());
+        // Build the bot
+        try {
+            if (shard != -1) builder.useSharding(shard, config.getInt("sharding.shard_total"));
+            jda = builder.build();
+        } catch (InvalidTokenException e) {
+            e.printStackTrace();
+            LOGGER.error("Please put a valid token in the config.json file!");
+            System.exit(0);
+        }
+        try {
+            jda.awaitReady();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
-        LOGGER.info("Upserting " + (commands.size() + contextCommands.size()) + " commands...");
+        if (shard == -1 || shard == 0) {
+            jda.retrieveApplicationInfo().queue(appInfo -> botOwner = appInfo.getOwner());
+            LOGGER.info("Upserting " + (commands.size() + contextCommands.size()) + " commands...");
+            // Upsert the registered slash and context commands
+            CommandHandler.upsertAll();
+            LOGGER.info("All commands upserted!");
+        }
 
-        // Upsert the registered slash and context commands
-        CommandHandler.upsertAll();
-
-        LOGGER.info("Initialized!");
+        if (shard == -1) LOGGER.info("Initialized!");
+        else LOGGER.info("Initialized shard #" + shard + "!");
     }
 
     // Utility methods ------------------------------

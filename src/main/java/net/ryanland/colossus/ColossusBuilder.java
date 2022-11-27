@@ -72,7 +72,9 @@ public class ColossusBuilder {
     static {
         CORE_CONFIG_ENTRIES.put("token", "");
         CORE_CONFIG_ENTRIES.put("client_id", "");
-        CORE_CONFIG_ENTRIES.put("shard_amount", 1);
+
+        CORE_CONFIG_ENTRIES.put("sharding.enabled", false);
+        CORE_CONFIG_ENTRIES.put("sharding.shard_total", 1);
 
         CORE_CONFIG_ENTRIES.put("slash_commands.enabled", true);
         CORE_CONFIG_ENTRIES.put("slash_commands.global", false);
