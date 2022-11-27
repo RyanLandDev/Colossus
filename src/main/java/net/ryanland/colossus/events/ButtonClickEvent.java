@@ -1,10 +1,11 @@
 package net.ryanland.colossus.events;
 
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.ColossusBuilder;
 import net.ryanland.colossus.command.CommandException;
-import net.ryanland.colossus.events.repliable.ComponentInteractionRepliableEvent;
+import net.ryanland.colossus.events.repliable.EditableRepliableEvent;
 import net.ryanland.colossus.sys.interactions.button.BaseButton;
 import net.ryanland.colossus.sys.interactions.button.ButtonRow;
 import net.ryanland.colossus.sys.util.ExecutorUtil;
@@ -14,7 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class ButtonClickEvent implements ComponentInteractionRepliableEvent {
+public class ButtonClickEvent implements EditableRepliableEvent {
 
     private static final HashMap<Long, List<ButtonIdentifier>> MESSAGE_BUTTONS = new HashMap<>();
     private static final HashMap<ButtonIdentifier, BaseButton> BUTTONS = new HashMap<>();
@@ -105,6 +106,11 @@ public class ButtonClickEvent implements ComponentInteractionRepliableEvent {
     @Override
     public ButtonInteractionEvent getEvent() {
         return event;
+    }
+
+    @Override
+    public Message getMessage() {
+        return getEvent().getMessage();
     }
 
     private record ButtonIdentifier(Long msgId, String buttonId) {}

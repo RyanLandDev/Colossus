@@ -1,16 +1,17 @@
 package net.ryanland.colossus.events;
 
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.interactions.callbacks.IReplyCallback;
 import net.dv8tion.jda.api.interactions.modals.ModalMapping;
 import net.ryanland.colossus.command.CommandException;
 import net.ryanland.colossus.command.executor.functional_interface.CommandConsumer;
-import net.ryanland.colossus.events.repliable.InteractionRepliableEvent;
+import net.ryanland.colossus.events.repliable.EditableRepliableEvent;
 
 import java.util.HashMap;
 import java.util.List;
 
-public class ModalSubmitEvent implements InteractionRepliableEvent {
+public class ModalSubmitEvent implements EditableRepliableEvent {
 
     private static final HashMap<ModalIdentifier, CommandConsumer<ModalSubmitEvent>> MODAL_ACTIONS = new HashMap<>();
 
@@ -41,8 +42,14 @@ public class ModalSubmitEvent implements InteractionRepliableEvent {
         action.accept(this);
     }
 
+    @Override
     public ModalInteractionEvent getEvent() {
         return event;
+    }
+
+    @Override
+    public Message getMessage() {
+        return getEvent().getMessage();
     }
 
     public ModalIdentifier getModalIdentifier() {
@@ -77,11 +84,6 @@ public class ModalSubmitEvent implements InteractionRepliableEvent {
      */
     public ModalMapping getValue(String id) {
         return getEvent().getValue(id);
-    }
-
-    @Override
-    public IReplyCallback getCallback() {
-        return getEvent();
     }
 
     private record ModalIdentifier(Long userId, String modalId) {}

@@ -1,7 +1,10 @@
 package net.ryanland.colossus.events.repliable;
 
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.events.interaction.component.GenericComponentInteractionCreateEvent;
+import net.dv8tion.jda.api.interactions.callbacks.IMessageEditCallback;
+import net.dv8tion.jda.api.interactions.callbacks.IModalCallback;
+import net.dv8tion.jda.api.interactions.callbacks.IReplyCallback;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.modals.Modal;
 import net.ryanland.colossus.command.executor.functional_interface.CommandConsumer;
@@ -19,11 +22,12 @@ import java.util.List;
 
 /**
  * This will edit the existing message instead of creating a new message, except for ephemeral messages<br>
- * Only for Button and Select Menu events
  */
-public interface ComponentInteractionRepliableEvent extends RepliableEvent {
+public interface EditableRepliableEvent extends RepliableEvent {
 
-    GenericComponentInteractionCreateEvent getEvent();
+    <E extends IReplyCallback & IMessageEditCallback> E getEvent();
+
+    Message getMessage();
 
     @Override
     default ColossusUser getUser() {
@@ -74,10 +78,10 @@ public interface ComponentInteractionRepliableEvent extends RepliableEvent {
 
         if (!message.isEphemeral()) {
             // remove old listeners
-            if (!getEvent().getMessage().getActionRows().isEmpty()) {
-                ExecutorUtil.cancel(getEvent().getMessageId(), false); // cancel an active action row emptier
-                ButtonClickEvent.removeListeners(getEvent().getMessageIdLong());
-                SelectMenuEvent.removeListeners(getEvent().getMessageIdLong());
+            if (!getMessage().getActionRows().isEmpty()) {
+                ExecutorUtil.cancel(getMessage().getId(), false); // cancel an active action row emptier
+                ButtonClickEvent.removeListeners(getMessage().getIdLong());
+                SelectMenuEvent.removeListeners(getMessage().getIdLong());
             }
             // send reply and set hook
             getEvent().editMessageEmbeds(message.embed())
@@ -95,7 +99,7 @@ public interface ComponentInteractionRepliableEvent extends RepliableEvent {
     }
 
     /**
-     * Reply to this event with a {@link Modal}<br>
+     * Reply to this event with a {@link Modal}. Event must implement {@link IModalCallback} to work.<br>
      * Note: When overriding this method, do not forget to add a modal submit listener!
      *
      * @param modal
@@ -105,7 +109,7 @@ public interface ComponentInteractionRepliableEvent extends RepliableEvent {
      */
     @Override
     default void reply(Modal modal, CommandConsumer<ModalSubmitEvent> action) {
-        getEvent().replyModal(modal).queue();
+        ((IModalCallback) getEvent()).replyModal(modal).queue();
         ModalSubmitEvent.addListener(getUser().getIdLong(), modal.getId(), action);
     }
 }

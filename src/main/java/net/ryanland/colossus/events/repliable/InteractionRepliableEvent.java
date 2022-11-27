@@ -18,21 +18,21 @@ import java.util.concurrent.TimeUnit;
 
 public interface InteractionRepliableEvent extends RepliableEvent {
 
-    IReplyCallback getCallback();
+    IReplyCallback getEvent();
 
     @Override
     default ColossusUser getUser() {
-        return new ColossusUser(getCallback().getUser());
+        return new ColossusUser(getEvent().getUser());
     }
 
     @Override
     default ColossusMember getMember() {
-        return new ColossusMember(getCallback().getMember());
+        return new ColossusMember(getEvent().getMember());
     }
 
     @Override
     default ColossusGuild getGuild() {
-        return new ColossusGuild(getCallback().getGuild());
+        return new ColossusGuild(getEvent().getGuild());
     }
 
     /**
@@ -43,7 +43,7 @@ public interface InteractionRepliableEvent extends RepliableEvent {
      */
     @Override
     default void reply(String message, boolean ephemeral) {
-        getCallback().reply(message).setEphemeral(ephemeral).queue();
+        getEvent().reply(message).setEphemeral(ephemeral).queue();
     }
 
     /**
@@ -54,7 +54,7 @@ public interface InteractionRepliableEvent extends RepliableEvent {
      */
     @Override
     default void reply(MessageEmbed message, boolean ephemeral) {
-        getCallback().replyEmbeds(message).setEphemeral(ephemeral).queue();
+        getEvent().replyEmbeds(message).setEphemeral(ephemeral).queue();
     }
 
     /**
@@ -70,7 +70,7 @@ public interface InteractionRepliableEvent extends RepliableEvent {
     @Override
     default void reply(PresetBuilder message) {
         // send reply and set hook
-        getCallback().replyEmbeds(message.embed())
+        getEvent().replyEmbeds(message.embed())
             .setEphemeral(message.isEphemeral())
             .setComponents(message.getActionRows())
             .setContent(message.getContent())
@@ -89,7 +89,7 @@ public interface InteractionRepliableEvent extends RepliableEvent {
     @Override
     default void reply(Modal modal, CommandConsumer<ModalSubmitEvent> action) {
         try {
-            ((IModalCallback) getCallback()).replyModal(modal).queue();
+            ((IModalCallback) getEvent()).replyModal(modal).queue();
         } catch (ClassCastException e) {
             Colossus.LOGGER.error(getClass().getName() + " - This event does not support replying with modals");
             e.printStackTrace();

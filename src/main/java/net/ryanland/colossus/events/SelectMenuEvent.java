@@ -1,12 +1,13 @@
 package net.ryanland.colossus.events;
 
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
 import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.ColossusBuilder;
 import net.ryanland.colossus.command.CommandException;
 import net.ryanland.colossus.command.executor.functional_interface.CommandConsumer;
-import net.ryanland.colossus.events.repliable.ComponentInteractionRepliableEvent;
+import net.ryanland.colossus.events.repliable.EditableRepliableEvent;
 import net.ryanland.colossus.sys.interactions.select.BaseSelectMenu;
 import net.ryanland.colossus.sys.util.ExecutorUtil;
 
@@ -15,7 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class SelectMenuEvent implements ComponentInteractionRepliableEvent {
+public class SelectMenuEvent implements EditableRepliableEvent {
 
     private static final HashMap<Long, List<SelectMenuIdentifier>> MESSAGE_SELECT_MENUS = new HashMap<>();
     private static final HashMap<SelectMenuIdentifier, BaseSelectMenu> SELECT_MENUS = new HashMap<>();
@@ -99,6 +100,11 @@ public class SelectMenuEvent implements ComponentInteractionRepliableEvent {
     @Override
     public StringSelectInteractionEvent getEvent() {
         return event;
+    }
+
+    @Override
+    public Message getMessage() {
+        return getEvent().getMessage();
     }
 
     public SelectMenuIdentifier getSelectMenuIdentifier() {
