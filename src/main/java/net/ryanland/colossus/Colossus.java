@@ -87,46 +87,49 @@ public class Colossus {
         Colossus.finalizers = finalizers;
     }
 
-    // for sharding
-    private static boolean initialized = false;
-
     /**
      * Initialize the bot
      */
     public void initialize() {
-        if (!initialized) {
-            LOGGER.info("Initializing...");
+        initialize(1);
+    }
 
-            // Register commands
-            CommandHandler.registerCommands(commands);
-            CommandHandler.registerContextCommands(contextCommands);
-        }
+    /**
+     * Initialize the bot with the provided amount of shards
+     */
+    public void initialize(int shardTotal) {
+
+        LOGGER.info("Initializing...");
+
+        // Register commands
+        CommandHandler.registerCommands(commands);
+        CommandHandler.registerContextCommands(contextCommands);
 
         // Build the bot
-        try {
-            jda = builder.build();
-        } catch (InvalidTokenException e) {
-            e.printStackTrace();
-            LOGGER.error("Please put a valid token in the config.json file!");
-            System.exit(0);
+        for (int i = 0; i < shardTotal; i++) {
+            try {
+                if (shardTotal > 1) builder.useSharding(i, shardTotal);
+                jda = builder.build();
+            } catch (InvalidTokenException e) {
+                e.printStackTrace();
+                LOGGER.error("Please put a valid token in the config.json file!");
+                System.exit(0);
+            }
+            try {
+                jda.awaitReady();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
-        try {
-            jda.awaitReady();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
 
-        if (!initialized) {
-            jda.retrieveApplicationInfo().queue(appInfo -> botOwner = appInfo.getOwner());
+        jda.retrieveApplicationInfo().queue(appInfo -> botOwner = appInfo.getOwner());
 
-            LOGGER.info("Upserting " + (commands.size() + contextCommands.size()) + " commands...");
+        LOGGER.info("Upserting " + (commands.size() + contextCommands.size()) + " commands...");
 
-            // Upsert the registered slash and context commands
-            CommandHandler.upsertAll();
+        // Upsert the registered slash and context commands
+        CommandHandler.upsertAll();
 
-            LOGGER.info("Initialized!");
-            initialized = true;
-        }
+        LOGGER.info("Initialized!");
     }
 
     // Utility methods ------------------------------
