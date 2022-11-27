@@ -12,9 +12,11 @@ import net.ryanland.colossus.sys.message.PresetBuilder;
  * Creates an {@link InteractionMenu} that presents the user with an option to either go through with an action or cancel it.
  * @param description The description of the embed to confirm the action
  * @param confirmedDescription The description of the embed after the user has clicked the Confirm button
+ * @param ephemeral Whether this menu should be sent as an ephemeral message
  * @param confirmAction Code to perform when the user has clicked the Confirm button
  */
-public record ConfirmMenu(String description, String confirmedDescription, CommandConsumer<ButtonClickEvent> confirmAction)
+public record ConfirmMenu(String description, String confirmedDescription,
+                          boolean ephemeral, CommandConsumer<ButtonClickEvent> confirmAction)
     implements InteractionMenu {
 
     @Override
@@ -26,7 +28,7 @@ public record ConfirmMenu(String description, String confirmedDescription, Comma
             .setTitle("Confirm")
             .setDescription(description)
             .addLogo()
-            .setEphemeral(true);
+            .setEphemeral(ephemeral);
 
         // Create buttons
         embed.addButtons(
