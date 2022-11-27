@@ -42,25 +42,21 @@ public class SQLGlobalProvider extends SQLProvider {
     }
 
     @Override
-    public Supply deserialize(ResultSet data) {
+    public Supply deserializeSQL(ResultSet data) throws SQLException {
         HashMap<String, Object> values = new HashMap<>();
 
         // deserializers
-        try {
-            values.put("_bot_id", data.getString("_bot_id"));
-            // disabled commands
-            List<BasicCommand> disabledCommands = new ArrayList<>();
-            ResultSet dcData = Colossus.getSQLDatabaseDriver().query("SELECT * FROM disabled_commands");
-            while (dcData.next()) {
-                // get info
-                String commandName = dcData.getString("command_name");
-                CommandType commandType = CommandType.of(dcData.getInt("command_type"));
-                disabledCommands.add(commandType.getCommand(commandName));
-            }
-            values.put("disabled_commands", disabledCommands);
-        } catch (SQLException e) {
-            throw new IllegalArgumentException(e);
+        values.put("_bot_id", data.getString("_bot_id"));
+        // disabled commands
+        List<BasicCommand> disabledCommands = new ArrayList<>();
+        ResultSet dcData = Colossus.getSQLDatabaseDriver().query("SELECT * FROM disabled_commands");
+        while (dcData.next()) {
+            // get info
+            String commandName = dcData.getString("command_name");
+            CommandType commandType = CommandType.of(dcData.getInt("command_type"));
+            disabledCommands.add(commandType.getCommand(commandName));
         }
+        values.put("disabled_commands", disabledCommands);
 
         return new Supply(getStockName(), values);
     }
@@ -78,7 +74,7 @@ public class SQLGlobalProvider extends SQLProvider {
         }
 
         @Override
-        public Supply deserialize(ResultSet data) {
+        public Supply deserializeSQL(ResultSet data) {
             return null;
         }
     }

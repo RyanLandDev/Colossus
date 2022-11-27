@@ -42,28 +42,24 @@ public class SQLUsersProvider extends SQLProvider {
     }
 
     @Override
-    public Supply deserialize(ResultSet data) {
+    public Supply deserializeSQL(ResultSet data) throws SQLException {
         HashMap<String, Object> values = new HashMap<>();
 
         // deserializers ----------------------------------------------
-        try {
-            String userId = data.getString("_user_id");
-            values.put("_user_id", userId);
-            // cooldowns
-            List<Cooldown> cooldowns = new ArrayList<>();
-            ResultSet cooldownsData = Colossus.getSQLDatabaseDriver().query("SELECT * FROM cooldowns WHERE user_id = ?", userId);
-            while (cooldownsData.next()) {
-                // get info
-                String commandName = cooldownsData.getString("command_name");
-                CommandType commandType = CommandType.of(cooldownsData.getInt("command_type"));
-                Date expires = cooldownsData.getDate("expires");
+        String userId = data.getString("_user_id");
+        values.put("_user_id", userId);
+        // cooldowns
+        List<Cooldown> cooldowns = new ArrayList<>();
+        ResultSet cooldownsData = Colossus.getSQLDatabaseDriver().query("SELECT * FROM cooldowns WHERE user_id = ?", userId);
+        while (cooldownsData.next()) {
+            // get info
+            String commandName = cooldownsData.getString("command_name");
+            CommandType commandType = CommandType.of(cooldownsData.getInt("command_type"));
+            Date expires = cooldownsData.getDate("expires");
 
-                cooldowns.add(new Cooldown(commandType.getCommand(commandName), expires));
-            }
-            values.put("cooldowns", cooldowns);
-        } catch (SQLException e) {
-            throw new IllegalArgumentException(e);
+            cooldowns.add(new Cooldown(commandType.getCommand(commandName), expires));
         }
+        values.put("cooldowns", cooldowns);
 
         return new Supply(getStockName(), values);
     }
@@ -81,7 +77,7 @@ public class SQLUsersProvider extends SQLProvider {
         }
 
         @Override
-        public Supply deserialize(ResultSet data) {
+        public Supply deserializeSQL(ResultSet data) {
             return null;
         }
     }

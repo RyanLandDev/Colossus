@@ -25,16 +25,12 @@ public class SQLMembersProvider extends SQLProvider {
     }
 
     @Override
-    public Supply deserialize(ResultSet data) {
+    public Supply deserializeSQL(ResultSet data) throws SQLException {
         HashMap<String, Object> values = new HashMap<>();
 
         // deserializers
-        try {
-            values.put("_user_id", data.getString("_user_id"));
-            values.put("_guild_id", data.getString("_guild_id"));
-        } catch (SQLException e) {
-            throw new IllegalArgumentException(e);
-        }
+        values.put("_user_id", data.getString("_user_id"));
+        values.put("_guild_id", data.getString("_guild_id"));
 
         return new Supply(getStockName(), values);
     }

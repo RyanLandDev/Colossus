@@ -25,16 +25,12 @@ public class SQLGuildsProvider extends SQLProvider {
     }
 
     @Override
-    public Supply deserialize(ResultSet data) {
+    public Supply deserializeSQL(ResultSet data) throws SQLException {
         HashMap<String, Object> values = new HashMap<>();
 
         // deserializers
-        try {
-            values.put("_guild_id", data.getString("_guild_id"));
-            if (data.getString("prefix") != null) values.put("prefix", data.getString("prefix"));
-        } catch (SQLException e) {
-            throw new IllegalArgumentException(e);
-        }
+        values.put("_guild_id", data.getString("_guild_id"));
+        if (data.getString("prefix") != null) values.put("prefix", data.getString("prefix"));
 
         return new Supply(getStockName(), values);
     }
