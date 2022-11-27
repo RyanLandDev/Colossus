@@ -91,13 +91,13 @@ public class Colossus {
      * Initialize the bot
      */
     public void initialize() {
-        initialize(1);
+        initialize(config.getInt("shard_amount"));
     }
 
     /**
      * Initialize the bot with the provided amount of shards
      */
-    public void initialize(int shardTotal) {
+    private void initialize(int shardTotal) {
 
         LOGGER.info("Initializing...");
 
