@@ -165,8 +165,8 @@ public final class SlashCommandEvent extends CommandEvent {
         return event.getGuildChannel();
     }
 
-    public String getCommandPath() {
-        return event.getCommandPath();
+    public String getFullCommandName() {
+        return event.getFullCommandName();
     }
 
     public String getId() {
