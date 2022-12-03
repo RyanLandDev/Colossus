@@ -117,5 +117,9 @@ public class SelectMenuEvent implements EditableRepliableEvent {
         return (List<T>) event.getValues();
     }
 
+    public <T> T getValue() {
+        return (T) getValues().get(0);
+    }
+
     private record SelectMenuIdentifier(long msgId, String selectMenuId) {}
 }
