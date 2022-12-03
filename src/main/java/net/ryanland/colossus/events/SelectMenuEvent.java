@@ -2,9 +2,6 @@ package net.ryanland.colossus.events;
 
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.component.GenericSelectMenuInteractionEvent;
-import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
-import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
-import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu;
 import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.ColossusBuilder;
 import net.ryanland.colossus.command.CommandException;
@@ -16,6 +13,7 @@ import net.ryanland.colossus.sys.util.ExecutorUtil;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.WeakHashMap;
 import java.util.concurrent.TimeUnit;
 
 public class SelectMenuEvent implements EditableRepliableEvent {
@@ -94,7 +92,7 @@ public class SelectMenuEvent implements EditableRepliableEvent {
      * Handle this event; execute it
      */
     public void handle() throws CommandException {
-        CommandConsumer<SelectMenuEvent> action = SELECT_MENUS.remove(selectMenuIdentifier).getOnSubmit();
+        CommandConsumer<SelectMenuEvent> action = SELECT_MENUS.get(selectMenuIdentifier).getOnSubmit();
         if (action == null) return;
         action.accept(this);
     }
