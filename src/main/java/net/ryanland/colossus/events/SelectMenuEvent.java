@@ -1,8 +1,10 @@
 package net.ryanland.colossus.events;
 
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.events.interaction.component.GenericSelectMenuInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
+import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu;
 import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.ColossusBuilder;
 import net.ryanland.colossus.command.CommandException;
@@ -80,7 +82,7 @@ public class SelectMenuEvent implements EditableRepliableEvent {
         if (MESSAGE_SELECT_MENUS.containsKey(msgId)) MESSAGE_SELECT_MENUS.remove(msgId).forEach(SELECT_MENUS::remove);
     }
 
-    public final StringSelectInteractionEvent event;
+    public final GenericSelectMenuInteractionEvent<?, ?> event;
     public final SelectMenuIdentifier selectMenuIdentifier;
 
     public SelectMenuEvent(StringSelectInteractionEvent event) {
@@ -98,7 +100,7 @@ public class SelectMenuEvent implements EditableRepliableEvent {
     }
 
     @Override
-    public StringSelectInteractionEvent getEvent() {
+    public GenericSelectMenuInteractionEvent<?, ?> getEvent() {
         return event;
     }
 
@@ -111,23 +113,8 @@ public class SelectMenuEvent implements EditableRepliableEvent {
         return selectMenuIdentifier;
     }
 
-    /**
-     * If available, this will resolve the selected {@link #getValues() values} to the representative {@link SelectOption SelectOption} instances.
-     * <br>This is null if the message is ephemeral.
-     *
-     * @return {@link List} of the selected options or null if this message is ephemeral
-     */
-    public List<SelectOption> getSelectedOptions() {
-        return event.getSelectedOptions();
-    }
-
-    /**
-     * The selected values. These are defined in the individual {@link SelectOption SelectOptions}.
-     *
-     * @return {@link List} of {@link SelectOption#getValue()}
-     */
-    public List<String> getValues() {
-        return getEvent().getValues();
+    public <T> List<T> getValues() {
+        return (List<T>) event.getValues();
     }
 
     private record SelectMenuIdentifier(long msgId, String selectMenuId) {}
