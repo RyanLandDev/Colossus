@@ -26,25 +26,25 @@ public class SelectRowMenu implements InteractionMenu {
 
     @Override
     public void send(RepliableEvent event) throws CommandException {
-        startMessage.getComponentRows().add(0, renderSelectMenu(null));
+        startMessage.getComponentRows().add(0, renderSelectMenu(options, null));
         event.reply(startMessage);
     }
 
-    private void sendMessage(RepliableEvent event, SelectRowOption option) {
+    public static void sendMessage(List<SelectRowOption> options, RepliableEvent event, SelectRowOption option) {
         PresetBuilder message = option.getMessage();
         message.setComponentRows(new ArrayList<>(option.getRows()));
-        message.getComponentRows().add(0, renderSelectMenu(option));
+        message.getComponentRows().add(0, renderSelectMenu(options, option));
         event.reply(message);
     }
 
-    private BaseSelectMenu renderSelectMenu(SelectRowOption selected) {
+    public static BaseSelectMenu renderSelectMenu(List<SelectRowOption> options, SelectRowOption selected) {
         StringSelectMenu.Builder builder = StringSelectMenu.create("selectrowmenu");
         for (SelectRowOption option : options) {
             builder.addOption(option.getName(), option.getName(), option.getDescription(), option.getEmoji());
         }
         if (selected != null) builder.setDefaultValues(selected.getName());
         return new BaseSelectMenu(builder.build(), event -> {
-            sendMessage(event, options.stream().filter(option -> option.getName().equals(event.getValues().get(0))).toList().get(0));
+            sendMessage(options, event, options.stream().filter(option -> option.getName().equals(event.getValues().get(0))).toList().get(0));
         });
     }
 }
