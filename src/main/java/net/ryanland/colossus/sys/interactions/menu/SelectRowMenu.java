@@ -30,11 +30,15 @@ public class SelectRowMenu implements InteractionMenu {
         event.reply(startMessage);
     }
 
-    public static void sendMessage(List<SelectRowOption> options, RepliableEvent event, SelectRowOption option) {
+    public static PresetBuilder renderMessage(List<SelectRowOption> options, SelectRowOption option) {
         PresetBuilder message = option.getMessage();
         message.setComponentRows(new ArrayList<>(option.getRows()));
         message.getComponentRows().add(0, renderSelectMenu(options, option));
-        event.reply(message);
+        return message;
+    }
+
+    public static void sendMessage(List<SelectRowOption> options, RepliableEvent event, SelectRowOption option) {
+        event.reply(renderMessage(options, option));
     }
 
     public static BaseSelectMenu renderSelectMenu(List<SelectRowOption> options, SelectRowOption selected) {
