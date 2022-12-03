@@ -85,7 +85,7 @@ public class SelectMenuEvent implements EditableRepliableEvent {
     public final GenericSelectMenuInteractionEvent<?, ?> event;
     public final SelectMenuIdentifier selectMenuIdentifier;
 
-    public SelectMenuEvent(StringSelectInteractionEvent event) {
+    public SelectMenuEvent(GenericSelectMenuInteractionEvent<?, ?> event) {
         this.event = event;
         this.selectMenuIdentifier = new SelectMenuIdentifier(event.getMessageIdLong(), event.getComponentId());
     }

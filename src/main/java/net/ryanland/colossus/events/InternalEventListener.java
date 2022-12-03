@@ -4,6 +4,8 @@ import net.dv8tion.jda.api.entities.ISnowflake;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.*;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.EntitySelectInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.GenericSelectMenuInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -65,10 +67,19 @@ public class InternalEventListener extends ListenerAdapter {
         }
     }
 
-    // Submit select menu
+    // Submit string select menu
     @Override
-
     public void onStringSelectInteraction(@NotNull StringSelectInteractionEvent event) {
+        onSelectInteraction(event);
+    }
+
+    // Submit entity select menu
+    @Override
+    public void onEntitySelectInteraction(EntitySelectInteractionEvent event) {
+        onSelectInteraction(event);
+    }
+
+    private void onSelectInteraction(GenericSelectMenuInteractionEvent<?, ?> event) {
         try {
             new SelectMenuEvent(event).handle();
         } catch (CommandException e) {
