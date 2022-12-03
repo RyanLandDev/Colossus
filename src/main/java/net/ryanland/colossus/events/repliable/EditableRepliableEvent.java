@@ -84,10 +84,18 @@ public interface EditableRepliableEvent extends RepliableEvent {
                 SelectMenuEvent.removeListeners(getMessage().getIdLong());
             }
             // send reply and set hook
-            getEvent().editMessageEmbeds(message.embed())
-                .setComponents(actionRows)
-                .setContent(message.getContent())
-                .queue(message::addComponentRowListeners);
+            // check if event is already acknowledged
+            if (!getEvent().isAcknowledged()) {
+                getEvent().editMessageEmbeds(message.embed())
+                    .setComponents(actionRows)
+                    .setContent(message.getContent())
+                    .queue(message::addComponentRowListeners);
+            } else {
+                getEvent().getHook().editOriginalEmbeds(message.embed())
+                    .setComponents(actionRows)
+                    .setContent(message.getContent())
+                    .queue(message::addComponentRowListeners);
+            }
         } else {
             // send reply and set hook
             getEvent().replyEmbeds(message.embed())
