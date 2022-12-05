@@ -53,19 +53,21 @@ See the [wiki](https://github.com/RyanLandDev/Colossus/wiki) for various guides 
       ```
 * Custom **interaction menus**; you can either create your own or use one of the pre-made ones:
     * `ConfirmMenu` - a menu to either cancel or confirm an action
-    * `TabMenu` - a menu to browse custom defined pages and (nested) subpages. The default help command uses this menu
+    * `TabMenu` - a menu to browse custom defined pages and (nested) subpages using tabs. The default help command uses this menu
+    * `SelectRowMenu` - a menu to switch between pages using a select menu, useful for e.g. a settings command
+    * `ScrollPageMenu` - a menu to browse pages using buttons
 * `PresetBuilder` - a helper class to create rich embed messages
     * **Preset types** - these can be used to create PresetBuilders with default values. Error messages use a (customizable) `PresetType` for example.
     * Easily add components using the previously mentioned custom component system
     * **Ephemeral** messages
-* Automatic JSON **config system**; allowing for extra custom key entries
-* **Serializer** interface
+* Automatic JSON **config system**; allowing for extra custom key entries and grouping
 * **Database driver system** to easily manage, write and read a database
-    * Either create your own or use the pre-made `JsonDatabaseDriver` or `MongoDatabaseDriver`
+    * Either create your own or use the pre-made `SQLDatabaseDriver`, `JsonDatabaseDriver` or `MongoDatabaseDriver`
     * Automatically takes care of **caching**, see the `DatabaseDriver` javadoc for specifics
-    * **Update and read** database values easily using a `Table` and Colossus entities
+    * **Update and read** database values easily using a `Supply` and Colossus entities
       ```java
-      event.getUser().modifyValue("coins", coins -> coins + 10);
+      event.getUser().modifyValue("coins", coins -> coins * 10); // multiply coins by 10
+      event.getUser().increaseValue("coins", 10); // add 10 coins
       ```
 * `LocalFile` - extended File class, with useful methods such as `getContent()` or `parseJson()`, also comes with a helpful `LocalFileBuilder`
 * An **event waiter** to await events with ease
