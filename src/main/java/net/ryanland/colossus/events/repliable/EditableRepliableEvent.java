@@ -46,29 +46,55 @@ public interface EditableRepliableEvent extends RepliableEvent {
 
     @Override
     default void reply(String message, boolean ephemeral) {
-        if (!ephemeral) {
-            getEvent().editMessageEmbeds(Collections.emptyList())
-                .setComponents(Collections.emptyList())
-                .setContent(message)
-                .queue();
+        if (!getEvent().isAcknowledged()) {
+            if (!ephemeral) {
+                getEvent().editMessageEmbeds(Collections.emptyList())
+                    .setComponents(Collections.emptyList())
+                    .setContent(message)
+                    .queue();
+            } else {
+                getEvent().reply(message)
+                    .setEphemeral(true)
+                    .queue();
+            }
         } else {
-            getEvent().reply(message)
-                .setEphemeral(true)
-                .queue();
+            if (!ephemeral) {
+                getEvent().getHook().editOriginalEmbeds(Collections.emptyList())
+                    .setComponents(Collections.emptyList())
+                    .setContent(message)
+                    .queue();
+            } else {
+                getEvent().getHook().sendMessage(message)
+                    .setEphemeral(true)
+                    .queue();
+            }
         }
     }
 
     @Override
     default void reply(MessageEmbed message, boolean ephemeral) {
-        if (!ephemeral) {
-            getEvent().editMessageEmbeds(message)
-                .setComponents(Collections.emptyList())
-                .setContent("")
-                .queue();
+        if (!getEvent().isAcknowledged()) {
+            if (!ephemeral) {
+                getEvent().editMessageEmbeds(message)
+                    .setComponents(Collections.emptyList())
+                    .setContent("")
+                    .queue();
+            } else {
+                getEvent().replyEmbeds(message)
+                    .setEphemeral(true)
+                    .queue();
+            }
         } else {
-            getEvent().replyEmbeds(message)
-                .setEphemeral(true)
-                .queue();
+            if (!ephemeral) {
+                getEvent().getHook().editOriginalEmbeds(message)
+                    .setComponents(Collections.emptyList())
+                    .setContent("")
+                    .queue();
+            } else {
+                getEvent().getHook().sendMessageEmbeds(message)
+                    .setEphemeral(true)
+                    .queue();
+            }
         }
     }
 
@@ -83,7 +109,7 @@ public interface EditableRepliableEvent extends RepliableEvent {
                 ButtonClickEvent.removeListeners(getMessage().getIdLong());
                 SelectMenuEvent.removeListeners(getMessage().getIdLong());
             }
-            // send reply and set hook
+            // send reply
             // check if event is already acknowledged
             if (!getEvent().isAcknowledged()) {
                 getEvent().editMessageEmbeds(message.embed())
@@ -97,12 +123,19 @@ public interface EditableRepliableEvent extends RepliableEvent {
                     .queue(message::addComponentRowListeners);
             }
         } else {
-            // send reply and set hook
-            getEvent().replyEmbeds(message.embed())
-                .setComponents(actionRows)
-                .setContent(message.getContent())
-                .setEphemeral(true)
-                .queue(message::addComponentRowListeners);
+            if (!getEvent().isAcknowledged()) {
+                getEvent().replyEmbeds(message.embed())
+                    .setComponents(actionRows)
+                    .setContent(message.getContent())
+                    .setEphemeral(true)
+                    .queue(message::addComponentRowListeners);
+            } else {
+                getEvent().getHook().sendMessageEmbeds(message.embed())
+                    .setComponents(actionRows)
+                    .setContent(message.getContent())
+                    .setEphemeral(true)
+                    .queue(message::addComponentRowListeners);
+            }
         }
     }
 

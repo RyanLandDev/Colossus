@@ -43,7 +43,11 @@ public interface InteractionRepliableEvent extends RepliableEvent {
      */
     @Override
     default void reply(String message, boolean ephemeral) {
-        getEvent().reply(message).setEphemeral(ephemeral).queue();
+        if (!getEvent().isAcknowledged()) {
+            getEvent().reply(message).setEphemeral(ephemeral).queue();
+        } else {
+            getEvent().getHook().sendMessage(message).setEphemeral(ephemeral).queue();
+        }
     }
 
     /**
@@ -54,7 +58,11 @@ public interface InteractionRepliableEvent extends RepliableEvent {
      */
     @Override
     default void reply(MessageEmbed message, boolean ephemeral) {
-        getEvent().replyEmbeds(message).setEphemeral(ephemeral).queue();
+        if (!getEvent().isAcknowledged()) {
+            getEvent().replyEmbeds(message).setEphemeral(ephemeral).queue();
+        } else {
+            getEvent().getHook().sendMessageEmbeds(message).setEphemeral(ephemeral).queue();
+        }
     }
 
     /**
@@ -69,12 +77,19 @@ public interface InteractionRepliableEvent extends RepliableEvent {
      */
     @Override
     default void reply(PresetBuilder message) {
-        // send reply and set hook
-        getEvent().replyEmbeds(message.embed())
-            .setEphemeral(message.isEphemeral())
-            .setComponents(message.getActionRows())
-            .setContent(message.getContent())
-            .queue(message::addComponentRowListeners);
+        if (!getEvent().isAcknowledged()) {
+            getEvent().replyEmbeds(message.embed())
+                .setEphemeral(message.isEphemeral())
+                .setComponents(message.getActionRows())
+                .setContent(message.getContent())
+                .queue(message::addComponentRowListeners);
+        } else {
+            getEvent().getHook().sendMessageEmbeds(message.embed())
+                .setEphemeral(message.isEphemeral())
+                .setComponents(message.getActionRows())
+                .setContent(message.getContent())
+                .queue(message::addComponentRowListeners);
+        }
     }
 
     /**
