@@ -14,8 +14,8 @@ import net.ryanland.colossus.command.regular.SubCommand;
 import net.ryanland.colossus.command.regular.SubCommandHolder;
 import net.ryanland.colossus.events.command.BasicCommandEvent;
 import net.ryanland.colossus.events.command.CommandEvent;
-import net.ryanland.colossus.sys.interactions.menu.TabMenuBuilder;
-import net.ryanland.colossus.sys.interactions.menu.TabMenuPage;
+import net.ryanland.colossus.sys.interactions.menu.tab.TabMenuBuilder;
+import net.ryanland.colossus.sys.interactions.menu.tab.TabMenuPage;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 
 import java.util.List;

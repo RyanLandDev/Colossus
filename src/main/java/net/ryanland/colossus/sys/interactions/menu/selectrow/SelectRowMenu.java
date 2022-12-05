@@ -1,9 +1,10 @@
-package net.ryanland.colossus.sys.interactions.menu;
+package net.ryanland.colossus.sys.interactions.menu.selectrow;
 
 import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu;
 import net.ryanland.colossus.command.CommandException;
 import net.ryanland.colossus.events.repliable.RepliableEvent;
 import net.ryanland.colossus.sys.interactions.ComponentRow;
+import net.ryanland.colossus.sys.interactions.menu.InteractionMenu;
 import net.ryanland.colossus.sys.interactions.select.BaseSelectMenu;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 

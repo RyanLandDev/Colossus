@@ -1,5 +1,6 @@
-package net.ryanland.colossus.sys.interactions.menu;
+package net.ryanland.colossus.sys.interactions.menu.tab;
 
+import net.ryanland.colossus.sys.interactions.menu.InteractionMenuBuilder;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 
 import java.util.ArrayList;

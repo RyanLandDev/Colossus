@@ -1,4 +1,4 @@
-package net.ryanland.colossus.sys.interactions.menu;
+package net.ryanland.colossus.sys.interactions.menu.selectrow;
 
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.ryanland.colossus.sys.interactions.ComponentRow;
