@@ -40,7 +40,7 @@ See the [wiki](https://github.com/RyanLandDev/Colossus/wiki) for various guides 
     * **Select Menus**
       ```java
       SelectMenu menu = //... jda select menu
-      aseSelectMenu selectMenu = BaseSelectMenu.user(userId, menu,
+      BaseSelectMenu selectMenu = BaseSelectMenu.user(userId, menu,
           submitEvent -> submitEvent.reply("Submitted!"));
       presetBuilder.addComponentRows(selectMenu);
       event.reply(presetBuilder);
