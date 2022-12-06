@@ -6,7 +6,7 @@ plugins {
 }
 
 group 'net.ryanland'
-version '1.0'
+version '1.0.0'
 mainClassName = 'net.ryanland.colossus.Colossus'
 
 repositories {
@@ -33,6 +33,9 @@ dependencies {
 
     // json
     implementation 'com.google.code.gson:gson:2.9.0'
+
+    // okhttp
+    implementation 'com.squareup.okhttp3:okhttp:4.10.0'
 }
 
 publishing {
@@ -40,7 +43,7 @@ publishing {
         mavenJava(MavenPublication) {
             groupId = 'net.ryanland'
             artifactId = 'Colossus'
-            version = '1.0'
+            version = version
 
             from components.java
         }
