@@ -26,6 +26,7 @@ import net.dv8tion.jda.api.interactions.commands.privileges.IntegrationPrivilege
 import net.dv8tion.jda.api.managers.AudioManager;
 import net.dv8tion.jda.api.managers.GuildManager;
 import net.dv8tion.jda.api.managers.GuildStickerManager;
+import net.dv8tion.jda.api.managers.GuildWelcomeScreenManager;
 import net.dv8tion.jda.api.requests.ErrorResponse;
 import net.dv8tion.jda.api.requests.RestAction;
 import net.dv8tion.jda.api.requests.restaction.*;
@@ -587,7 +588,12 @@ public record ColossusGuild(Guild guild) implements Guild, ColossusDatabaseEntit
     public RestAction<List<Webhook>> retrieveWebhooks() {
         return guild().retrieveWebhooks();
     }
-    
+
+    @Override
+    public RestAction<GuildWelcomeScreen> retrieveWelcomeScreen() {
+        return guild().retrieveWelcomeScreen();
+    }
+
     @NotNull
     @Override
     public List<GuildVoiceState> getVoiceStates() {
@@ -1336,6 +1342,11 @@ public record ColossusGuild(Guild guild) implements Guild, ColossusDatabaseEntit
     @Override
     public RoleOrderAction modifyRolePositions(boolean useAscendingOrder) {
         return guild().modifyRolePositions(useAscendingOrder);
+    }
+
+    @Override
+    public GuildWelcomeScreenManager modifyWelcomeScreen() {
+        return guild().modifyWelcomeScreen();
     }
 
     /**
