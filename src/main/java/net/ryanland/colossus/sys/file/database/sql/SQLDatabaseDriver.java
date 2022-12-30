@@ -193,6 +193,13 @@ public abstract class SQLDatabaseDriver extends DatabaseDriver {
         }
     }
 
+    /**
+     * Checks if the result of a COUNT query is equal to 0
+     */
+    public final boolean queryIsZero(String query) {
+        return ((int) singleQuery(query)) == 0;
+    }
+
     /*
     private Set<String> getPrimaryKeys(String tableName) throws SQLException {
         ResultSet pkColumns = getConnection().getMetaData().getPrimaryKeys(null, null, tableName);
