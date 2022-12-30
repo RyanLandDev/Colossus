@@ -133,6 +133,13 @@ public abstract class SQLDatabaseDriver extends DatabaseDriver {
         }
     }
 
+    /**
+     * Checks if the result of a COUNT query is equal to 0
+     */
+    public final boolean queryIsZero(String query, Object... params) {
+        return ((int) queryValue(query, params)) == 0;
+    }
+
     public final List<Supply> querySupplies(String query, Object... params) {
         List<Supply> supplies = new ArrayList<>();
         String stockName = query.replaceFirst("^SELECT .+ FROM ", "").replaceFirst(" .+$", "");
@@ -191,13 +198,6 @@ public abstract class SQLDatabaseDriver extends DatabaseDriver {
         } catch (SQLException e) {
             throw new IllegalArgumentException(e);
         }
-    }
-
-    /**
-     * Checks if the result of a COUNT query is equal to 0
-     */
-    public final boolean queryIsZero(String query) {
-        return ((int) singleQuery(query)) == 0;
     }
 
     /*
