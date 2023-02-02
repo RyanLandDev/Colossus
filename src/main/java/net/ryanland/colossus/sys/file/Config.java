@@ -19,14 +19,17 @@ public class Config {
     }
 
     public String getString(String key) {
+        if (get(key) == null) return null;
         return get(key).getAsString();
     }
 
     public Integer getInt(String key) {
+        if (get(key) == null) return null;
         return get(key).getAsInt();
     }
 
     public Boolean getBoolean(String key) {
+        if (get(key) == null) return null;
         return get(key).getAsBoolean();
     }
 }
