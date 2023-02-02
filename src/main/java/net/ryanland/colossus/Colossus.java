@@ -29,6 +29,7 @@ import org.slf4j.Logger;
 import java.nio.file.InvalidPathException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -99,7 +100,7 @@ public class Colossus {
      */
     public void initialize(int shard) {
         // check if sharding is disabled
-        if (!config.getBoolean("sharding.enabled")) shard = -1;
+        if (!Objects.requireNonNullElse(config.getBoolean("sharding.enabled"), false)) shard = -1;
 
         if (shard == -1) LOGGER.info("Initializing...");
         else LOGGER.info("Initializing shard #" + shard + "...");
