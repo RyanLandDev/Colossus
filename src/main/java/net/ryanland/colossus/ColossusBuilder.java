@@ -183,6 +183,7 @@ public class ColossusBuilder {
     }
 
     private static JsonPrimitive toPrimitive(Object value) {
+        if (value == null) return null;
         return (JsonPrimitive) JsonProvider.serializeElement(value);
     }
 
