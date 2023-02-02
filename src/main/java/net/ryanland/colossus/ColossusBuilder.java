@@ -118,6 +118,8 @@ public class ColossusBuilder {
      * @see Colossus
      */
     public ColossusBuilder(String configDirectory) {
+        if (configDirectory == null) throw new NullPointerException("Provided config directory is null");
+
         // Get directory and perform checks
         LocalFile.validateDirectoryPath(configDirectory);
         this.configDirectory = configDirectory;
@@ -220,7 +222,7 @@ public class ColossusBuilder {
                 new SQLGuildsProvider(), new SQLMembersProvider(), new SQLUsersProvider(), new SQLUsersProvider.CooldownsProvider());
         }
 
-        buildConfigFile();
+        if (configDirectory != null) buildConfigFile();
 
         return new Colossus(jdaBuilder, config, categories, commands, contextCommands, localFiles,
             buttonListenerExpirationTimeAmount, buttonListenerExpirationTimeUnit, databaseDriver, providers,
