@@ -134,8 +134,12 @@ public class Colossus {
             try {
                 CommandHandler.upsertAll();
             } catch (IllegalArgumentException e) {
-                // default sql databases don't exist, create them
-                getSQLDatabaseDriver().query("create table global ( _bot_id varchar(25) constraint global_pk primary key ); create table guilds ( _guild_id varchar(25) constraint guilds_pk primary key ); create table members ( _user_id varchar(25) not null, _guild_id varchar(25) not null, constraint members_pk primary key (_guild_id, _user_id) ); create table users ( _user_id varchar(25) constraint users_pk primary key ); create table cooldowns ( user_id varchar(25) not null, command_name varchar(32) not null, command_type tinyint not null, expires datetime not null, constraint cooldowns_pk primary key (user_id, command_name, command_type) ); create table disabled_commands ( command_name varchar(32) not null, command_type tinyint not null, constraint disabled_commands_pk primary key (command_name, command_type) ); ");
+                if (getDatabaseDriver() instanceof SQLDatabaseDriver) {
+                    e.printStackTrace();
+                    // default sql databases don't exist, create them
+                    getSQLDatabaseDriver().query("create table global ( _bot_id varchar(25) constraint global_pk primary key ); create table guilds ( _guild_id varchar(25) constraint guilds_pk primary key ); create table members ( _user_id varchar(25) not null, _guild_id varchar(25) not null, constraint members_pk primary key (_guild_id, _user_id) ); create table users ( _user_id varchar(25) constraint users_pk primary key ); create table cooldowns ( user_id varchar(25) not null, command_name varchar(32) not null, command_type tinyint not null, expires datetime not null, constraint cooldowns_pk primary key (user_id, command_name, command_type) ); create table disabled_commands ( command_name varchar(32) not null, command_type tinyint not null, constraint disabled_commands_pk primary key (command_name, command_type) ); ");
+                    LOGGER.info("Default SQL tables not found, created them");
+                }
             }
             LOGGER.info("All commands upserted!");
         }
