@@ -116,28 +116,32 @@ public interface EditableRepliableEvent extends RepliableEvent {
             // send reply
             // check if event is already acknowledged
             if (!getEvent().isAcknowledged()) {
-                MessageEditCallbackAction reply = getEvent().editMessage(message.getContent())
-                    .setComponents(actionRows);
+                MessageEditCallbackAction reply = getEvent().editComponents(actionRows)
+                    .setContent(message.getContent());
                 if (!message.embedBuilder().isEmpty()) reply.setEmbeds(message.embed());
+                else reply.setEmbeds();
                 reply.queue(message::addComponentRowListeners);
             } else {
-                WebhookMessageEditAction<Message> reply = getEvent().getHook().editOriginal(message.getContent())
-                    .setComponents(actionRows);
+                WebhookMessageEditAction<Message> reply = getEvent().getHook().editOriginalComponents(actionRows)
+                    .setContent(message.getContent());
                 if (!message.embedBuilder().isEmpty()) reply.setEmbeds(message.embed());
+                else reply.setEmbeds();
                 reply.queue(message::addComponentRowListeners);
             }
         } else {
             if (!getEvent().isAcknowledged()) {
-                ReplyCallbackAction reply = getEvent().reply(message.getContent())
-                    .setComponents(actionRows)
+                ReplyCallbackAction reply = getEvent().replyComponents(actionRows)
+                    .setContent(message.getContent())
                     .setEphemeral(true);
                 if (!message.embedBuilder().isEmpty()) reply.setEmbeds(message.embed());
+                else reply.setEmbeds();
                 reply.queue(message::addComponentRowListeners);
             } else {
-                WebhookMessageCreateAction<Message> reply = getEvent().getHook().sendMessage(message.getContent())
-                    .setComponents(actionRows)
+                WebhookMessageCreateAction<Message> reply = getEvent().getHook().sendMessageComponents(actionRows)
+                    .setContent(message.getContent())
                     .setEphemeral(true);
                 if (!message.embedBuilder().isEmpty()) reply.setEmbeds(message.embed());
+                else reply.setEmbeds();
                 reply.queue(message::addComponentRowListeners);
             }
         }

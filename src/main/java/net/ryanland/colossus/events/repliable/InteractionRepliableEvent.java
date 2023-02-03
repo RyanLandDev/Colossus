@@ -81,16 +81,18 @@ public interface InteractionRepliableEvent extends RepliableEvent {
     @Override
     default void reply(PresetBuilder message) {
         if (!getEvent().isAcknowledged()) {
-            ReplyCallbackAction reply = getEvent().reply(message.getContent())
+            ReplyCallbackAction reply = getEvent().replyComponents(message.getActionRows())
                 .setEphemeral(message.isEphemeral())
-                .setComponents(message.getActionRows());
+                .setContent(message.getContent());
             if (!message.embedBuilder().isEmpty()) reply.setEmbeds(message.embed());
+            else reply.setEmbeds();
             reply.queue(message::addComponentRowListeners);
         } else {
-            WebhookMessageCreateAction<Message> reply = getEvent().getHook().sendMessage(message.getContent())
+            WebhookMessageCreateAction<Message> reply = getEvent().getHook().sendMessageComponents(message.getActionRows())
                 .setEphemeral(message.isEphemeral())
-                .setComponents(message.getActionRows());
+                .setContent(message.getContent());
             if (!message.embedBuilder().isEmpty()) reply.setEmbeds(message.embed());
+            else reply.setEmbeds();
             reply.queue(message::addComponentRowListeners);
         }
     }

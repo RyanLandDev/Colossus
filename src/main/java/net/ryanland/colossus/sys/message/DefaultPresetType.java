@@ -1,6 +1,7 @@
 package net.ryanland.colossus.sys.message;
 
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.Role;
 import net.ryanland.colossus.Colossus;
 import org.jetbrains.annotations.Nullable;
 
@@ -12,7 +13,7 @@ import java.util.function.Supplier;
  */
 public enum DefaultPresetType implements PresetType {
 
-    EMPTY(() -> null, () -> null, () -> null, () -> null, () -> null,
+    EMPTY(() -> null, () -> null, () -> null, () -> null, () -> Role.DEFAULT_COLOR_RAW,
         () -> null, () -> null, () -> null, () -> null,
         () -> null, () -> null,
         () -> null, () -> null, () -> false),
