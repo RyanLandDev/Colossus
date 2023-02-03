@@ -1,9 +1,12 @@
 package net.ryanland.colossus.events.repliable;
 
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.interactions.callbacks.IModalCallback;
 import net.dv8tion.jda.api.interactions.callbacks.IReplyCallback;
 import net.dv8tion.jda.api.interactions.modals.Modal;
+import net.dv8tion.jda.api.requests.restaction.WebhookMessageCreateAction;
+import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
 import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.command.executor.functional_interface.CommandConsumer;
 import net.ryanland.colossus.events.ButtonClickEvent;
@@ -78,17 +81,17 @@ public interface InteractionRepliableEvent extends RepliableEvent {
     @Override
     default void reply(PresetBuilder message) {
         if (!getEvent().isAcknowledged()) {
-            getEvent().replyEmbeds(message.embed())
+            ReplyCallbackAction reply = getEvent().reply(message.getContent())
                 .setEphemeral(message.isEphemeral())
-                .setComponents(message.getActionRows())
-                .setContent(message.getContent())
-                .queue(message::addComponentRowListeners);
+                .setComponents(message.getActionRows());
+            if (!message.embedBuilder().isEmpty()) reply.setEmbeds(message.embed());
+            reply.queue(message::addComponentRowListeners);
         } else {
-            getEvent().getHook().sendMessageEmbeds(message.embed())
+            WebhookMessageCreateAction<Message> reply = getEvent().getHook().sendMessage(message.getContent())
                 .setEphemeral(message.isEphemeral())
-                .setComponents(message.getActionRows())
-                .setContent(message.getContent())
-                .queue(message::addComponentRowListeners);
+                .setComponents(message.getActionRows());
+            if (!message.embedBuilder().isEmpty()) reply.setEmbeds(message.embed());
+            reply.queue(message::addComponentRowListeners);
         }
     }
 

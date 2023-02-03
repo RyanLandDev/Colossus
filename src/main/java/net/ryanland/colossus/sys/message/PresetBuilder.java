@@ -322,6 +322,7 @@ public class PresetBuilder {
      * @see #embedBuilder()
      */
     public MessageEmbed embed() {
+        if (embedBuilder().isEmpty()) return null;
         return embedBuilder().build();
     }
 }

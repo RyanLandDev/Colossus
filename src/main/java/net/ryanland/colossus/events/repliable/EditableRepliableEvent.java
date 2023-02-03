@@ -7,6 +7,10 @@ import net.dv8tion.jda.api.interactions.callbacks.IModalCallback;
 import net.dv8tion.jda.api.interactions.callbacks.IReplyCallback;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.modals.Modal;
+import net.dv8tion.jda.api.requests.restaction.WebhookMessageCreateAction;
+import net.dv8tion.jda.api.requests.restaction.WebhookMessageEditAction;
+import net.dv8tion.jda.api.requests.restaction.interactions.MessageEditCallbackAction;
+import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
 import net.ryanland.colossus.command.executor.functional_interface.CommandConsumer;
 import net.ryanland.colossus.events.ButtonClickEvent;
 import net.ryanland.colossus.events.ModalSubmitEvent;
@@ -112,29 +116,29 @@ public interface EditableRepliableEvent extends RepliableEvent {
             // send reply
             // check if event is already acknowledged
             if (!getEvent().isAcknowledged()) {
-                getEvent().editMessageEmbeds(message.embed())
-                    .setComponents(actionRows)
-                    .setContent(message.getContent())
-                    .queue(message::addComponentRowListeners);
+                MessageEditCallbackAction reply = getEvent().editMessage(message.getContent())
+                    .setComponents(actionRows);
+                if (!message.embedBuilder().isEmpty()) reply.setEmbeds(message.embed());
+                reply.queue(message::addComponentRowListeners);
             } else {
-                getEvent().getHook().editOriginalEmbeds(message.embed())
-                    .setComponents(actionRows)
-                    .setContent(message.getContent())
-                    .queue(message::addComponentRowListeners);
+                WebhookMessageEditAction<Message> reply = getEvent().getHook().editOriginal(message.getContent())
+                    .setComponents(actionRows);
+                if (!message.embedBuilder().isEmpty()) reply.setEmbeds(message.embed());
+                reply.queue(message::addComponentRowListeners);
             }
         } else {
             if (!getEvent().isAcknowledged()) {
-                getEvent().replyEmbeds(message.embed())
+                ReplyCallbackAction reply = getEvent().reply(message.getContent())
                     .setComponents(actionRows)
-                    .setContent(message.getContent())
-                    .setEphemeral(true)
-                    .queue(message::addComponentRowListeners);
+                    .setEphemeral(true);
+                if (!message.embedBuilder().isEmpty()) reply.setEmbeds(message.embed());
+                reply.queue(message::addComponentRowListeners);
             } else {
-                getEvent().getHook().sendMessageEmbeds(message.embed())
+                WebhookMessageCreateAction<Message> reply = getEvent().getHook().sendMessage(message.getContent())
                     .setComponents(actionRows)
-                    .setContent(message.getContent())
-                    .setEphemeral(true)
-                    .queue(message::addComponentRowListeners);
+                    .setEphemeral(true);
+                if (!message.embedBuilder().isEmpty()) reply.setEmbeds(message.embed());
+                reply.queue(message::addComponentRowListeners);
             }
         }
     }

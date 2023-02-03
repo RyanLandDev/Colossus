@@ -12,6 +12,11 @@ import java.util.function.Supplier;
  */
 public enum DefaultPresetType implements PresetType {
 
+    EMPTY(() -> null, () -> null, () -> null, () -> null, () -> null,
+        () -> null, () -> null, () -> null, () -> null,
+        () -> null, () -> null,
+        () -> null, () -> null, () -> false),
+
     DEFAULT(() -> null, () -> null, () -> null, OffsetDateTime::now, () -> 0x2f3136,
         () -> null, () -> null, () -> null, () -> null,
         () -> Colossus.getSelfUser().getName(), () -> Colossus.getSelfUser().getAvatarUrl(),
