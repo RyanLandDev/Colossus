@@ -16,6 +16,14 @@ import java.util.List;
  */
 public record BaseButton(Button button, CommandConsumer<ButtonClickEvent> onClick) {
 
+    public BaseButton(Button button) {
+        this(button, event -> {});
+    }
+
+    public BaseButton of(Button button) {
+        return new BaseButton(button);
+    }
+
     /**
      * Create a button which only works if the provided predicate is true, and do something if false
      */
