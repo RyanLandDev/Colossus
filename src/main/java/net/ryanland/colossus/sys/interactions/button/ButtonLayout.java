@@ -21,20 +21,24 @@ public class ButtonLayout {
         return rows;
     }
 
-    public void add(ButtonRow... rows) {
+    public ButtonLayout add(ButtonRow... rows) {
         this.rows.addAll(List.of(rows));
+        return this;
     }
 
-    public void add(int index, ButtonRow row) {
+    public ButtonLayout add(int index, ButtonRow row) {
         rows.add(index, row);
+        return this;
     }
 
-    public void addButton(int rowIndex, BaseButton... buttons) {
+    public ButtonLayout addButton(int rowIndex, BaseButton... buttons) {
         rows.get(rowIndex).add(buttons);
+        return this;
     }
 
-    public void insertButton(int rowIndex, int buttonIndex, BaseButton button) {
+    public ButtonLayout insertButton(int rowIndex, int buttonIndex, BaseButton button) {
         rows.get(rowIndex).add(buttonIndex, button);
+        return this;
     }
 
     public int size() {
