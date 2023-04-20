@@ -6,6 +6,9 @@ import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Collection of {@link ButtonRow ButtonRows} with additional helper methods.
+ */
 public class ButtonLayout {
 
     public ButtonLayout(ButtonRow... rows) {
@@ -24,6 +27,14 @@ public class ButtonLayout {
 
     public void add(int index, ButtonRow row) {
         rows.add(index, row);
+    }
+
+    public void addButton(int rowIndex, BaseButton... buttons) {
+        rows.get(rowIndex).add(buttons);
+    }
+
+    public void insertButton(int rowIndex, int buttonIndex, BaseButton button) {
+        rows.get(rowIndex).add(buttonIndex, button);
     }
 
     public int size() {

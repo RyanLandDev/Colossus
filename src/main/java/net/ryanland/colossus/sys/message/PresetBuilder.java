@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.sys.interactions.ComponentRow;
 import net.ryanland.colossus.sys.interactions.button.BaseButton;
+import net.ryanland.colossus.sys.interactions.button.ButtonLayout;
 import net.ryanland.colossus.sys.interactions.button.ButtonRow;
 import net.ryanland.colossus.sys.util.InteractionUtil;
 
@@ -282,6 +283,15 @@ public class PresetBuilder {
      */
     public PresetBuilder addButtons(Collection<BaseButton> buttons) {
         componentRows.addAll(InteractionUtil.ofBase(buttons));
+        return this;
+    }
+
+    /**
+     * Overwrites all component rows in this {@link PresetBuilder} and replaces them with the provided {@link ButtonLayout}.
+     */
+    public PresetBuilder setButtonLayout(ButtonLayout layout) {
+        componentRows = new ArrayList<>();
+        componentRows.addAll(layout.getRows());
         return this;
     }
 
