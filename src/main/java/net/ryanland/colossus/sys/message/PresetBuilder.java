@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.sys.interactions.ComponentRow;
 import net.ryanland.colossus.sys.interactions.button.BaseButton;
@@ -262,6 +263,15 @@ public class PresetBuilder {
      */
     public PresetBuilder addButtons(BaseButton... buttons) {
         return addButtons(List.of(buttons));
+    }
+
+    /**
+     * Creates one or more {@link ButtonRow}s and adds them to this {@link PresetBuilder} based on the buttons provided.
+     * @see #addButtons(BaseButton...)
+     * @see #addComponentRow(ComponentRow)
+     */
+    public PresetBuilder addButtons(Button... buttons) {
+        return addButtons(Arrays.stream(buttons).map(BaseButton::new).toList());
     }
 
     /**
