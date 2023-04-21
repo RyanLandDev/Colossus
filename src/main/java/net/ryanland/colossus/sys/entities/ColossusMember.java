@@ -224,7 +224,16 @@ public record ColossusMember(Member member) implements Member, ColossusDatabaseE
         return member().getColorRaw();
     }
 
-    
+    @Override
+    public int getFlagsRaw() {
+        return member().getFlagsRaw();
+    }
+
+    @Override
+    public EnumSet<MemberFlag> getFlags() {
+        return member().getFlags();
+    }
+
     @Override
     public boolean canInteract(Member member) {
         return member().canInteract(member);

@@ -20,19 +20,19 @@ repositories {
 
 dependencies {
     // log
-    implementation 'ch.qos.logback:logback-classic:1.4.5'
+    implementation 'ch.qos.logback:logback-classic:1.4.6'
 
     // jda
-    implementation 'net.dv8tion:JDA:5.0.0-beta.2'
+    implementation 'net.dv8tion:JDA:5.0.0-beta.8'
 
     // database
     // note: these packages are unnecessary for users not using the MongoDatabaseDriver/SQLiteDatabaseDriver,
     // unnecessarily increasing the size of colossus. is this a problem? if so, solution?
-    implementation 'org.mongodb:mongodb-driver-sync:4.8.1'
-    implementation 'org.xerial:sqlite-jdbc:3.40.0.0'
+    implementation 'org.mongodb:mongodb-driver-sync:4.9.0'
+    implementation 'org.xerial:sqlite-jdbc:3.40.1.0'
 
     // json
-    implementation 'com.google.code.gson:gson:2.10'
+    implementation 'com.google.code.gson:gson:2.10.1'
 
     // okhttp
     implementation 'com.squareup.okhttp3:okhttp:4.10.0'
