@@ -1,8 +1,11 @@
 package net.ryanland.colossus;
 
 import com.google.gson.*;
+import net.dv8tion.jda.api.GatewayEncoding;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.OnlineStatus;
+import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.SelfUser;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
 import net.dv8tion.jda.api.interactions.commands.localization.LocalizationFunction;
@@ -307,6 +310,45 @@ public class ColossusBuilder {
      */
     public ColossusBuilder setJDABuilder(Function<JDABuilder, JDABuilder> modifier) {
         jdaBuilder = modifier.apply(jdaBuilder);
+        return this;
+    }
+
+    /**
+     * Sets the {@link Activity Activity} for our session.
+     * <br>This value can be changed at any time in the {@link net.dv8tion.jda.api.managers.Presence Presence} from a JDA instance.
+     *
+     * <p><b>Hint:</b> You can create an {@link Activity Activity} object using
+     * {@link Activity#playing(String)} or {@link Activity#streaming(String, String)}.
+     * @param  activity
+     *         An instance of {@link Activity Activity} (null allowed)
+     * @return This {@link ColossusBuilder}
+     * @see    net.dv8tion.jda.api.managers.Presence#setActivity(Activity)  Presence.setActivity(Activity)
+     */
+    public ColossusBuilder setActivity(Activity activity) {
+        setJDABuilder(builder -> builder.setActivity(activity));
+        return this;
+    }
+
+    /**
+     * Sets the {@link OnlineStatus} our connection will display.
+     * <br>This value can be changed at any time in the {@link net.dv8tion.jda.api.managers.Presence Presence} from a JDA instance.
+     * @param  status
+     *         Not-null OnlineStatus (default online)
+     * @return This {@link ColossusBuilder}
+     */
+    public ColossusBuilder setStatus(OnlineStatus status) {
+        setJDABuilder(builder -> builder.setStatus(status));
+        return this;
+    }
+
+    /**
+     * Choose which {@link GatewayEncoding} JDA should use.
+     * @param  encoding
+     *         The {@link GatewayEncoding} (default: JSON)
+     * @return This {@link ColossusBuilder}
+     */
+    public ColossusBuilder setGatewayEncoding(GatewayEncoding encoding) {
+        setJDABuilder(builder -> builder.setGatewayEncoding(encoding));
         return this;
     }
 
