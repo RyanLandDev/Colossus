@@ -94,32 +94,39 @@ public abstract class Argument<T> {
 
     public abstract ArgumentOptionData getArgumentOptionData();
 
-    public ArgumentOptionData addChoice(@NotNull String name, double value) {
-        return getArgumentOptionData().addChoice(name, value);
+    public Argument<T> addChoice(@NotNull String name, double value) {
+        getArgumentOptionData().addChoice(name, value);
+        return this;
     }
 
-    public ArgumentOptionData addChoice(@NotNull String name, long value) {
-        return getArgumentOptionData().addChoice(name, value);
+    public Argument<T> addChoice(@NotNull String name, long value) {
+        getArgumentOptionData().addChoice(name, value);
+        return this;
     }
 
-    public ArgumentOptionData addChoice(@NotNull String name, @NotNull String value) {
-        return getArgumentOptionData().addChoice(name, value);
+    public Argument<T> addChoice(@NotNull String name, @NotNull String value) {
+        getArgumentOptionData().addChoice(name, value);
+        return this;
     }
 
-    public ArgumentOptionData addChoices(String... choices) {
-        return getArgumentOptionData().addChoices(choices);
+    public Argument<T> addChoices(String... choices) {
+        getArgumentOptionData().addChoices(choices);
+        return this;
     }
 
-    public ArgumentOptionData addChoices(List<String> choices) {
-        return getArgumentOptionData().addChoices(choices);
+    public Argument<T> addChoices(List<String> choices) {
+        getArgumentOptionData().addChoices(choices);
+        return this;
     }
 
-    public ArgumentOptionData addChoices(@NotNull Command.Choice... choices) {
-        return getArgumentOptionData().addChoices(choices);
+    public Argument<T> addChoices(@NotNull Command.Choice... choices) {
+        getArgumentOptionData().addChoices(choices);
+        return this;
     }
 
-    public ArgumentOptionData addChoices(@NotNull Collection<? extends Command.Choice> choices) {
-        return getArgumentOptionData().addChoices(choices);
+    public Argument<T> addChoices(@NotNull Collection<? extends Command.Choice> choices) {
+        getArgumentOptionData().addChoices(choices);
+        return this;
     }
 
     public boolean ignoreMissingException() {
