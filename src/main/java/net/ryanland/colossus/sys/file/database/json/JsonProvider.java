@@ -1,9 +1,15 @@
 package net.ryanland.colossus.sys.file.database.json;
 
 import com.google.gson.*;
+import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.sys.file.database.Provider;
+import net.ryanland.colossus.sys.file.database.Supply;
+import net.ryanland.colossus.sys.file.database.ValueProvider;
+import net.ryanland.colossus.sys.file.database.sql.SQLValueProvider;
 
+import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.function.Function;
 
@@ -40,5 +46,19 @@ public abstract class JsonProvider extends Provider<JsonObject, JsonObject> {
             if (value.isString()) return value.getAsString();
         }
         return null;
+    }
+
+    protected void processValueProviderSerializations(JsonObject json, Supply supply) {
+        for (ValueProvider<?, ?, ?> p : Colossus.getDatabaseDriver().getValueProviders(getStockName())) {
+            JsonValueProvider<?> provider = (JsonValueProvider<?>) p;
+            json.add(provider.getKeyName(), provider.serialize(supply.get(provider.getKeyName())));
+        }
+    }
+
+    protected void processValueProviderDeserializations(HashMap<String, Object> values, JsonObject data) {
+        for (ValueProvider<?, ?, ?> p : Colossus.getSQLDatabaseDriver().getValueProviders(getStockName())) {
+            JsonValueProvider<?> provider = (JsonValueProvider<?>) p;
+            values.put(provider.getKeyName(), provider.deserialize(data));
+        }
     }
 }

@@ -38,6 +38,8 @@ public class SQLUsersProvider extends SQLProvider {
         }
         supply.getModifiedKeys().remove("cooldowns");
 
+        processValueProviderSerializations(data, supply);
+
         return data;
     }
 
@@ -60,6 +62,8 @@ public class SQLUsersProvider extends SQLProvider {
             cooldowns.add(new Cooldown(commandType.getCommand(commandName), expires));
         }
         values.put("cooldowns", cooldowns);
+
+        processValueProviderDeserializations(values, data);
 
         return new Supply(getStockName(), values);
     }

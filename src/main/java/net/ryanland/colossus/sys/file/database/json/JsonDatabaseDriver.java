@@ -10,9 +10,13 @@ import net.ryanland.colossus.sys.file.database.DatabaseDriver;
 import net.ryanland.colossus.sys.file.database.PrimaryKey;
 import net.ryanland.colossus.sys.file.database.Stock;
 import net.ryanland.colossus.sys.file.database.Supply;
+import net.ryanland.colossus.sys.file.database.mongo.MongoDatabaseDriver;
+import net.ryanland.colossus.sys.file.database.mongo.MongoValueProvider;
+import org.bson.Document;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * JSON implementation of {@link DatabaseDriver}.<br>
@@ -105,5 +109,31 @@ public class JsonDatabaseDriver extends DatabaseDriver {
         }
 
         file.write(json);
+    }
+
+    public <T> JsonDatabaseDriver registerValueProvider(String stockName, String keyName,
+                                                         Function<T, JsonObject> serializer, Function<JsonObject, T> deserializer) {
+        registerValueProviders(new JsonValueProvider<T>() {
+            @Override
+            public String getStockName() {
+                return stockName;
+            }
+
+            @Override
+            public String getKeyName() {
+                return keyName;
+            }
+
+            @Override
+            public JsonObject serialize(T toSerialize) {
+                return serializer.apply(toSerialize);
+            }
+
+            @Override
+            public T deserialize(JsonObject data) {
+                return deserializer.apply(data);
+            }
+        });
+        return this;
     }
 }

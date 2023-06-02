@@ -1,6 +1,5 @@
 package net.ryanland.colossus.sys.file.database.mongo;
 
-import com.google.gson.JsonObject;
 import net.ryanland.colossus.sys.file.database.Supply;
 import org.bson.Document;
 
@@ -21,6 +20,8 @@ public class MongoGuildsProvider extends MongoProvider {
         data.put("_guild_id", supply.get("_guild_id"));
         if (supply.get("prefix") != null) data.put("prefix", supply.get("prefix"));
 
+        processValueProviderSerializations(data, supply);
+
         return new Document(data);
     }
 
@@ -31,6 +32,8 @@ public class MongoGuildsProvider extends MongoProvider {
         // deserializers
         values.put("_guild_id", data.getString("_guild_id"));
         if (data.get("prefix") != null) values.put("prefix", data.getString("prefix"));
+
+        processValueProviderDeserializations(values, data);
 
         return new Supply(getStockName(), values);
     }

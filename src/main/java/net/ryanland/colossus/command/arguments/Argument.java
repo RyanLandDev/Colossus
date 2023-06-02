@@ -1,5 +1,6 @@
 package net.ryanland.colossus.command.arguments;
 
+import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.ArgumentException;
@@ -7,8 +8,12 @@ import net.ryanland.colossus.command.arguments.parsing.exceptions.InterruptedArg
 import net.ryanland.colossus.events.command.CommandEvent;
 import net.ryanland.colossus.events.command.MessageCommandEvent;
 import net.ryanland.colossus.events.command.SlashCommandEvent;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Deque;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Function;
@@ -88,6 +93,34 @@ public abstract class Argument<T> {
     // ------------------------
 
     public abstract ArgumentOptionData getArgumentOptionData();
+
+    public ArgumentOptionData addChoice(@NotNull String name, double value) {
+        return getArgumentOptionData().addChoice(name, value);
+    }
+
+    public ArgumentOptionData addChoice(@NotNull String name, long value) {
+        return getArgumentOptionData().addChoice(name, value);
+    }
+
+    public ArgumentOptionData addChoice(@NotNull String name, @NotNull String value) {
+        return getArgumentOptionData().addChoice(name, value);
+    }
+
+    public ArgumentOptionData addChoices(String... choices) {
+        return getArgumentOptionData().addChoices(choices);
+    }
+
+    public ArgumentOptionData addChoices(List<String> choices) {
+        return getArgumentOptionData().addChoices(choices);
+    }
+
+    public ArgumentOptionData addChoices(@NotNull Command.Choice... choices) {
+        return getArgumentOptionData().addChoices(choices);
+    }
+
+    public ArgumentOptionData addChoices(@NotNull Collection<? extends Command.Choice> choices) {
+        return getArgumentOptionData().addChoices(choices);
+    }
 
     public boolean ignoreMissingException() {
         return false;

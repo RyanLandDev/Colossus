@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -82,6 +83,14 @@ public class ArgumentOptionData extends OptionData {
     @Override
     public ArgumentOptionData addChoice(@NotNull String name, @NotNull String value) {
         return (ArgumentOptionData) super.addChoice(name, value);
+    }
+
+    public ArgumentOptionData addChoices(String... choices) {
+        return addChoices(Arrays.stream(choices).toList());
+    }
+
+    public ArgumentOptionData addChoices(List<String> choices) {
+        return addChoices(choices.stream().map(choice -> new Command.Choice(choice, choice)).toList());
     }
 
     @NotNull

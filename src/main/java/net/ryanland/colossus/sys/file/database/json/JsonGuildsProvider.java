@@ -20,6 +20,8 @@ public class JsonGuildsProvider extends JsonProvider {
         json.add("_guild_id", serializeElement(supply.get("_guild_id")));
         if (supply.get("prefix") != null) json.add("prefix", serializeElement(supply.get("prefix")));
 
+        processValueProviderSerializations(json, supply);
+
         return json;
     }
 
@@ -30,6 +32,8 @@ public class JsonGuildsProvider extends JsonProvider {
         // deserializers
         values.put("_guild_id", data.get("_guild_id").getAsString());
         if (data.get("prefix") != null) values.put("prefix", data.get("prefix").getAsString());
+
+        processValueProviderDeserializations(values, data);
 
         return new Supply(getStockName(), values);
     }

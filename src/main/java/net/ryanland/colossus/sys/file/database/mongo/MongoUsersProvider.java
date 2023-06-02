@@ -30,6 +30,8 @@ public class MongoUsersProvider extends MongoProvider {
             .map(cooldown -> Arrays.asList(cooldown.command().getName(), cooldown.expires(), cooldown.command().getCommandType().getId()))
             .collect(Collectors.toList()));
 
+        processValueProviderSerializations(data, supply);
+
         return new Document(data);
     }
 
@@ -42,6 +44,8 @@ public class MongoUsersProvider extends MongoProvider {
         values.put("cooldowns", data.getList("cooldowns", List.class, List.of()).stream()
             .map(list -> new Cooldown(CommandType.of((int) list.get(2)).getCommand((String) list.get(0)), (Date) list.get(1)))
             .toList());
+
+        processValueProviderDeserializations(values, data);
 
         return new Supply(getStockName(), values);
     }

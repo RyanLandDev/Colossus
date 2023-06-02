@@ -14,9 +14,11 @@ import net.ryanland.colossus.sys.file.database.Supply;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
+import java.sql.ResultSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * MongoDB implementation of {@link DatabaseDriver}
@@ -87,5 +89,31 @@ public class MongoDatabaseDriver extends DatabaseDriver {
     @Override
     protected void deleteSupply(Supply supply) {
         getCollection(supply.getStockName()).deleteOne(toFilter(supply));
+    }
+
+    public <T> MongoDatabaseDriver registerValueProvider(String stockName, String keyName,
+                                                         Function<T, Object> serializer, Function<Document, T> deserializer) {
+        registerValueProviders(new MongoValueProvider<T>() {
+            @Override
+            public String getStockName() {
+                return stockName;
+            }
+
+            @Override
+            public String getKeyName() {
+                return keyName;
+            }
+
+            @Override
+            public Object serialize(T toSerialize) {
+                return serializer.apply(toSerialize);
+            }
+
+            @Override
+            public T deserialize(Document data) {
+                return deserializer.apply(data);
+            }
+        });
+        return this;
     }
 }

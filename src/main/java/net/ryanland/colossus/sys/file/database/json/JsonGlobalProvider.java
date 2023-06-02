@@ -32,6 +32,8 @@ public class JsonGlobalProvider extends JsonProvider {
                 return obj;
         }).toArray(JsonObject[]::new)));
 
+        processValueProviderSerializations(json, supply);
+
         return json;
     }
 
@@ -48,6 +50,8 @@ public class JsonGlobalProvider extends JsonProvider {
             disabledCommands.add(commandType.getCommand(commandName));
         }
         values.put("disabled_commands", disabledCommands);
+
+        processValueProviderDeserializations(values, data);
 
         return new Supply(getStockName(), values);
     }

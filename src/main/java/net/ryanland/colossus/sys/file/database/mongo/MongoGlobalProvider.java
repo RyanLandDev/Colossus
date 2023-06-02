@@ -28,6 +28,8 @@ public class MongoGlobalProvider extends MongoProvider {
             .map(command -> command.getCommandType().getId() + ";" + command.getName())
             .toList());
 
+        processValueProviderSerializations(data, supply);
+
         return new Document(data);
     }
 
@@ -46,6 +48,8 @@ public class MongoGlobalProvider extends MongoProvider {
             })
             .collect(Collectors.toList());
         values.put("disabled_commands", disabledCommands);
+
+        processValueProviderDeserializations(values, data);
 
         return new Supply(getStockName(), values);
     }

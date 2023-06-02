@@ -34,6 +34,8 @@ public class JsonUsersProvider extends JsonProvider {
                 return obj;
             }).toArray(JsonObject[]::new)));
 
+        processValueProviderSerializations(json, supply);
+
         return json;
     }
 
@@ -55,6 +57,8 @@ public class JsonUsersProvider extends JsonProvider {
             cooldowns.add(new Cooldown(commandType.getCommand(commandName), expires));
         }
         values.put("cooldowns", cooldowns);
+
+        processValueProviderDeserializations(values, data);
 
         return new Supply(getStockName(), values);
     }

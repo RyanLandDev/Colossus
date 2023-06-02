@@ -21,6 +21,8 @@ public class SQLMembersProvider extends SQLProvider {
         data.put("_user_id", supply.get("_user_id"));
         data.put("_guild_id", supply.get("_guild_id"));
 
+        processValueProviderSerializations(data, supply);
+
         return data;
     }
 
@@ -31,6 +33,8 @@ public class SQLMembersProvider extends SQLProvider {
         // deserializers
         values.put("_user_id", data.getString("_user_id"));
         values.put("_guild_id", data.getString("_guild_id"));
+
+        processValueProviderDeserializations(values, data);
 
         return new Supply(getStockName(), values);
     }

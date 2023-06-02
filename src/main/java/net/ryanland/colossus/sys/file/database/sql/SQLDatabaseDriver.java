@@ -1,16 +1,14 @@
 package net.ryanland.colossus.sys.file.database.sql;
 
 import net.ryanland.colossus.Colossus;
-import net.ryanland.colossus.sys.file.database.DatabaseDriver;
-import net.ryanland.colossus.sys.file.database.PrimaryKey;
-import net.ryanland.colossus.sys.file.database.Stock;
-import net.ryanland.colossus.sys.file.database.Supply;
+import net.ryanland.colossus.sys.file.database.*;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.function.Function;
 
 /**
  * SQL implementation of {@link DatabaseDriver}.<br>
@@ -283,5 +281,44 @@ public abstract class SQLDatabaseDriver extends DatabaseDriver {
         List<Object> params = keys.stream().map(data::get).toList();
 
         query("DELETE FROM " + supply.getStockName() + " " + getWhereClause(keys), params);
+    }
+
+    public <R extends SQLDatabaseDriver, T> R registerValueProvider(String stockName, String keyName, String sqlDataType,
+                                                                 SQLFunction<T, Object> serializer, SQLFunction<ResultSet, T> deserializer) {
+        registerValueProviders(new SQLValueProvider<T>() {
+            @Override
+            public String getSQLDataType() {
+                return sqlDataType;
+            }
+
+            @Override
+            public String getStockName() {
+                return stockName;
+            }
+
+            @Override
+            public String getKeyName() {
+                return keyName;
+            }
+
+            @Override
+            public Object serialize(T toSerialize) {
+                try {
+                    return serializer.apply(toSerialize);
+                } catch (SQLException e) {
+                    throw new IllegalArgumentException();
+                }
+            }
+
+            @Override
+            public T deserialize(ResultSet data) {
+                try {
+                    return deserializer.apply(data);
+                } catch (SQLException e) {
+                    throw new IllegalArgumentException();
+                }
+            }
+        });
+        return (R) this;
     }
 }

@@ -20,6 +20,8 @@ public class JsonMembersProvider extends JsonProvider {
         json.add("_user_id", serializeElement(supply.get("_user_id")));
         json.add("_guild_id", serializeElement(supply.get("_guild_id")));
 
+        processValueProviderSerializations(json, supply);
+
         return json;
     }
 
@@ -30,6 +32,8 @@ public class JsonMembersProvider extends JsonProvider {
         // deserializers
         values.put("_user_id", data.get("_user_id").getAsString());
         values.put("_guild_id", data.get("_guild_id").getAsString());
+
+        processValueProviderDeserializations(values, data);
 
         return new Supply(getStockName(), values);
     }

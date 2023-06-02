@@ -2,10 +2,7 @@ package net.ryanland.colossus.sys.file.database;
 
 import net.ryanland.colossus.ColossusBuilder;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Supplier;
 
 /**
@@ -14,6 +11,23 @@ import java.util.function.Supplier;
  * @see ColossusBuilder#setDatabaseDriver(DatabaseDriver)
  */
 public abstract class DatabaseDriver {
+
+    protected final HashMap<String, List<ValueProvider<?, ?, ?>>> valueProviders = new HashMap<>();
+
+    public <R extends ValueProvider<?, ?, ?>> List<R> getValueProviders(String stockName) {
+        return Collections.unmodifiableList((List<R>) valueProviders.getOrDefault(stockName, List.of()));
+    }
+
+    public <R extends DatabaseDriver> R registerValueProviders(ValueProvider<?, ?, ?>... providers) {
+        for (ValueProvider<?, ?, ?> provider : providers) {
+            valueProviders.putIfAbsent(provider.getStockName(), new ArrayList<>());
+            valueProviders.compute(provider.getStockName(), (stockName, list) -> {
+                list.add(provider);
+                return list;
+            });
+        }
+        return (R) this;
+    }
 
     // Stock methods -----------------------
 
@@ -28,7 +42,7 @@ public abstract class DatabaseDriver {
      * or if null, returns {@link #find(String)}.
      *
      * @param stockName The name of the {@link Stock}
-     * @return The result {@link Stock}. This will never be null.
+     * @return The result {@link Stock}
      */
     public Stock get(String stockName) {
         return nullOr(getFromCache(stockName), () -> find(stockName));

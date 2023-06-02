@@ -1,6 +1,8 @@
 package net.ryanland.colossus.sys.file.database.sql;
 
+import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.sys.file.database.Supply;
+import net.ryanland.colossus.sys.file.database.ValueProvider;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -21,6 +23,8 @@ public class SQLGuildsProvider extends SQLProvider {
         data.put("_guild_id", supply.get("_guild_id"));
         if (supply.get("prefix") != null) data.put("prefix", supply.get("prefix"));
 
+        processValueProviderSerializations(data, supply);
+
         return data;
     }
 
@@ -31,6 +35,8 @@ public class SQLGuildsProvider extends SQLProvider {
         // deserializers
         values.put("_guild_id", data.getString("_guild_id"));
         if (data.getString("prefix") != null) values.put("prefix", data.getString("prefix"));
+
+        processValueProviderDeserializations(values, data);
 
         return new Supply(getStockName(), values);
     }

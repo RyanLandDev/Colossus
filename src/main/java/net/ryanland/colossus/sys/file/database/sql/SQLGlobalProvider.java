@@ -38,6 +38,8 @@ public class SQLGlobalProvider extends SQLProvider {
         }
         supply.getModifiedKeys().remove("disabled_commands");
 
+        processValueProviderSerializations(data, supply);
+
         return data;
     }
 
@@ -57,6 +59,8 @@ public class SQLGlobalProvider extends SQLProvider {
             disabledCommands.add(commandType.getCommand(commandName));
         }
         values.put("disabled_commands", disabledCommands);
+
+        processValueProviderDeserializations(values, data);
 
         return new Supply(getStockName(), values);
     }
