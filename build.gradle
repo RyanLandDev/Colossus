@@ -20,10 +20,10 @@ repositories {
 
 dependencies {
     // log
-    implementation 'ch.qos.logback:logback-classic:1.4.6'
+    implementation 'ch.qos.logback:logback-classic:1.4.7'
 
     // jda
-    implementation 'net.dv8tion:JDA:5.0.0-beta.8'
+    implementation 'net.dv8tion:JDA:5.0.0-beta.12'
 
     // database
     // note: these packages are unnecessary for users not using the MongoDatabaseDriver/SQLiteDatabaseDriver,
