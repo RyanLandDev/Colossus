@@ -25,7 +25,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * This will edit the existing message instead of creating a new message, except for ephemeral messages<br>
+ * This will edit the existing message instead of creating a new message, except for ephemeral replies to regular messages<br>
  */
 public interface EditableRepliableEvent extends RepliableEvent {
 
@@ -51,7 +51,7 @@ public interface EditableRepliableEvent extends RepliableEvent {
     @Override
     default void reply(String message, boolean ephemeral) {
         if (!getEvent().isAcknowledged()) {
-            if (!ephemeral) {
+            if (!ephemeral || (ephemeral && getMessage().isEphemeral())) {
                 getEvent().editMessageEmbeds(Collections.emptyList())
                     .setComponents(Collections.emptyList())
                     .setContent(message)
@@ -62,7 +62,7 @@ public interface EditableRepliableEvent extends RepliableEvent {
                     .queue();
             }
         } else {
-            if (!ephemeral) {
+            if (!ephemeral || (ephemeral && getMessage().isEphemeral())) {
                 getEvent().getHook().editOriginalEmbeds(Collections.emptyList())
                     .setComponents(Collections.emptyList())
                     .setContent(message)
@@ -78,7 +78,7 @@ public interface EditableRepliableEvent extends RepliableEvent {
     @Override
     default void reply(MessageEmbed message, boolean ephemeral) {
         if (!getEvent().isAcknowledged()) {
-            if (!ephemeral) {
+            if (!ephemeral || (ephemeral && getMessage().isEphemeral())) {
                 getEvent().editMessageEmbeds(message)
                     .setComponents(Collections.emptyList())
                     .setContent("")
@@ -89,7 +89,7 @@ public interface EditableRepliableEvent extends RepliableEvent {
                     .queue();
             }
         } else {
-            if (!ephemeral) {
+            if (!ephemeral || (ephemeral && getMessage().isEphemeral())) {
                 getEvent().getHook().editOriginalEmbeds(message)
                     .setComponents(Collections.emptyList())
                     .setContent("")
@@ -106,7 +106,7 @@ public interface EditableRepliableEvent extends RepliableEvent {
     default void reply(PresetBuilder message) {
         List<ActionRow> actionRows = message.getActionRows();
 
-        if (!message.isEphemeral()) {
+        if (!message.isEphemeral() || (message.isEphemeral() && getMessage().isEphemeral())) {
             // remove old listeners
             if (!getMessage().getActionRows().isEmpty()) {
                 ExecutorUtil.cancel(getMessage().getId(), false); // cancel an active action row emptier
