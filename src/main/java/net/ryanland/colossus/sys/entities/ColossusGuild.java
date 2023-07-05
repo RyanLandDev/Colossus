@@ -5,6 +5,8 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.Region;
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.automod.AutoModRule;
+import net.dv8tion.jda.api.entities.automod.build.AutoModRuleData;
 import net.dv8tion.jda.api.entities.channel.concrete.*;
 import net.dv8tion.jda.api.entities.channel.middleman.AudioChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
@@ -23,10 +25,7 @@ import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.PrivilegeConfig;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.privileges.IntegrationPrivilege;
-import net.dv8tion.jda.api.managers.AudioManager;
-import net.dv8tion.jda.api.managers.GuildManager;
-import net.dv8tion.jda.api.managers.GuildStickerManager;
-import net.dv8tion.jda.api.managers.GuildWelcomeScreenManager;
+import net.dv8tion.jda.api.managers.*;
 import net.dv8tion.jda.api.requests.ErrorResponse;
 import net.dv8tion.jda.api.requests.RestAction;
 import net.dv8tion.jda.api.requests.restaction.*;
@@ -141,7 +140,32 @@ public record ColossusGuild(Guild guild) implements Guild, ColossusDatabaseEntit
         return guild().retrieveRegions(includeDeprecated);
     }
 
-    
+    @Override
+    public RestAction<List<AutoModRule>> retrieveAutoModRules() {
+        return guild().retrieveAutoModRules();
+    }
+
+    @Override
+    public RestAction<AutoModRule> retrieveAutoModRuleById(String id) {
+        return guild().retrieveAutoModRuleById(id);
+    }
+
+    @Override
+    public AuditableRestAction<AutoModRule> createAutoModRule(AutoModRuleData data) {
+        return guild().createAutoModRule(data);
+    }
+
+    @Override
+    public AutoModRuleManager modifyAutoModRuleById(String id) {
+        return modifyAutoModRuleById(id);
+    }
+
+    @Override
+    public AuditableRestAction<Void> deleteAutoModRuleById(String id) {
+        return deleteAutoModRuleById(id);
+    }
+
+
     @NotNull
     @Override
     public MemberAction addMember(String accessToken, UserSnowflake user) {

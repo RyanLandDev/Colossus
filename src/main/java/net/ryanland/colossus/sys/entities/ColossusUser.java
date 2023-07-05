@@ -31,6 +31,11 @@ public record ColossusUser(User user) implements User, ColossusDatabaseEntity {
         return user().getName();
     }
 
+    @Override
+    public String getGlobalName() {
+        return user().getGlobalName();
+    }
+
     @NotNull
     @Override
     public String getDiscriminator() {

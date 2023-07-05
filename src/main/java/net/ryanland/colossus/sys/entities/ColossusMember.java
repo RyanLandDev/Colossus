@@ -282,4 +282,9 @@ public record ColossusMember(Member member) implements Member, ColossusDatabaseE
     public long getIdLong() {
         return member().getIdLong();
     }
+
+    @Override
+    public String getDefaultAvatarId() {
+        return member().getDefaultAvatarId();
+    }
 }
