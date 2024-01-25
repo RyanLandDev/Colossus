@@ -18,7 +18,14 @@ public interface Config {
     void read();
 
     /**
-     * Adds the given key+value pairs to the config.
+     * Puts the given key+value pair in the config.
+     */
+    default <V> void addValue(String key, V defaultValue) {
+        this.values.put(key, defaultValue);
+    }
+
+    /**
+     * Puts the given key+value pairs in the config.
      */
     default <V> void addValues(Map<String, V> values) {
         this.values.putAll(values);
