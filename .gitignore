@@ -6,9 +6,9 @@ build
 .idea
 
 # Custom Files
-config.json
 webhooks.json
 
 # Testing
 /src/test/
 /src/database
+/src/config

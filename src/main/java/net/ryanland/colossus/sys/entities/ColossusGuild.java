@@ -36,10 +36,7 @@ import net.dv8tion.jda.api.requests.restaction.order.RoleOrderAction;
 import net.dv8tion.jda.api.requests.restaction.pagination.AuditLogPaginationAction;
 import net.dv8tion.jda.api.requests.restaction.pagination.BanPaginationAction;
 import net.dv8tion.jda.api.utils.FileUpload;
-import net.dv8tion.jda.api.utils.cache.CacheFlag;
-import net.dv8tion.jda.api.utils.cache.MemberCacheView;
-import net.dv8tion.jda.api.utils.cache.SnowflakeCacheView;
-import net.dv8tion.jda.api.utils.cache.SortedSnowflakeCacheView;
+import net.dv8tion.jda.api.utils.cache.*;
 import net.dv8tion.jda.api.utils.concurrent.Task;
 import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.sys.file.database.PrimaryKey;
@@ -427,7 +424,17 @@ public record ColossusGuild(Guild guild) implements Guild, ColossusDatabaseEntit
         return guild().getForumChannelCache();
     }
 
-    
+    @Override
+    public SnowflakeCacheView<MediaChannel> getMediaChannelCache() {
+        return guild().getMediaChannelCache();
+    }
+
+    @Override
+    public SortedChannelCacheView<GuildChannel> getChannelCache() {
+        return guild().getChannelCache();
+    }
+
+
     @NotNull
     @Override
     public List<GuildChannel> getChannels(boolean includeHidden) {
@@ -1062,6 +1069,11 @@ public record ColossusGuild(Guild guild) implements Guild, ColossusDatabaseEntit
     @Override
     public ChannelAction<ForumChannel> createForumChannel(@NotNull String name, @Nullable Category parent) {
         return guild().createForumChannel(name, parent);
+    }
+
+    @Override
+    public ChannelAction<MediaChannel> createMediaChannel(String name, Category parent) {
+        return null;
     }
 
     /**
