@@ -1,4 +1,4 @@
-package net.ryanland.colossus.sys.file;
+package net.ryanland.colossus.sys.file.local;
 
 public enum LocalFileType {
 

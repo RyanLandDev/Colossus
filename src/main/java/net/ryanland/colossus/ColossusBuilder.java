@@ -32,10 +32,9 @@ import net.ryanland.colossus.command.inhibitors.impl.PermissionInhibitor;
 import net.ryanland.colossus.events.ButtonClickEvent;
 import net.ryanland.colossus.events.InternalEventListener;
 import net.ryanland.colossus.events.command.CommandEvent;
-import net.ryanland.colossus.sys.file.Config;
-import net.ryanland.colossus.sys.file.LocalFile;
-import net.ryanland.colossus.sys.file.LocalFileBuilder;
-import net.ryanland.colossus.sys.file.LocalFileType;
+import net.ryanland.colossus.sys.file.config.Config;
+import net.ryanland.colossus.sys.file.local.LocalFile;
+import net.ryanland.colossus.sys.file.config.JsonConfig;
 import net.ryanland.colossus.sys.file.database.DatabaseDriver;
 import net.ryanland.colossus.sys.file.database.Provider;
 import net.ryanland.colossus.sys.file.database.json.*;
@@ -48,7 +47,6 @@ import net.ryanland.colossus.sys.message.PresetType;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * A helper class for making a {@link Colossus} bot ready for startup
@@ -110,15 +108,17 @@ public class ColossusBuilder {
     private LocalizationFunction localizationFunction = s -> Map.of();
 
     /**
-     * Helper class to build a new instance of {@link Colossus}.<br>
+     * Helper class to build a new instance of {@link Colossus} using a JSON config.<br>
+     * You can use an alternate config system with the {@link #ColossusBuilder(Config)} constructor.
      * @param configDirectory The directory the config.json file should be in, containing the bot token among other things.<br>
-     *                        For example, a valid input could be: "src/config".<br>
-     *                        This directory should be created manually before running your bot. When running, a config file<br>
+     *                        For example, a valid input could be: "src/main/resources".<br>
+     *                        This directory should be created manually before running your bot. When running, a config file
      *                        will be automatically generated with empty fields for you to fill in.<br><br>
      *
      *                        <strong>WARNING:</strong> It is recommended to {@code .gitignore} your config.json
      *                        if your code is public to prevent your bot token getting in hands of the wrong people.
      * @see Colossus
+     * @see #ColossusBuilder(Config)
      */
     public ColossusBuilder(String configDirectory) {
         if (configDirectory == null) throw new NullPointerException("Provided config directory is null");
@@ -127,17 +127,38 @@ public class ColossusBuilder {
         LocalFile.validateDirectoryPath(configDirectory);
         this.configDirectory = configDirectory;
 
+        // Prepare the config
+        config = new JsonConfig(configDirectory + "/config.json");
+        config.addValues(CORE_CONFIG_ENTRIES);
+        config.read();
+
         // Prepare the builder
-        buildConfigFile();
         jdaBuilder = JDABuilder.createDefault(config.getString("token"))
             .addEventListeners(CORE_EVENTS);
     }
 
     /**
-     * Helper class to build a new instance of {@link Colossus}.
+     * Helper class to build a new instance of {@link Colossus} using a custom {@link Config} object.<br>
+     * For a simpler approach using JSON, use the {@link #ColossusBuilder(String)} constructor.
+     * @param config The {@link Config} implementation your bot should use.<br>
+     *               Colossus provides one pre-built config implementation named {@link JsonConfig}.
+     * @see Colossus
+     */
+    public ColossusBuilder(Config config) {
+        // Prepare the config
+        this.config = config;
+        config.addValues(CORE_CONFIG_ENTRIES);
+        config.read();
+
+        // Prepare the builder
+        jdaBuilder = JDABuilder.createDefault(config.getString("token"))
+                .addEventListeners(CORE_EVENTS);
+    }
+
+    /**
+     * Helper class to build a new instance of {@link Colossus} without a designated config.
      * <br>Note: using this constructor will let the bot ignore your {@code config.json} file.
-     * <br>To use the config file instead, take advantage of the
-     * {@link ColossusBuilder#ColossusBuilder(String)} constructor.
+     * <br>To use a config file instead, take advantage of the {@link #ColossusBuilder(String)} constructor.
      * <br>This constructor is mainly intended for quick setup. It is recommended to use a proper config file instead.
      * <br><br>
      * @param token The token of the bot. If you use this constructor, please make sure your bot files are not public,
@@ -182,7 +203,8 @@ public class ColossusBuilder {
         values.put("message_commands.enabled", toPrimitive(prefix != null));
         values.put("message_commands.prefix", toPrimitive(prefix));
 
-        config = new Config(values);
+        try { config = new JsonConfig(null); } catch (UnsupportedOperationException ignored) {}
+        config.addValues(values);
         jdaBuilder = JDABuilder.createDefault(config.getString("token"))
             .addEventListeners(CORE_EVENTS);
     }
@@ -225,7 +247,7 @@ public class ColossusBuilder {
                 new SQLGuildsProvider(), new SQLMembersProvider(), new SQLUsersProvider(), new SQLUsersProvider.CooldownsProvider());
         }
 
-        if (configDirectory != null) buildConfigFile();
+        if (configDirectory != null) config.read();
 
         return new Colossus(jdaBuilder, config, categories, commands, contextCommands, localFiles,
             buttonListenerExpirationTimeAmount, buttonListenerExpirationTimeUnit, databaseDriver, providers,
@@ -572,30 +594,6 @@ public class ColossusBuilder {
      */
     public ColossusBuilder addEventListeners(Object... listeners) {
         return setJDABuilder(builder -> builder.addEventListeners(listeners));
-    }
-
-    private void buildConfigFile() {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
-        // Build the config file
-        LocalFile configFile = new LocalFileBuilder()
-            .setName(configDirectory + "/config")
-            .setFileType(LocalFileType.JSON)
-            .buildFile();
-
-        // Parse the config file's JSON
-        JsonObject configJson = configFile.parseJson();
-
-        LinkedHashMap<String, Object> entries = new LinkedHashMap<>(configEntries); // set entries to default entries
-        LinkedHashMap<String, Object> currentEntries = LocalFile.mapOfJson(configJson);
-        entries.putAll(currentEntries); // put all current entries and thus overwrite default entries
-
-        configJson = LocalFile.jsonOfEntries(entries);
-        configFile.write(gson.toJson(configJson));
-
-        // Create a new Config and set it
-        config = new Config(entries.entrySet().stream()
-            .collect(Collectors.toMap(Map.Entry::getKey, entry -> JsonProvider.serializeElement(entry.getValue()))));
     }
 
     /**

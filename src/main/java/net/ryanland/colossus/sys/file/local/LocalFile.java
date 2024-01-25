@@ -1,9 +1,8 @@
-package net.ryanland.colossus.sys.file;
+package net.ryanland.colossus.sys.file.local;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.google.gson.JsonPrimitive;
 import net.ryanland.colossus.sys.file.database.json.JsonProvider;
 import org.jetbrains.annotations.NotNull;
 
@@ -12,11 +11,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.StandardOpenOption;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
-import java.util.stream.Collectors;
 
 public class LocalFile extends File {
 

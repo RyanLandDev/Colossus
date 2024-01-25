@@ -24,6 +24,7 @@ public class PresetBuilder {
 
     private String content;
     private String title;
+    private String titleUrl;
     private String description;
     private OffsetDateTime timestamp;
     private Integer color;
@@ -91,6 +92,15 @@ public class PresetBuilder {
 
     public PresetBuilder setTitle(String title) {
         this.title = title;
+        return this;
+    }
+
+    public String getTitleUrl() {
+        return titleUrl;
+    }
+
+    public PresetBuilder setTitleUrl(String titleUrl) {
+        this.titleUrl = titleUrl;
         return this;
     }
 
@@ -323,7 +333,7 @@ public class PresetBuilder {
      */
     public EmbedBuilder embedBuilder() {
         EmbedBuilder builder = new EmbedBuilder()
-            .setTitle(title)
+            .setTitle(title, titleUrl)
             .setDescription(description)
             .setTimestamp(timestamp)
             .setColor(color)
