@@ -117,8 +117,7 @@ public class Colossus {
             if (shard != -1) builder.useSharding(shard, config.getInt("sharding.shard_total"));
             jda = builder.build();
         } catch (InvalidTokenException e) {
-            e.printStackTrace();
-            LOGGER.error("Please put a valid token in the config.json file!");
+            Colossus.LOGGER.error("The token in your configuration is invalid.");
             System.exit(0);
         }
         try {
@@ -135,7 +134,6 @@ public class Colossus {
                 CommandHandler.upsertAll();
             } catch (IllegalArgumentException e) {
                 if (getDatabaseDriver() instanceof SQLDatabaseDriver) {
-                    e.printStackTrace();
                     // default sql databases don't exist, create them
                     getSQLDatabaseDriver().query("create table global ( _bot_id varchar(25) constraint global_pk primary key )");
                     getSQLDatabaseDriver().query("create table guilds ( _guild_id varchar(25) constraint guilds_pk primary key )");

@@ -72,7 +72,6 @@ public class ColossusBuilder {
 
     static {
         CORE_CONFIG_ENTRIES.put("token", "");
-        CORE_CONFIG_ENTRIES.put("client_id", "");
 
         CORE_CONFIG_ENTRIES.put("sharding.enabled", false);
         CORE_CONFIG_ENTRIES.put("sharding.shard_total", 1);
@@ -194,7 +193,6 @@ public class ColossusBuilder {
         Map<String, JsonElement> values = new LinkedHashMap<>();
 
         values.put("token", toPrimitive(token));
-        values.put("client_id", toPrimitive(clientId));
 
         values.put("slash_commands.enabled", toPrimitive(guildId != null));
         values.put("slash_commands.global", toPrimitive(false));

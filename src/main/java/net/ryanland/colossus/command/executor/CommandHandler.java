@@ -1,5 +1,6 @@
 package net.ryanland.colossus.command.executor;
 
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.ISnowflake;
 import net.dv8tion.jda.api.entities.Message;
@@ -108,7 +109,9 @@ public class CommandHandler {
         Guild privateGuild = Colossus.getJDA().getGuildById(Colossus.getConfig().getString("slash_commands.guild_id"));
 
         if (!global && privateGuild == null) {
-            throw new IllegalStateException("The bot is not in the provided test guild, or the ID is invalid.");
+            Colossus.LOGGER.error("The bot is not a member of the test guild defined in the configuration, or the ID is invalid.\n" +
+                "Invite the bot to your server using this link: " + Colossus.getJDA().getInviteUrl(Permission.ADMINISTRATOR));
+            System.exit(0);
         }
 
         // set updater
@@ -121,6 +124,11 @@ public class CommandHandler {
                     ((SubCommandHolder) command).getRealSubCommands().stream()
                         .noneMatch(subcommand -> subcommand instanceof SlashCommand))
                     continue;
+            }
+
+            if (!command.getClass().isAnnotationPresent(CommandBuilder.class)) {
+                Colossus.LOGGER.error("The command " + command.getClass().getName() + " was not loaded, because it was not annotated with @CommandBuilder");
+                continue;
             }
 
             SlashCommandData slashCmdData = Commands.slash(command.getName(), command.getDescription())
