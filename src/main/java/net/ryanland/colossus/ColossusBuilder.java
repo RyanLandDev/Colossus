@@ -32,7 +32,7 @@ import net.ryanland.colossus.command.inhibitors.impl.PermissionInhibitor;
 import net.ryanland.colossus.events.ButtonClickEvent;
 import net.ryanland.colossus.events.InternalEventListener;
 import net.ryanland.colossus.events.command.CommandEvent;
-import net.ryanland.colossus.sys.file.config.Config;
+import net.ryanland.colossus.sys.file.config.ConfigSupplier;
 import net.ryanland.colossus.sys.file.local.LocalFile;
 import net.ryanland.colossus.sys.file.config.JsonConfig;
 import net.ryanland.colossus.sys.file.database.DatabaseDriver;
@@ -85,7 +85,7 @@ public class ColossusBuilder {
     }
 
     private JDABuilder jdaBuilder;
-    private Config config;
+    private ConfigSupplier config;
     private String configDirectory;
     private final Set<Category> categories = new LinkedHashSet<>();
     private final List<Command> commands = new ArrayList<>();
@@ -108,7 +108,7 @@ public class ColossusBuilder {
 
     /**
      * Helper class to build a new instance of {@link Colossus} using a JSON config.<br>
-     * You can use an alternate config system with the {@link #ColossusBuilder(Config)} constructor.
+     * You can use an alternate config system with the {@link #ColossusBuilder(ConfigSupplier)} constructor.
      * @param configDirectory The directory the config.json file should be in, containing the bot token among other things.<br>
      *                        For example, a valid input could be: "src/main/resources".<br>
      *                        This directory should be created manually before running your bot. When running, a config file
@@ -117,7 +117,7 @@ public class ColossusBuilder {
      *                        <strong>WARNING:</strong> It is recommended to {@code .gitignore} your config.json
      *                        if your code is public to prevent your bot token getting in hands of the wrong people.
      * @see Colossus
-     * @see #ColossusBuilder(Config)
+     * @see #ColossusBuilder(ConfigSupplier)
      */
     public ColossusBuilder(String configDirectory) {
         if (configDirectory == null) throw new NullPointerException("Provided config directory is null");
@@ -137,13 +137,13 @@ public class ColossusBuilder {
     }
 
     /**
-     * Helper class to build a new instance of {@link Colossus} using a custom {@link Config} object.<br>
+     * Helper class to build a new instance of {@link Colossus} using a custom {@link ConfigSupplier} object.<br>
      * For a simpler approach using JSON, use the {@link #ColossusBuilder(String)} constructor.
-     * @param config The {@link Config} implementation your bot should use.<br>
+     * @param config The {@link ConfigSupplier} implementation your bot should use.<br>
      *               Colossus provides one pre-built config implementation named {@link JsonConfig}.
      * @see Colossus
      */
-    public ColossusBuilder(Config config) {
+    public ColossusBuilder(ConfigSupplier config) {
         // Prepare the config
         this.config = config;
         config.addValues(CORE_CONFIG_ENTRIES);
@@ -169,17 +169,8 @@ public class ColossusBuilder {
      *              - Click <strong>Bot</strong> on the left side menu<br>
      *              - Under <i>Token</i>, click {@code Copy}<br>
      *              - Paste it here<br><br>
-     *
-     * @param clientId The client ID of the bot.<br><br>
-     *
-     *                 Your bot's client ID can be retrieved by:<br>
-     *                 - Go to <a href="https://discord.com/developers/applications">Discord Developer Applications</a><br>
-     *                 - Click the bot you want to use<br>
-     *                 - Under <i>Application ID</i>, click {@code Copy}<br>
-     *                 - Paste it here<br><br>
-     *
      * @param prefix The prefix of the bot, used for message commands.
-     *               In addition to this prefix, the bot will also listen for mentions.
+     *               In addition to this prefix, the bot will also listen for mentions.<br><br>
      * @param guildId The ID of the Discord server you are running your bot in.<br><br>
      *
      *                  Your server's ID can be retrieved by:<br>
@@ -189,7 +180,7 @@ public class ColossusBuilder {
      *                  - Paste it here<br>
      * @see Colossus
      */
-    public ColossusBuilder(String token, String clientId, String prefix, String guildId) {
+    public ColossusBuilder(String token, String prefix, String guildId) {
         Map<String, JsonElement> values = new LinkedHashMap<>();
 
         values.put("token", toPrimitive(token));
@@ -497,15 +488,15 @@ public class ColossusBuilder {
 
     /**
      * Register custom entries that will appear in the {@code config.json} file.<br>
-     * These can be retrieved later using the {@link Config} class.
+     * These can be retrieved later using the {@link ConfigSupplier} class.
      * <p>For sub-objects, use dots (e.g. "message_commands.prefix").
      * @param entries The entries to register (key-defaultValue pairs)
      * @return The builder
-     * @see Config
-     * @see Config#get(String)
-     * @see Config#getString(String)
-     * @see Config#getInt(String)
-     * @see Config#getBoolean(String)
+     * @see ConfigSupplier
+     * @see ConfigSupplier#get(String)
+     * @see ConfigSupplier#getString(String)
+     * @see ConfigSupplier#getInt(String)
+     * @see ConfigSupplier#getBoolean(String)
      */
     public ColossusBuilder registerConfigEntries(Map<String, Object> entries) {
         configEntries.putAll(entries);
@@ -514,15 +505,15 @@ public class ColossusBuilder {
 
     /**
      * Register custom entries that will appear in the {@code config.json} file.<br>
-     * These can be retrieved later using the {@link Config} class.
+     * These can be retrieved later using the {@link ConfigSupplier} class.
      * @param key The config key. For sub-objects, use dots (e.g. "message_commands.prefix").
      * @param defaultValue The default config value
      * @return The builder
-     * @see Config
-     * @see Config#get(String)
-     * @see Config#getString(String)
-     * @see Config#getInt(String)
-     * @see Config#getBoolean(String)
+     * @see ConfigSupplier
+     * @see ConfigSupplier#get(String)
+     * @see ConfigSupplier#getString(String)
+     * @see ConfigSupplier#getInt(String)
+     * @see ConfigSupplier#getBoolean(String)
      */
     public ColossusBuilder registerConfigEntry(String key, Object defaultValue) {
         configEntries.put(key, defaultValue);
@@ -595,11 +586,11 @@ public class ColossusBuilder {
     }
 
     /**
-     * Returns the {@link Config} in its current state.<br>
+     * Returns the {@link ConfigSupplier} in its current state.<br>
      * This method should only be used before the bot is initialized.
      * @see Colossus#getConfig()
      */
-    public Config getConfig() {
+    public ConfigSupplier getConfig() {
         return config;
     }
 

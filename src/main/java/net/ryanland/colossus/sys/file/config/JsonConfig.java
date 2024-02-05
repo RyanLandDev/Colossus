@@ -13,7 +13,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class JsonConfig implements Config {
+public class JsonConfig implements ConfigSupplier {
 
     private String filePath;
 

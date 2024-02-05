@@ -1,61 +1,41 @@
 package net.ryanland.colossus.sys.file.config;
 
-import net.ryanland.colossus.ColossusBuilder;
-import org.apache.commons.collections4.map.LinkedMap;
+import net.ryanland.colossus.Colossus;
 
-import java.util.Map;
-
-public interface Config {
-
-    Map<String, Object> values = new LinkedMap<>();
-
-    /**
-     * Reads the config.<br>
-     * This method is called internally when instantiating a {@link ColossusBuilder} object
-     * and upon calling {@link ColossusBuilder#build()}, and should normally never be called in your code.
-     * @implNote Colossus automatically adds a couple configuration entries in addition to your own. See {@link ColossusBuilder#CORE_CONFIG_ENTRIES}.
-     */
-    void read();
-
-    /**
-     * Puts the given key+value pair in the config.
-     */
-    default <V> void addValue(String key, V defaultValue) {
-        this.values.put(key, defaultValue);
-    }
-
-    /**
-     * Puts the given key+value pairs in the config.
-     */
-    default <V> void addValues(Map<String, V> values) {
-        this.values.putAll(values);
-    }
+/**
+ * Shortcut helper class.
+ */
+public final class Config {
 
     /**
      * Returns the value associated with this key.
+     * <p>Equivalent of {@code Colossus.getConfig().get(key)}.
      */
-    default Object get(String key) {
-        return values.get(key);
+    public static Object get(String key) {
+        return Colossus.getConfig().get(key);
     }
 
     /**
      * Returns the {@link String} associated with this key.
+     * <p>Equivalent of {@code Colossus.getConfig().getString(key)}.
      */
-    default String getString(String key) {
-        return (String) values.get(key);
+    public static String getString(String key) {
+        return Colossus.getConfig().getString(key);
     }
 
     /**
      * Returns the {@link Integer} associated with this key.
+     * <p>Equivalent of {@code Colossus.getConfig().getInt(key)}.
      */
-    default Integer getInt(String key) {
-        return (Integer) values.get(key);
+    public static Integer getInt(String key) {
+        return Colossus.getConfig().getInt(key);
     }
 
     /**
      * Returns the {@link Boolean} associated with this key.
+     * <p>Equivalent of {@code Colossus.getConfig().getBoolean(key)}.
      */
-    default Boolean getBoolean(String key) {
-        return (Boolean) values.get(key);
+    public static Boolean getBoolean(String key) {
+        return Colossus.getConfig().getBoolean(key);
     }
 }

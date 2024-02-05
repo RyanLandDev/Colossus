@@ -39,6 +39,7 @@ import net.dv8tion.jda.api.utils.FileUpload;
 import net.dv8tion.jda.api.utils.cache.*;
 import net.dv8tion.jda.api.utils.concurrent.Task;
 import net.ryanland.colossus.Colossus;
+import net.ryanland.colossus.sys.file.config.Config;
 import net.ryanland.colossus.sys.file.database.PrimaryKey;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -64,7 +65,7 @@ public record ColossusGuild(Guild guild) implements Guild, ColossusDatabaseEntit
     public String getPrefix() {
         String prefix = getValue("prefix");
         if (prefix != null) return prefix;
-        else return Colossus.getConfig().getString("message_commands.prefix");
+        else return Config.getString("message_commands.prefix");
     }
 
     

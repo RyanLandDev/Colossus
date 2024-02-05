@@ -15,6 +15,7 @@ import net.ryanland.colossus.command.executor.CommandHandler;
 import net.ryanland.colossus.events.command.ContextCommandEvent;
 import net.ryanland.colossus.events.command.MessageCommandEvent;
 import net.ryanland.colossus.events.command.SlashCommandEvent;
+import net.ryanland.colossus.sys.file.config.Config;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 import org.jetbrains.annotations.NotNull;
 
@@ -23,7 +24,7 @@ public class InternalEventListener extends ListenerAdapter {
     // Execute slash command
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
-        if (!Colossus.getConfig().getBoolean("slash_commands.enabled")) return;
+        if (!Config.getBoolean("slash_commands.enabled")) return;
         new Thread(() -> CommandHandler.run(new SlashCommandEvent(event))).start();
     }
 
@@ -37,8 +38,8 @@ public class InternalEventListener extends ListenerAdapter {
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         if (!event.getAuthor().isBot()) {
-            if (!Colossus.getConfig().getBoolean("message_commands.enabled") ||
-                Colossus.getConfig().getString("message_commands.prefix") == null) return;
+            if (!Config.getBoolean("message_commands.enabled") ||
+                Config.getString("message_commands.prefix") == null) return;
             new Thread(() -> CommandHandler.run(new MessageCommandEvent(event))).start();
         }
     }

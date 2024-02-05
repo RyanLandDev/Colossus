@@ -26,6 +26,7 @@ import net.ryanland.colossus.command.regular.SubCommandHolder;
 import net.ryanland.colossus.events.command.CommandEvent;
 import net.ryanland.colossus.events.command.ContextCommandEvent;
 import net.ryanland.colossus.events.repliable.RepliableEvent;
+import net.ryanland.colossus.sys.file.config.Config;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 
 import java.util.ArrayList;
@@ -103,10 +104,10 @@ public class CommandHandler {
     }
 
     public static void upsertAll() {
-        if (!Colossus.getConfig().getBoolean("slash_commands.enabled")) return;
+        if (!Config.getBoolean("slash_commands.enabled")) return;
 
-        boolean global = Colossus.getConfig().getBoolean("slash_commands.global");
-        Guild privateGuild = Colossus.getJDA().getGuildById(Colossus.getConfig().getString("slash_commands.guild_id"));
+        boolean global = Config.getBoolean("slash_commands.global");
+        Guild privateGuild = Colossus.getJDA().getGuildById(Config.getString("slash_commands.guild_id"));
 
         if (!global && privateGuild == null) {
             Colossus.LOGGER.error("The bot is not a member of the test guild defined in the configuration, or the ID is invalid.\n" +

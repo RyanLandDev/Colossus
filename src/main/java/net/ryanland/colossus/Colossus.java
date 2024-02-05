@@ -17,6 +17,7 @@ import net.ryanland.colossus.command.inhibitors.Inhibitor;
 import net.ryanland.colossus.events.ButtonClickEvent;
 import net.ryanland.colossus.events.SelectMenuEvent;
 import net.ryanland.colossus.sys.file.config.Config;
+import net.ryanland.colossus.sys.file.config.ConfigSupplier;
 import net.ryanland.colossus.sys.file.local.LocalFile;
 import net.ryanland.colossus.sys.file.database.DatabaseDriver;
 import net.ryanland.colossus.sys.file.database.Provider;
@@ -43,7 +44,7 @@ public class Colossus {
     public static final DiscordLocale DEFAULT_LOCALE = DiscordLocale.ENGLISH_US;
 
     private static JDA jda;
-    private static Config config;
+    private static ConfigSupplier config;
     private static Set<Category> categories;
     private static List<Command> commands;
     private static List<ContextCommand<?>> contextCommands;
@@ -63,7 +64,7 @@ public class Colossus {
 
     private static User botOwner;
 
-    public Colossus(JDABuilder builder, Config config, Set<Category> categories, List<Command> commands,
+    public Colossus(JDABuilder builder, ConfigSupplier config, Set<Category> categories, List<Command> commands,
                     List<ContextCommand<?>> contextCommands, List<LocalFile> localFiles, long buttonListenerExpirationTimeAmount,
                     TimeUnit buttonListenerExpirationTimeUnit, DatabaseDriver databaseDriver,
                     HashMap<String, Provider<?, ?>> providers, PresetType defaultPresetType, PresetType errorPresetType,
@@ -165,7 +166,11 @@ public class Colossus {
         return botOwner;
     }
 
-    public static Config getConfig() {
+    /**
+     * Returns the configured {@link ConfigSupplier}.
+     * <p>If you're only looking to retrieve values from the config, use {@link Config} instead.
+     */
+    public static ConfigSupplier getConfig() {
         return config;
     }
 
