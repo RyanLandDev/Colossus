@@ -56,7 +56,7 @@ public abstract class JsonProvider extends Provider<JsonObject, JsonObject> {
     }
 
     protected void processValueProviderDeserializations(HashMap<String, Object> values, JsonObject data) {
-        for (ValueProvider<?, ?, ?> p : Colossus.getSQLDatabaseDriver().getValueProviders(getStockName())) {
+        for (ValueProvider<?, ?, ?> p : Colossus.getDatabaseDriver().getValueProviders(getStockName())) {
             JsonValueProvider<?> provider = (JsonValueProvider<?>) p;
             values.put(provider.getKeyName(), provider.deserialize(data));
         }
