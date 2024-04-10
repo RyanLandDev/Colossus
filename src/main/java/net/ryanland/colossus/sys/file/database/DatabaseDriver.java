@@ -163,13 +163,21 @@ public abstract class DatabaseDriver {
 
     // Misc methods ------------------
 
-    public Map<String, List<String>> getPrimaryKeys() {
-        return Map.of("global", List.of("_bot_id"),
+    private static final Map<String, List<String>> DEFAULT_PRIMARY_KEYS = Map.of("global", List.of("_bot_id"),
             "guilds", List.of("_guild_id"),
             "users", List.of("_user_id"),
             "members", List.of("_user_id", "_guild_id"),
             "cooldowns", List.of("user_id", "command_name", "command_type"),
             "disabled_commands", List.of("command_name", "command_type"));
+    private Map<String, List<String>> PRIMARY_KEYS = null;
+
+    public Map<String, List<String>> getPrimaryKeys() {
+        return PRIMARY_KEYS == null ? DEFAULT_PRIMARY_KEYS : PRIMARY_KEYS;
+    }
+
+    public final void updatePrimaryKeys(String stockName, String... keys) {
+        if (PRIMARY_KEYS == null) PRIMARY_KEYS = new HashMap<>(DEFAULT_PRIMARY_KEYS);
+        PRIMARY_KEYS.put(stockName, List.of(keys));
     }
 
     /**
