@@ -248,7 +248,7 @@ public abstract class SQLDatabaseDriver extends DatabaseDriver {
     private String getWhereClause(List<String> keys) {
         StringBuilder whereClause = new StringBuilder("WHERE " + keys.get(0) + " = ?");
         if (keys.size() > 1) {
-            for (String key : keys) {
+            for (String key : keys.subList(1, keys.size())) {
                 whereClause.append(" AND ").append(key).append(" = ?");
             }
         }

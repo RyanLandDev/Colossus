@@ -44,6 +44,7 @@ import net.ryanland.colossus.sys.file.database.PrimaryKey;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.time.temporal.TemporalAccessor;
 import java.util.*;
@@ -793,6 +794,11 @@ public record ColossusGuild(Guild guild) implements Guild, ColossusDatabaseEntit
     @Override
     public AuditableRestAction<Void> ban(@NotNull UserSnowflake user, int deletionTimeframe, @NotNull TimeUnit unit) {
         return guild().ban(user, deletionTimeframe, unit);
+    }
+
+    @Override
+    public AuditableRestAction<BulkBanResponse> ban(Collection<UserSnowflake> users, Duration deletionTime) {
+        return guild().ban(users, deletionTime);
     }
 
     @NotNull
