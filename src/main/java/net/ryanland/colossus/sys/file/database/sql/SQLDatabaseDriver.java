@@ -321,4 +321,12 @@ public abstract class SQLDatabaseDriver extends DatabaseDriver {
         });
         return (R) this;
     }
+
+    /**
+     * Registers an integer column + value provider with the default value set to 0.<br>
+     * Equal to {@code registerValueProvider(stockName, keyName, "int default 0 not null", c -> c, result -> result.getInt(keyName))}
+     */
+    public <R extends SQLDatabaseDriver> R registerIntValueProvider(String stockName, String keyName) {
+        return registerValueProvider(stockName, keyName, "int default 0 not null", c -> c, result -> result.getInt(keyName));
+    }
 }

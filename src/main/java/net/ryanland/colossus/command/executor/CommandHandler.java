@@ -118,6 +118,9 @@ public class CommandHandler {
         // set updater
         CommandListUpdateAction updater = global ? Colossus.getJDA().updateCommands() : privateGuild.updateCommands();
 
+        // refresh commands
+        updater.queue();
+
         // normal commands
         for (Command command : COMMANDS) {
             if (!(command instanceof SlashCommand)) {
