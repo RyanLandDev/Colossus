@@ -23,7 +23,7 @@ dependencies {
     implementation 'ch.qos.logback:logback-classic:1.4.12'
 
     // jda
-    implementation 'net.dv8tion:JDA:5.0.0-beta.22'
+    implementation 'net.dv8tion:JDA:5.0.0-beta.24'
 
     // database
     // note: these packages are unnecessary for users not using the MongoDatabaseDriver/SQLiteDatabaseDriver,

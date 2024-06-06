@@ -46,7 +46,7 @@ public class ButtonRow extends ComponentRow {
     public void startListening(Message message) {
         ButtonClickEvent.addListener(
             message.getIdLong(), List.of(this),
-            () -> message.editMessageComponents(Collections.emptyList()).queue()
+            () -> message.editMessageComponents(Collections.emptyList()).queue(success -> {}, error -> {})
         );
     }
 }

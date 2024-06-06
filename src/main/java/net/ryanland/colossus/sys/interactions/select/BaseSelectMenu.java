@@ -77,7 +77,7 @@ public class BaseSelectMenu extends ComponentRow {
     public void startListening(Message message) {
         SelectMenuEvent.addListener(
             message.getIdLong(), this,
-            () -> message.editMessageComponents(Collections.emptyList()).queue()
+            () -> message.editMessageComponents(Collections.emptyList()).queue(success -> {}, error -> {})
         );
     }
 }
