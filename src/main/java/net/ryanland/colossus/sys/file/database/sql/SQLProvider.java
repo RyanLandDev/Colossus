@@ -11,6 +11,32 @@ import java.util.HashMap;
 
 public abstract class SQLProvider extends Provider<HashMap<String, Object>, ResultSet> {
 
+    /**
+     * Returns an anonymous {@link SQLProvider} that uses solely {@link ValueProvider}s
+     */
+    public static SQLProvider of(String stockName) {
+        return new SQLProvider() {
+            @Override
+            public String getStockName() {
+                return stockName;
+            }
+
+            @Override
+            public HashMap<String, Object> serialize(Supply toSerialize) {
+                HashMap<String, Object> data = new HashMap<>();
+                processValueProviderSerializations(data, toSerialize);
+                return data;
+            }
+
+            @Override
+            public Supply deserializeSQL(ResultSet data) throws SQLException {
+                HashMap<String, Object> values = new HashMap<>();
+                processValueProviderDeserializations(values, data);
+                return new Supply(getStockName(), values);
+            }
+        };
+    }
+
     @Override
     public final Supply deserialize(ResultSet data) {
         try {

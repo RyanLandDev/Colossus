@@ -5,9 +5,11 @@ import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.sys.file.database.Provider;
 import net.ryanland.colossus.sys.file.database.Supply;
 import net.ryanland.colossus.sys.file.database.ValueProvider;
+import net.ryanland.colossus.sys.file.database.sql.SQLProvider;
 import net.ryanland.colossus.sys.file.database.sql.SQLValueProvider;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,6 +18,33 @@ import java.util.function.Function;
 public abstract class JsonProvider extends Provider<JsonObject, JsonObject> {
 
     private static final Gson GSON_BUILDER = new GsonBuilder().create();
+
+    /**
+     * Returns an anonymous {@link JsonProvider} that uses solely {@link ValueProvider}s
+     */
+    public static JsonProvider of(String stockName) {
+        return new JsonProvider() {
+            @Override
+            public String getStockName() {
+                return stockName;
+            }
+
+            @Override
+            public JsonObject serialize(Supply toSerialize) {
+                JsonObject json = new JsonObject();
+                processValueProviderSerializations(json, toSerialize);
+                return json;
+            }
+
+            @Override
+            public Supply deserialize(JsonObject data) {
+                HashMap<String, Object> values = new HashMap<>();
+                processValueProviderDeserializations(values, data);
+                return new Supply(getStockName(), values);
+            }
+
+        };
+    }
 
     /**
      * Serializes a value to its {@link JsonElement} representation. Must be of a supported type.
