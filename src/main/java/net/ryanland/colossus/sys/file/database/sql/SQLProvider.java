@@ -51,11 +51,14 @@ public abstract class SQLProvider extends Provider<HashMap<String, Object>, Resu
     protected void processValueProviderSerializations(HashMap<String, Object> data, Supply supply) {
         for (ValueProvider<?, ?, ?> p : Colossus.getSQLDatabaseDriver().getValueProviders(getStockName())) {
             SQLValueProvider<?> provider = (SQLValueProvider<?>) p;
+
             // create db if it does not exist yet
-            Colossus.getSQLDatabaseDriver().query("CREATE TABLE IF NOT EXISTS "+ supply.getStockName());
-            try { // add column if it does not exist yet
-                Colossus.getSQLDatabaseDriver().query("ALTER TABLE " + getStockName() + " ADD " + provider.getKeyName() + " " + provider.getSQLDataType());
-            } catch (IllegalArgumentException ignored) {}
+            Colossus.getSQLDatabaseDriver().query("CREATE TABLE IF NOT EXISTS "+ supply.getStockName() +" (dummycolumn_oAEfpoj hidden integer primary key)");
+            // add column if it does not exist yet
+            Colossus.getSQLDatabaseDriver().query("ALTER TABLE " + getStockName() + " ADD COLUMN IF NOT EXISTS " + provider.getKeyName() + " " + provider.getSQLDataType());
+            // remove dummy column
+            Colossus.getSQLDatabaseDriver().query("ALTER TABLE " + getStockName() + " DROP COLUMN IF EXISTS dummycolumn_oAEfpoj");
+
             data.put(provider.getKeyName(), provider.serialize(supply.get(provider.getKeyName())));
         }
     }
