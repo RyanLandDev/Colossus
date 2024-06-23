@@ -175,9 +175,10 @@ public abstract class DatabaseDriver {
         return PRIMARY_KEYS == null ? DEFAULT_PRIMARY_KEYS : PRIMARY_KEYS;
     }
 
-    public final void updatePrimaryKeys(String stockName, String... keys) {
+    public final <R extends DatabaseDriver> R updatePrimaryKeys(String stockName, String... keys) {
         if (PRIMARY_KEYS == null) PRIMARY_KEYS = new HashMap<>(DEFAULT_PRIMARY_KEYS);
         PRIMARY_KEYS.put(stockName, List.of(keys));
+        return (R) this;
     }
 
     /**
