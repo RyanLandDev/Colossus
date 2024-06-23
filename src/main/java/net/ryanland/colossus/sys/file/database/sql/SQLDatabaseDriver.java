@@ -332,7 +332,7 @@ public abstract class SQLDatabaseDriver extends DatabaseDriver {
             });
 
             // create db if it does not exist yet
-            query("CREATE TABLE IF NOT EXISTS " + provider.getStockName() + " (dummycolumn_oAEfpoj hidden integer primary key)");
+            query("CREATE TABLE IF NOT EXISTS " + provider.getStockName() + " (dummycolumn_oAEfpoj hidden integer)");
             // add column if it does not exist yet
             try { query("ALTER TABLE " + provider.getStockName() + " ADD " + provider.getKeyName() + " " + ((SQLValueProvider<?>) provider).getSQLDataType());
             } catch (IllegalArgumentException ignored) {  ignored.printStackTrace();}
