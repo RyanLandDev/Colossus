@@ -107,7 +107,9 @@ public class CommandHandler {
         if (!Config.getBoolean("slash_commands.enabled")) return;
 
         boolean global = Config.getBoolean("slash_commands.global");
-        Guild privateGuild = Colossus.getJDA().getGuildById(Config.getString("slash_commands.guild_id"));
+        String guildId = Config.getString("slash_commands.guild_id");
+        if (guildId.isEmpty()) throw new NullPointerException("The slash_commands.guild_id config property may not be empty");
+        Guild privateGuild = Colossus.getJDA().getGuildById(guildId);
 
         if (!global && privateGuild == null) {
             Colossus.LOGGER.error("The bot is not a member of the test guild defined in the configuration, or the ID is invalid.\n" +
