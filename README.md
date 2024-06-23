@@ -21,7 +21,8 @@ See the [wiki](https://github.com/RyanLandDev/Colossus/wiki) for various guides 
       @Override
       public void run(SlashCommandEvent event) throws CommandException {
           if (Colossus.getSQLDatabaseDriver().queryIsZero("SELECT COUNT(*) FROM tickets WHERE channel = ?", event.getChannel().getId())) {
-              throw new CommandException("This is not a ticket channel."); // This will send the user an ephemeral error embed with the provided description
+              // This will send the user an ephemeral error embed with the provided description
+              throw new CommandException("This is not a ticket channel.");
           }
 
           event.reply("Ticket closed.", true);
@@ -33,10 +34,10 @@ See the [wiki](https://github.com/RyanLandDev/Colossus/wiki) for various guides 
     * **Permission system**, also allows for custom permissions (e.g. bot tester)
       * Discord's default slash command permissions are also supported
     * **Cooldowns**, with the option to create your own `CooldownManager` to handle cooldowns in a custom way
-      * `CooldownManager` is an interface which is already implemented in `MemoryCooldownManager` and `DatabaseCooldownManager`
+      * Comes with `MemoryCooldownManager` and `DatabaseCooldownManager` by default
     * **Inhibitors** - custom conditions that should be checked before any command is executed
       * Colossus also uses inhibitors internally for checks like cooldowns and permissions
-    * **Finalizers** - custom code that is run after a command was successfully executed
+    * **Finalizers** - custom code that is run after a command was successfully executed without exceptions
     * **Disabled command handler** - handles the enabling/disabling of commands and offers a default disable/enable command (can be removed)
     * **Command localization** - add localizations to slash commands
     * **Help command** - provides a default extensive help command, can be disabled
@@ -74,8 +75,8 @@ See the [wiki](https://github.com/RyanLandDev/Colossus/wiki) for various guides 
     * **Preset types** - these can be used to create PresetBuilders with default values. Error messages use a (customizable) `PresetType` for example.
     * Easily add components using the previously mentioned custom component system
     * Ephemeral messages
-* Automatic JSON **config system**; allowing for extra custom key entries and grouping
-* Customizable **configuration system** which allows custom configuration setups implemented using `ConfigSupplier` (e.g. a web dashboard or Minecraft plugin config)
+* Customizable **configuration system**
+  * Allows custom configuration setups implemented using `ConfigSupplier` (e.g. for a web dashboard or Minecraft plugin config)
   * Uses the pre-built `JsonConfig` by default, supports grouping
   * Easily add custom key entries
     ```java
@@ -97,7 +98,8 @@ See the [wiki](https://github.com/RyanLandDev/Colossus/wiki) for various guides 
       ```java
       ColossusBuilder builder = new ColossusBuilder(".")
           .setDatabaseDriver(new SQLiteDatabaseDriver("db.sqlite")
-              .registerValueProvider("users", "coins", "integer not null default 0", [serializer], [deserializer]) // coins property for every user
+              // registers a coins property for every user
+              .registerValueProvider("users", "coins", "integer not null default 0", [serializer], [deserializer])
           );
       ```
 * `LocalFile` - extended File class, with useful methods such as `getContent()` or `parseJson()`, also comes with a helpful `LocalFileBuilder`
