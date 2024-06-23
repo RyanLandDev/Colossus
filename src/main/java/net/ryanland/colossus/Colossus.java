@@ -134,7 +134,6 @@ public class Colossus {
             try {
                 CommandHandler.upsertAll();
             } catch (IllegalArgumentException e) {
-                e.printStackTrace();
                 if (getDatabaseDriver() instanceof SQLDatabaseDriver) {
                     // default sql databases don't exist, create them
                     getSQLDatabaseDriver().query("create table global ( _bot_id varchar(25) constraint global_pk primary key )");

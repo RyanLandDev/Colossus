@@ -52,7 +52,7 @@ public abstract class SQLProvider extends Provider<HashMap<String, Object>, Resu
         for (ValueProvider<?, ?, ?> p : Colossus.getSQLDatabaseDriver().getValueProviders(getStockName())) {
             SQLValueProvider<?> provider = (SQLValueProvider<?>) p;
             // create db if it does not exist yet
-            Colossus.getSQLDatabaseDriver().query("CREATE TABLE IF NOT EXISTS "+ supply.getStockName() +" ()");
+            Colossus.getSQLDatabaseDriver().query("CREATE TABLE IF NOT EXISTS "+ supply.getStockName());
             try { // add column if it does not exist yet
                 Colossus.getSQLDatabaseDriver().query("ALTER TABLE " + getStockName() + " ADD " + provider.getKeyName() + " " + provider.getSQLDataType());
             } catch (IllegalArgumentException ignored) {}
