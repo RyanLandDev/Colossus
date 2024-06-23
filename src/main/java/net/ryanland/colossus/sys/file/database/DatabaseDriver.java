@@ -27,17 +27,6 @@ public abstract class DatabaseDriver {
                 list.add(provider);
                 return list;
             });
-
-            if (provider instanceof SQLValueProvider) {
-                // create db if it does not exist yet
-                Colossus.getSQLDatabaseDriver().query("CREATE TABLE IF NOT EXISTS " + provider.getStockName() + " (dummycolumn_oAEfpoj hidden integer primary key)");
-                // add column if it does not exist yet
-                try { Colossus.getSQLDatabaseDriver().query("ALTER TABLE " + provider.getStockName() + " ADD " + provider.getKeyName() + " " + ((SQLValueProvider<?>) provider).getSQLDataType());
-                } catch (IllegalArgumentException ignored) {}
-                // remove dummy column
-                try { Colossus.getSQLDatabaseDriver().query("ALTER TABLE " + provider.getStockName() + " DROP dummycolumn_oAEfpoj");
-                } catch (IllegalArgumentException ignored) {}
-            }
         }
         return (R) this;
     }

@@ -322,6 +322,27 @@ public abstract class SQLDatabaseDriver extends DatabaseDriver {
         return (R) this;
     }
 
+    @Override
+    public <R extends DatabaseDriver> R registerValueProviders(ValueProvider<?, ?, ?>... providers) {
+        for (ValueProvider<?, ?, ?> provider : providers) {
+            valueProviders.putIfAbsent(provider.getStockName(), new ArrayList<>());
+            valueProviders.compute(provider.getStockName(), (stockName, list) -> {
+                list.add(provider);
+                return list;
+            });
+
+            // create db if it does not exist yet
+            query("CREATE TABLE IF NOT EXISTS " + provider.getStockName() + " (dummycolumn_oAEfpoj hidden integer primary key)");
+            // add column if it does not exist yet
+            try { query("ALTER TABLE " + provider.getStockName() + " ADD " + provider.getKeyName() + " " + ((SQLValueProvider<?>) provider).getSQLDataType());
+            } catch (IllegalArgumentException ignored) {}
+            // remove dummy column
+            try { query("ALTER TABLE " + provider.getStockName() + " DROP dummycolumn_oAEfpoj");
+            } catch (IllegalArgumentException ignored) {}
+        }
+        return (R) this;
+    }
+
     /**
      * Registers an integer column + value provider with the default value set to 0.<br>
      * Equal to {@code registerValueProvider(stockName, keyName, "int default 0 not null", c -> c, result -> result.getInt(keyName))}
