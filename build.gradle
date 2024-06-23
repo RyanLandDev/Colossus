@@ -29,7 +29,7 @@ dependencies {
     // note: these packages are unnecessary for users not using the MongoDatabaseDriver/SQLiteDatabaseDriver,
     // unnecessarily increasing the size of colossus. is this a problem? if so, solution?
     implementation 'org.mongodb:mongodb-driver-sync:4.9.0'
-    implementation 'org.xerial:sqlite-jdbc:3.41.2.2'
+    implementation 'org.xerial:sqlite-jdbc:3.46.0.0'
 
     // json
     implementation 'com.google.code.gson:gson:2.10.1'
