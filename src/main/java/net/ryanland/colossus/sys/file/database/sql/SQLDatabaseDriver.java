@@ -335,10 +335,10 @@ public abstract class SQLDatabaseDriver extends DatabaseDriver {
             query("CREATE TABLE IF NOT EXISTS " + provider.getStockName() + " (dummycolumn_oAEfpoj hidden integer primary key)");
             // add column if it does not exist yet
             try { query("ALTER TABLE " + provider.getStockName() + " ADD " + provider.getKeyName() + " " + ((SQLValueProvider<?>) provider).getSQLDataType());
-            } catch (IllegalArgumentException ignored) {}
+            } catch (IllegalArgumentException ignored) {  ignored.printStackTrace();}
             // remove dummy column
             try { query("ALTER TABLE " + provider.getStockName() + " DROP dummycolumn_oAEfpoj");
-            } catch (IllegalArgumentException ignored) {}
+            } catch (IllegalArgumentException ignored) { ignored.printStackTrace();}
         }
         return (R) this;
     }
