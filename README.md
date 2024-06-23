@@ -17,15 +17,29 @@ See the [wiki](https://github.com/RyanLandDev/Colossus/wiki) for various guides 
         * **Multi-step arguments** using `CompleteableFuture<T>`
         * Supports all Discord option features, such as autocomplete
     * Automatic **exception handling**; throwing a `CommandException` in the middle of your command execution code will automatically send an error message, same for regular exceptions
+      ```java
+      @Override
+      public void run(SlashCommandEvent event) throws CommandException {
+          if (Colossus.getSQLDatabaseDriver().queryIsZero("SELECT COUNT(*) FROM tickets WHERE channel = ?", event.getChannel().getId())) {
+              throw new CommandException("This is not a ticket channel."); // This will send the user an ephemeral error embed with the provided description
+          }
+
+          event.reply("Ticket closed.", true);
+          TicketHandler.deleteTicket(event.getChannel());
+      }
+      ```
     * **Subcommands** and nested subcommands
     * **Categories**
     * **Permission system**, also allows for custom permissions (e.g. bot tester)
+      * Discord's default slash command permissions are also supported
     * **Cooldowns**, with the option to create your own `CooldownManager` to handle cooldowns in a custom way
+      * `CooldownManager` is an interface which is already implemented in `MemoryCooldownManager` and `DatabaseCooldownManager`
     * **Inhibitors** - custom conditions that should be checked before any command is executed
+      * Colossus also uses inhibitors internally for checks like cooldowns and permissions
     * **Finalizers** - custom code that is run after a command was successfully executed
     * **Disabled command handler** - handles the enabling/disabling of commands and offers a default disable/enable command (can be removed)
     * **Command localization** - add localizations to slash commands
-    * **Help command** - provides a default help command, can be disabled
+    * **Help command** - provides a default extensive help command, can be disabled
 * User/message **context commands**
 * Custom **interactions/components system**
     * **Automatic event handling** - provide a condition and consumer beforehand
@@ -56,18 +70,35 @@ See the [wiki](https://github.com/RyanLandDev/Colossus/wiki) for various guides 
     * `TabMenu` - a menu to browse custom defined pages and (nested) subpages using tabs. The default help command uses this menu
     * `SelectRowMenu` - a menu to switch between pages using a select menu, useful for e.g. a settings command
     * `ScrollPageMenu` - a menu to browse pages using buttons
-* `PresetBuilder` - a helper class to create rich embed messages
+* `PresetBuilder` - a helper class to create rich embed messages with action rows
     * **Preset types** - these can be used to create PresetBuilders with default values. Error messages use a (customizable) `PresetType` for example.
     * Easily add components using the previously mentioned custom component system
-    * **Ephemeral** messages
+    * Ephemeral messages
 * Automatic JSON **config system**; allowing for extra custom key entries and grouping
-* **Database driver system** to easily manage, write and read a database
-    * Either create your own or use the pre-made `SQLDatabaseDriver`, `JsonDatabaseDriver` or `MongoDatabaseDriver`
+* Customizable **configuration system** which allows custom configuration setups implemented using `ConfigSupplier` (e.g. a web dashboard or Minecraft plugin config)
+  * Uses the pre-built `JsonConfig` by default, supports grouping
+  * Easily add custom key entries
+    ```java
+    ColossusBuilder builder = new ColossusBuilder(".")
+        .registerConfigEntry("tickets.log_channel", "");
+    // ...
+    String channelId = Config.getString("tickets.log_channel");
+    ```
+* **Database driver system** to easily perform create, read, update and delete actions to a database
+    * Either create your own or use the pre-made `SQLiteDatabaseDriver`, `JsonDatabaseDriver` or `MongoDatabaseDriver`
     * Automatically takes care of **caching**, see the `DatabaseDriver` javadoc for specifics
     * **Update and read** database values easily using a `Supply` and Colossus entities
       ```java
       event.getUser().modifyValue("coins", coins -> coins * 10); // multiply coins by 10
       event.getUser().increaseValue("coins", 10); // add 10 coins
+      ```
+    * Includes **helper methods** for easily performing SQL queries
+    * **Automatically creates SQL tables and columns** if they do not exist yet, creating a new data value takes seconds using `ValueProvider`
+      ```java
+      ColossusBuilder builder = new ColossusBuilder(".")
+          .setDatabaseDriver(new SQLiteDatabaseDriver("db.sqlite")
+              .registerValueProvider("users", "coins", "integer not null default 0", [serializer], [deserializer]) // coins property for every user
+          );
       ```
 * `LocalFile` - extended File class, with useful methods such as `getContent()` or `parseJson()`, also comes with a helpful `LocalFileBuilder`
 * An **event waiter** to await events with ease
@@ -129,4 +160,4 @@ See the [wiki](https://github.com/RyanLandDev/Colossus/wiki) for various guides 
 
 ## Support
 
-If you need help using the framework, please join our [Discord server](https://discord.gg/j7fmJYxPKf).
+If you need help using the framework, please contact me on Discord at `ryandev.` or join our [Discord server](https://discord.gg/j7fmJYxPKf).
