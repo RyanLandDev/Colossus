@@ -12,13 +12,9 @@ public class WebUtil {
 
     private static final OkHttpClient client = new OkHttpClient();
 
-    /**
-     * Initiates a GET request to the URL provided and returns the result as a Response
-     */
-    public static CompletableFuture<Response> request(String url) {
-        Request request = new Request.Builder().url(url).build();
+    @NotNull
+    public static CompletableFuture<Response> request(Request request) {
         CompletableFuture<Response> future = new CompletableFuture<>();
-
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
@@ -34,12 +30,45 @@ public class WebUtil {
     }
 
     /**
-     * Initiates a GET request to the URL provided and returns the result as an JsonObject
+     * Initiates a GET request to the URL provided and returns the result as a Response
+     */
+    public static CompletableFuture<Response> get(String url) {
+        Request request = new Request.Builder().url(url).build();
+        return request(request);
+    }
+
+    /**
+     * Initiates a GET request to the URL provided and returns the result as a JsonObject
      * @throws com.google.gson.JsonParseException if the response is not valid JSON
      */
-    public static CompletableFuture<JsonObject> requestJson(String url) {
+    public static CompletableFuture<JsonObject> getJson(String url) {
         CompletableFuture<JsonObject> future = new CompletableFuture<>();
-        CompletableFuture<Response> request = request(url);
+        CompletableFuture<Response> request = get(url);
+        request.thenAccept(response -> {
+            try {
+                future.complete(LocalFile.parseJson(response.body().string()).getAsJsonObject());
+            } catch (IOException e) {
+                future.completeExceptionally(e);
+            }
+        });
+        return future;
+    }
+
+    /**
+     * Initiates a POST request to the URL provided and returns the result as a Response
+     */
+    public static CompletableFuture<Response> post(String url, RequestBody body) {
+        Request request = new Request.Builder().url(url).post(body).build();
+        return request(request);
+    }
+
+    /**
+     * Initiates a POST request to the URL provided and returns the result as a JsonObject
+     * @throws com.google.gson.JsonParseException if the response is not valid JSON
+     */
+    public static CompletableFuture<JsonObject> postJson(String url, RequestBody body) {
+        CompletableFuture<JsonObject> future = new CompletableFuture<>();
+        CompletableFuture<Response> request = post(url, body);
         request.thenAccept(response -> {
             try {
                 future.complete(LocalFile.parseJson(response.body().string()).getAsJsonObject());

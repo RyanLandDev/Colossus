@@ -797,7 +797,7 @@ public record ColossusGuild(Guild guild) implements Guild, ColossusDatabaseEntit
     }
 
     @Override
-    public AuditableRestAction<BulkBanResponse> ban(Collection<UserSnowflake> users, Duration deletionTime) {
+    public AuditableRestAction<BulkBanResponse> ban(Collection<? extends UserSnowflake> users, Duration deletionTime) {
         return guild().ban(users, deletionTime);
     }
 
@@ -1134,32 +1134,6 @@ public record ColossusGuild(Guild guild) implements Guild, ColossusDatabaseEntit
         return guild().createRole();
     }
 
-    /**
-     * Creates a new {@link RichCustomEmoji} in this Guild.
-     * <br>If one or more Roles are specified the new emoji will only be available to Members with any of the specified Roles (see {@link Member#canInteract(RichCustomEmoji)})
-     * <br>For this to be successful, the logged in account has to have the {@link Permission#MANAGE_EMOJIS_AND_STICKERS MANAGE_EMOJIS_AND_STICKERS} Permission.
-     *
-     * <p><b><u>Unicode emojis are not included as {@link RichCustomEmoji}!</u></b>
-     *
-     * <p>Note that a guild is limited to 50 normal and 50 animated emojis by default.
-     * Some guilds are able to add additional emojis beyond this limitation due to the
-     * {@code MORE_EMOJI} feature (see {@link Guild#getFeatures() Guild.getFeatures()}).
-     * <br>Due to simplicity we do not check for these limits.
-     *
-     * <p>Possible {@link ErrorResponse ErrorResponses} caused by
-     * the returned {@link RestAction RestAction} include the following:
-     * <ul>
-     *     <li>{@link ErrorResponse#MISSING_PERMISSIONS MISSING_PERMISSIONS}
-     *     <br>The emoji could not be created due to a permission discrepancy</li>
-     * </ul>
-     *
-     * @param name  The name for the new emoji
-     * @param icon  The {@link Icon} for the new emoji
-     * @param roles The {@link Role Roles} the new emoji should be restricted to
-     *              <br>If no roles are provided the emoji will be available to all Members of this Guild
-     * @return {@link AuditableRestAction AuditableRestAction} - Type: {@link RichCustomEmoji}
-     * @throws InsufficientPermissionException If the logged in account does not have the {@link Permission#MANAGE_EMOJIS_AND_STICKERS MANAGE_EMOJIS_AND_STICKERS} Permission
-     */
     @NotNull
     @Override
     public AuditableRestAction<RichCustomEmoji> createEmoji(String name, Icon icon, Role... roles) {

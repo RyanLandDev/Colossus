@@ -23,7 +23,9 @@ dependencies {
     implementation 'ch.qos.logback:logback-classic:1.4.12'
 
     // jda
-    implementation 'net.dv8tion:JDA:5.0.0-beta.24'
+    implementation ('net.dv8tion:JDA:5.0.0') //{
+    //    exclude group: "com.squareup.okhttp3", module: "okhttp"
+   // }
 
     // database
     // note: these packages are unnecessary for users not using the MongoDatabaseDriver/SQLiteDatabaseDriver,
@@ -35,7 +37,7 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.10.1'
 
     // okhttp
-    implementation 'com.squareup.okhttp3:okhttp:4.10.0'
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
 }
 
 publishing {
