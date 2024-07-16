@@ -33,13 +33,13 @@ public class SelectRowMenu implements InteractionMenu {
         event.reply(startMessage);
     }
 
-    public PresetBuilder renderMessage(RepliableEvent event, List<SelectRowOption> options, SelectRowOption option) {
+    public PresetBuilder renderMessage(RepliableEvent event, List<SelectRowOption> options, SelectRowOption option) throws CommandException {
         PresetBuilder message = option.getMessage().apply(event);
         message.getComponentRows().add(0, renderSelectMenu(options, option));
         return message;
     }
 
-    public void sendMessage(List<SelectRowOption> options, RepliableEvent event, SelectRowOption option) {
+    public void sendMessage(List<SelectRowOption> options, RepliableEvent event, SelectRowOption option) throws CommandException {
         event.reply(renderMessage(event, options, option));
     }
 

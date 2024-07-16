@@ -1,6 +1,7 @@
 package net.ryanland.colossus.sys.interactions.menu.selectrow;
 
 import net.dv8tion.jda.api.entities.emoji.Emoji;
+import net.ryanland.colossus.command.executor.functional_interface.CommandFunction;
 import net.ryanland.colossus.events.repliable.RepliableEvent;
 import net.ryanland.colossus.sys.interactions.ComponentRow;
 import net.ryanland.colossus.sys.message.PresetBuilder;
@@ -13,9 +14,9 @@ public class SelectRowOption {
     private final String name;
     private final String description;
     private final Emoji emoji;
-    private final Function<RepliableEvent, PresetBuilder> message;
+    private final CommandFunction<RepliableEvent, PresetBuilder> message;
 
-    public SelectRowOption(String name, String description, Emoji emoji, Function<RepliableEvent, PresetBuilder> message) {
+    public SelectRowOption(String name, String description, Emoji emoji, CommandFunction<RepliableEvent, PresetBuilder> message) {
         this.name = name;
         this.description = description;
         this.emoji = emoji;
@@ -42,7 +43,7 @@ public class SelectRowOption {
         return emoji;
     }
 
-    public Function<RepliableEvent, PresetBuilder> getMessage() {
+    public CommandFunction<RepliableEvent, PresetBuilder> getMessage() {
         return message;
     }
 }
