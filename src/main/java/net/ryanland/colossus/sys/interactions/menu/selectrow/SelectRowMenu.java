@@ -19,10 +19,12 @@ public class SelectRowMenu implements InteractionMenu {
 
     private final List<SelectRowOption> options;
     private final PresetBuilder startMessage;
+    private final String placeholder;
 
-    public SelectRowMenu(List<SelectRowOption> options, PresetBuilder startMessage) {
+    public SelectRowMenu(List<SelectRowOption> options, PresetBuilder startMessage, String placeholder) {
         this.options = options;
         this.startMessage = startMessage;
+        this.placeholder = placeholder;
     }
 
     @Override
@@ -31,19 +33,21 @@ public class SelectRowMenu implements InteractionMenu {
         event.reply(startMessage);
     }
 
-    public static PresetBuilder renderMessage(List<SelectRowOption> options, SelectRowOption option) {
-        PresetBuilder message = option.getMessage();
-        message.setComponentRows(new ArrayList<>(option.getRows()));
+    public PresetBuilder renderMessage(RepliableEvent event, List<SelectRowOption> options, SelectRowOption option) {
+        PresetBuilder message = option.getMessage().apply(event);
         message.getComponentRows().add(0, renderSelectMenu(options, option));
         return message;
     }
 
-    public static void sendMessage(List<SelectRowOption> options, RepliableEvent event, SelectRowOption option) {
-        event.reply(renderMessage(options, option));
+    public void sendMessage(List<SelectRowOption> options, RepliableEvent event, SelectRowOption option) {
+        event.reply(renderMessage(event, options, option));
     }
 
-    public static BaseSelectMenu renderSelectMenu(List<SelectRowOption> options, SelectRowOption selected) {
+    public BaseSelectMenu renderSelectMenu(List<SelectRowOption> options, SelectRowOption selected) {
         StringSelectMenu.Builder builder = StringSelectMenu.create("selectrowmenu");
+        if (placeholder != null) builder.setPlaceholder(placeholder);
+
+        // add options to jda select menu
         for (SelectRowOption option : options) {
             builder.addOption(option.getName(), option.getName(), option.getDescription(), option.getEmoji());
         }

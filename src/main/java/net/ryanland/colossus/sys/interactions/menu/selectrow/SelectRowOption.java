@@ -1,29 +1,29 @@
 package net.ryanland.colossus.sys.interactions.menu.selectrow;
 
 import net.dv8tion.jda.api.entities.emoji.Emoji;
+import net.ryanland.colossus.events.repliable.RepliableEvent;
 import net.ryanland.colossus.sys.interactions.ComponentRow;
 import net.ryanland.colossus.sys.message.PresetBuilder;
 
 import java.util.List;
+import java.util.function.Function;
 
 public class SelectRowOption {
 
     private final String name;
     private final String description;
     private final Emoji emoji;
-    private final PresetBuilder message;
-    private final List<ComponentRow> rows;
+    private final Function<RepliableEvent, PresetBuilder> message;
 
-    public SelectRowOption(String name, String description, Emoji emoji, PresetBuilder message) {
+    public SelectRowOption(String name, String description, Emoji emoji, Function<RepliableEvent, PresetBuilder> message) {
         this.name = name;
         this.description = description;
         this.emoji = emoji;
         this.message = message;
-        this.rows = message.getComponentRows();
     }
 
     public SelectRowOption(String name, String description, PresetBuilder message) {
-        this(name, description, null, message);
+        this(name, description, null, event -> message);
     }
 
     public SelectRowOption(String name, PresetBuilder message) {
@@ -42,16 +42,7 @@ public class SelectRowOption {
         return emoji;
     }
 
-    public PresetBuilder getMessage() {
+    public Function<RepliableEvent, PresetBuilder> getMessage() {
         return message;
-    }
-
-    public List<ComponentRow> getRows() {
-        return rows;
-    }
-
-    public SelectRowOption addRows(ComponentRow... rows) {
-        this.rows.addAll(List.of(rows));
-        return this;
     }
 }

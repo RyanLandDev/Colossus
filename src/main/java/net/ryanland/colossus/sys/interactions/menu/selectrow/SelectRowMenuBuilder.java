@@ -11,6 +11,7 @@ public class SelectRowMenuBuilder implements InteractionMenuBuilder<SelectRowMen
 
     private PresetBuilder startMessage;
     private List<SelectRowOption> options = new ArrayList<>();
+    private String placeholder = null;
 
     public SelectRowMenuBuilder(PresetBuilder startMessage, SelectRowOption... options) {
         this.startMessage = startMessage;
@@ -23,6 +24,10 @@ public class SelectRowMenuBuilder implements InteractionMenuBuilder<SelectRowMen
 
     public List<SelectRowOption> getOptions() {
         return options;
+    }
+
+    public String getPlaceholder() {
+        return placeholder;
     }
 
     public SelectRowMenuBuilder setStartMessage(PresetBuilder startMessage) {
@@ -44,8 +49,13 @@ public class SelectRowMenuBuilder implements InteractionMenuBuilder<SelectRowMen
         return addOptions(List.of(options));
     }
 
+    public SelectRowMenuBuilder setPlaceholder(String placeholder) {
+        this.placeholder = placeholder;
+        return this;
+    }
+
     @Override
     public SelectRowMenu build() {
-        return new SelectRowMenu(options, startMessage);
+        return new SelectRowMenu(options, startMessage, placeholder);
     }
 }
