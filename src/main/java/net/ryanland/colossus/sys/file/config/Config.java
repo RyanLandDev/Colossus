@@ -2,6 +2,8 @@ package net.ryanland.colossus.sys.file.config;
 
 import net.ryanland.colossus.Colossus;
 
+import java.util.List;
+
 /**
  * Shortcut helper class.
  */
@@ -61,5 +63,13 @@ public final class Config {
      */
     public static Boolean getBoolean(String key) {
         return Colossus.getConfig().getBoolean(key);
+    }
+
+    /**
+     * Returns the {@link java.util.ArrayList} associated with this key.
+     * <p>Equivalent of {@code Colossus.getConfig().getList(key)}.
+     */
+    public static <R> List<R> getList(String key) {
+        return Colossus.getConfig().getList(key);
     }
 }

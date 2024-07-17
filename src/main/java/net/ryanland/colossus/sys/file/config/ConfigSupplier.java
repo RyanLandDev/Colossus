@@ -3,6 +3,7 @@ package net.ryanland.colossus.sys.file.config;
 import net.ryanland.colossus.ColossusBuilder;
 import org.apache.commons.collections4.map.LinkedMap;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -83,5 +84,12 @@ public interface ConfigSupplier {
      */
     default Boolean getBoolean(String key) {
         return (Boolean) values.get(key);
+    }
+
+    /**
+     * Returns the {@link java.util.ArrayList} associated with this key.
+     */
+    default <R> List<R> getList(String key) {
+        return (List<R>) values.get(key);
     }
 }

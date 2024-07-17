@@ -10,6 +10,7 @@ import net.ryanland.colossus.sys.file.local.LocalFileType;
 import net.ryanland.colossus.sys.file.database.json.JsonProvider;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -86,5 +87,11 @@ public class JsonConfig implements ConfigSupplier {
     public Boolean getBoolean(String key) {
         if (get(key) == null) return null;
         return get(key).getAsBoolean();
+    }
+
+    @Override
+    public <R> List<R> getList(String key) {
+        if (get(key) == null) return null;
+        return (List<R>) JsonProvider.deserializeElement(get(key).getAsJsonArray());
     }
 }
