@@ -37,6 +37,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Main class for initializing Colossus
  * @author RyanLandDev
+ * @see ColossusBuilder
  */
 public class Colossus {
 
