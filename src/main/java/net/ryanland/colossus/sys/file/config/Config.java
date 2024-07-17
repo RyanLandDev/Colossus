@@ -32,6 +32,30 @@ public final class Config {
     }
 
     /**
+     * Returns the {@link Long} associated with this key.
+     * <p>Equivalent of {@code Colossus.getConfig().getLong(key)}.
+     */
+    public static Long getLong(String key) {
+        return Colossus.getConfig().getLong(key);
+    }
+
+    /**
+     * Returns the {@link Float} associated with this key.
+     * <p>Equivalent of {@code Colossus.getConfig().getFloat(key)}.
+     */
+    public static Float getFloat(String key) {
+        return Colossus.getConfig().getFloat(key);
+    }
+
+    /**
+     * Returns the {@link Double} associated with this key.
+     * <p>Equivalent of {@code Colossus.getConfig().getFloat(key)}.
+     */
+    public static Double getDouble(String key) {
+        return Colossus.getConfig().getDouble(key);
+    }
+
+    /**
      * Returns the {@link Boolean} associated with this key.
      * <p>Equivalent of {@code Colossus.getConfig().getBoolean(key)}.
      */
