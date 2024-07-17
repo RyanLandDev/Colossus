@@ -65,6 +65,24 @@ public class JsonConfig implements ConfigSupplier {
     }
 
     @Override
+    public Long getLong(String key) {
+        if (get(key) == null) return null;
+        return get(key).getAsLong();
+    }
+
+    @Override
+    public Float getFloat(String key) {
+        if (get(key) == null) return null;
+        return get(key).getAsFloat();
+    }
+
+    @Override
+    public Double getDouble(String key) {
+        if (get(key) == null) return null;
+        return get(key).getAsDouble();
+    }
+
+    @Override
     public Boolean getBoolean(String key) {
         if (get(key) == null) return null;
         return get(key).getAsBoolean();

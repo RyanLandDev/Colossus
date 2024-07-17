@@ -58,6 +58,27 @@ public interface ConfigSupplier {
     }
 
     /**
+     * Returns the {@link Long} associated with this key.
+     */
+    default Long getLong(String key) {
+        return (Long) values.get(key);
+    }
+
+    /**
+     * Returns the {@link Float} associated with this key.
+     */
+    default Float getFloat(String key) {
+        return (Float) values.get(key);
+    }
+
+    /**
+     * Returns the {@link Double} associated with this key.
+     */
+    default Double getDouble(String key) {
+        return (Double) values.get(key);
+    }
+
+    /**
      * Returns the {@link Boolean} associated with this key.
      */
     default Boolean getBoolean(String key) {
