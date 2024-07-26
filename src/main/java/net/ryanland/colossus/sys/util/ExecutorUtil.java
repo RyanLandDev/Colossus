@@ -42,7 +42,8 @@ public class ExecutorUtil {
      * @param mayInterruptIfRunning If {@code true}, interrupt in-progress tasks, otherwise finish the task
      */
     public static void cancel(String id, boolean mayInterruptIfRunning) {
-        TASKS.remove(id).cancel(mayInterruptIfRunning);
+        var task = TASKS.remove(id);
+        if (task != null) task.cancel(mayInterruptIfRunning);
     }
 
     /**
