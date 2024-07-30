@@ -108,7 +108,7 @@ public class CommandHandler {
 
         boolean global = Config.getBoolean("slash_commands.global");
         String guildId = Config.getString("slash_commands.guild_id");
-        if (guildId.isEmpty()) throw new NullPointerException("The slash_commands.guild_id config property may not be empty");
+        if (guildId.isEmpty() && !global) throw new NullPointerException("The slash_commands.guild_id config property may not be empty");
         Guild privateGuild = Colossus.getJDA().getGuildById(guildId);
 
         if (!global && privateGuild == null) {
