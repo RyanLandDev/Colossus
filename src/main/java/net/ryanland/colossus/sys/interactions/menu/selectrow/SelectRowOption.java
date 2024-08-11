@@ -3,11 +3,7 @@ package net.ryanland.colossus.sys.interactions.menu.selectrow;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.ryanland.colossus.command.executor.functional_interface.CommandFunction;
 import net.ryanland.colossus.events.repliable.RepliableEvent;
-import net.ryanland.colossus.sys.interactions.ComponentRow;
-import net.ryanland.colossus.sys.message.PresetBuilder;
-
-import java.util.List;
-import java.util.function.Function;
+import net.ryanland.colossus.sys.presetbuilder.PresetBuilder;
 
 public class SelectRowOption {
 

@@ -9,11 +9,11 @@ import net.dv8tion.jda.api.interactions.modals.Modal;
 import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.command.BasicCommand;
 import net.ryanland.colossus.command.executor.functional_interface.CommandConsumer;
-import net.ryanland.colossus.events.ModalSubmitEvent;
+import net.ryanland.colossus.events.repliable.ModalSubmitEvent;
 import net.ryanland.colossus.events.repliable.RepliableEvent;
 import net.ryanland.colossus.sys.file.database.DatabaseDriver;
 import net.ryanland.colossus.sys.file.database.Supply;
-import net.ryanland.colossus.sys.message.PresetBuilder;
+import net.ryanland.colossus.sys.presetbuilder.PresetBuilder;
 
 public sealed abstract class BasicCommandEvent implements RepliableEvent permits CommandEvent, ContextCommandEvent {
 

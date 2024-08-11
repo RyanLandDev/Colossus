@@ -14,7 +14,7 @@ import net.ryanland.colossus.command.permission.impl.BotOwnerRequirement;
 import net.ryanland.colossus.command.regular.CombinedCommand;
 import net.ryanland.colossus.command.regular.CommandBuilder;
 import net.ryanland.colossus.events.command.CommandEvent;
-import net.ryanland.colossus.sys.message.PresetBuilder;
+import net.ryanland.colossus.sys.presetbuilder.PresetBuilder;
 
 @CommandBuilder(
     name = "disable",

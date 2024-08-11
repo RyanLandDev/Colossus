@@ -20,7 +20,7 @@ import net.ryanland.colossus.events.command.CommandEvent;
 import net.ryanland.colossus.events.command.ContextCommandEvent;
 import net.ryanland.colossus.events.command.MessageCommandEvent;
 import net.ryanland.colossus.events.command.SlashCommandEvent;
-import net.ryanland.colossus.sys.message.PresetBuilder;
+import net.ryanland.colossus.sys.presetbuilder.PresetBuilder;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Deque;

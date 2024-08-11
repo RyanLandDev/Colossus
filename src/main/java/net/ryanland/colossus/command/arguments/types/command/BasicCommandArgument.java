@@ -19,7 +19,7 @@ import net.ryanland.colossus.command.executor.CommandHandler;
 import net.ryanland.colossus.events.command.CommandEvent;
 import net.ryanland.colossus.events.command.SlashCommandEvent;
 import net.ryanland.colossus.sys.interactions.button.BaseButton;
-import net.ryanland.colossus.sys.message.PresetBuilder;
+import net.ryanland.colossus.sys.presetbuilder.PresetBuilder;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;

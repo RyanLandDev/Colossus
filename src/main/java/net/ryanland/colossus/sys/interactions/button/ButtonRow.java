@@ -2,7 +2,7 @@ package net.ryanland.colossus.sys.interactions.button;
 
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
-import net.ryanland.colossus.events.ButtonClickEvent;
+import net.ryanland.colossus.events.repliable.ButtonClickEvent;
 import net.ryanland.colossus.sys.interactions.ComponentRow;
 
 import java.util.ArrayList;

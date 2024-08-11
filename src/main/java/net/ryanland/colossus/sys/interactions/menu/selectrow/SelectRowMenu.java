@@ -6,9 +6,8 @@ import net.ryanland.colossus.events.repliable.RepliableEvent;
 import net.ryanland.colossus.sys.interactions.ComponentRow;
 import net.ryanland.colossus.sys.interactions.menu.InteractionMenu;
 import net.ryanland.colossus.sys.interactions.select.BaseSelectMenu;
-import net.ryanland.colossus.sys.message.PresetBuilder;
+import net.ryanland.colossus.sys.presetbuilder.PresetBuilder;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

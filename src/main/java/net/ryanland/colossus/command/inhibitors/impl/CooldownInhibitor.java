@@ -4,7 +4,7 @@ import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.command.cooldown.CooldownHandler;
 import net.ryanland.colossus.command.inhibitors.Inhibitor;
 import net.ryanland.colossus.events.command.BasicCommandEvent;
-import net.ryanland.colossus.sys.message.PresetBuilder;
+import net.ryanland.colossus.sys.presetbuilder.PresetBuilder;
 import net.ryanland.colossus.sys.util.DateUtil;
 
 import java.util.Date;

@@ -6,7 +6,7 @@ import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle;
 import net.ryanland.colossus.events.repliable.RepliableEvent;
 import net.ryanland.colossus.sys.interactions.button.BaseButton;
 import net.ryanland.colossus.sys.interactions.menu.InteractionMenu;
-import net.ryanland.colossus.sys.message.PresetBuilder;
+import net.ryanland.colossus.sys.presetbuilder.PresetBuilder;
 
 import java.util.ArrayList;
 import java.util.List;

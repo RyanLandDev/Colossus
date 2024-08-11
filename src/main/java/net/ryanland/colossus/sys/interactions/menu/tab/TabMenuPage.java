@@ -1,6 +1,6 @@
 package net.ryanland.colossus.sys.interactions.menu.tab;
 
-import net.ryanland.colossus.sys.message.PresetBuilder;
+import net.ryanland.colossus.sys.presetbuilder.PresetBuilder;
 import net.ryanland.colossus.sys.util.Node;
 
 public class TabMenuPage extends Node<TabMenuPage> {

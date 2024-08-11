@@ -1,4 +1,4 @@
-package net.ryanland.colossus.sys.message;
+package net.ryanland.colossus.sys.presetbuilder;
 
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.Role;

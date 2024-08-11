@@ -4,8 +4,8 @@ import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.command.executor.functional_interface.CommandConsumer;
 import net.ryanland.colossus.command.executor.functional_interface.CommandPredicate;
-import net.ryanland.colossus.events.ButtonClickEvent;
-import net.ryanland.colossus.sys.message.PresetBuilder;
+import net.ryanland.colossus.events.repliable.ButtonClickEvent;
+import net.ryanland.colossus.sys.presetbuilder.PresetBuilder;
 
 import java.util.List;
 

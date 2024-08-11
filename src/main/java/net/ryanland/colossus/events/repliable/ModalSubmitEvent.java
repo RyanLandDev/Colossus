@@ -1,12 +1,10 @@
-package net.ryanland.colossus.events;
+package net.ryanland.colossus.events.repliable;
 
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
-import net.dv8tion.jda.api.interactions.callbacks.IReplyCallback;
 import net.dv8tion.jda.api.interactions.modals.ModalMapping;
 import net.ryanland.colossus.command.CommandException;
 import net.ryanland.colossus.command.executor.functional_interface.CommandConsumer;
-import net.ryanland.colossus.events.repliable.EditableRepliableEvent;
 
 import java.util.HashMap;
 import java.util.List;

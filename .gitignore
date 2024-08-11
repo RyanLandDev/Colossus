@@ -10,5 +10,3 @@ webhooks.json
 
 # Testing
 /src/test/
-/src/database
-/src/config

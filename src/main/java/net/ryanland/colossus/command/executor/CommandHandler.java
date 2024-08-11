@@ -27,7 +27,7 @@ import net.ryanland.colossus.events.command.CommandEvent;
 import net.ryanland.colossus.events.command.ContextCommandEvent;
 import net.ryanland.colossus.events.repliable.RepliableEvent;
 import net.ryanland.colossus.sys.file.config.Config;
-import net.ryanland.colossus.sys.message.PresetBuilder;
+import net.ryanland.colossus.sys.presetbuilder.PresetBuilder;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -171,7 +171,11 @@ public class CommandHandler {
     }
 
     public static void handleAutocompleteEvent(CommandAutoCompleteInteractionEvent event) {
-        Command command = getCommand(event.getName());
+        Command command = getCommand(event.getName());//This will get the "Command" of the first word in the slash command, e.g. "/test sub" -> "test"
+        if (command instanceof SubCommandHolder) {//If this command is a subcommand holder, get the subcommand executed
+            command = (Command) ((SubCommandHolder) command).getRealSubCommands().stream()
+                .filter(cmd -> ((Command) cmd).getName().equals(event.getSubcommandName())).toList().get(0);
+        }
         Argument<?> argument = command.getArguments().get(event.getFocusedOption().getName());
         ArgumentOptionData optionData = argument.getArgumentOptionData();
         if (optionData.isAutoComplete()) {

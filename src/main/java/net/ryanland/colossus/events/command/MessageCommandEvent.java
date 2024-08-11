@@ -12,12 +12,12 @@ import net.ryanland.colossus.command.Command;
 import net.ryanland.colossus.command.arguments.ParsedArgumentMap;
 import net.ryanland.colossus.command.executor.functional_interface.CommandConsumer;
 import net.ryanland.colossus.command.regular.SubCommandHolder;
-import net.ryanland.colossus.events.ModalSubmitEvent;
+import net.ryanland.colossus.events.repliable.ModalSubmitEvent;
 import net.ryanland.colossus.events.repliable.RepliableEvent;
 import net.ryanland.colossus.sys.entities.ColossusGuild;
 import net.ryanland.colossus.sys.entities.ColossusMember;
 import net.ryanland.colossus.sys.entities.ColossusUser;
-import net.ryanland.colossus.sys.message.PresetBuilder;
+import net.ryanland.colossus.sys.presetbuilder.PresetBuilder;
 
 public final class MessageCommandEvent extends CommandEvent {
 

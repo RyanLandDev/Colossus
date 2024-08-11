@@ -1,11 +1,10 @@
-package net.ryanland.colossus.events;
+package net.ryanland.colossus.events.repliable;
 
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.ColossusBuilder;
 import net.ryanland.colossus.command.CommandException;
-import net.ryanland.colossus.events.repliable.EditableRepliableEvent;
 import net.ryanland.colossus.sys.interactions.button.BaseButton;
 import net.ryanland.colossus.sys.interactions.button.ButtonRow;
 import net.ryanland.colossus.sys.util.ExecutorUtil;

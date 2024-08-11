@@ -1,7 +1,7 @@
 package net.ryanland.colossus.sys.interactions.menu.selectrow;
 
 import net.ryanland.colossus.sys.interactions.menu.InteractionMenuBuilder;
-import net.ryanland.colossus.sys.message.PresetBuilder;
+import net.ryanland.colossus.sys.presetbuilder.PresetBuilder;
 
 import java.util.ArrayList;
 import java.util.Collection;

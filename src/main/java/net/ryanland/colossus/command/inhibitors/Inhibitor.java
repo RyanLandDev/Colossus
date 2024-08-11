@@ -1,7 +1,7 @@
 package net.ryanland.colossus.command.inhibitors;
 
 import net.ryanland.colossus.events.command.BasicCommandEvent;
-import net.ryanland.colossus.sys.message.PresetBuilder;
+import net.ryanland.colossus.sys.presetbuilder.PresetBuilder;
 
 /**
  * Inhibitors are run before a command is executed.<br>

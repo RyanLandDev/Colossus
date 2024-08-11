@@ -11,7 +11,7 @@ import net.ryanland.colossus.command.arguments.parsing.exceptions.MissingArgumen
 import net.ryanland.colossus.command.regular.SubCommand;
 import net.ryanland.colossus.events.command.CommandEvent;
 import net.ryanland.colossus.events.command.MessageCommandEvent;
-import net.ryanland.colossus.sys.message.PresetBuilder;
+import net.ryanland.colossus.sys.presetbuilder.PresetBuilder;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
