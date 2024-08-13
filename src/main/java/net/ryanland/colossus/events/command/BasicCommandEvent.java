@@ -11,8 +11,6 @@ import net.ryanland.colossus.command.BasicCommand;
 import net.ryanland.colossus.command.executor.functional_interface.CommandConsumer;
 import net.ryanland.colossus.events.repliable.ModalSubmitEvent;
 import net.ryanland.colossus.events.repliable.RepliableEvent;
-import net.ryanland.colossus.sys.file.database.DatabaseDriver;
-import net.ryanland.colossus.sys.file.database.Supply;
 import net.ryanland.colossus.sys.presetbuilder.PresetBuilder;
 
 public sealed abstract class BasicCommandEvent implements RepliableEvent permits CommandEvent, ContextCommandEvent {
@@ -49,28 +47,6 @@ public sealed abstract class BasicCommandEvent implements RepliableEvent permits
      */
     public String getLocalization(String key) {
         return Colossus.getLocalization(getUserLocale(), key);
-    }
-
-    /**
-     * Get the {@link Supply} of the user who executed this command.
-     * <br>Note: This method may produce an error if the {@link DatabaseDriver} is not properly configured.
-     * @see Supply
-     * @see DatabaseDriver
-     */
-    public Supply getUserSupply() {
-        return getUser().getSupply();
-    }
-
-    /**
-     * Get the {@link Supply} of the guild this command was executed in.
-     * This will be {@code null} if the command was executed in DMs.
-     * <br>Note: This method may produce an error if the {@link DatabaseDriver} is not properly configured.
-     * @see Supply
-     * @see DatabaseDriver
-     */
-    public Supply getGuildSupply() {
-        if (getGuild() == null) return null;
-        return getGuild().getSupply();
     }
 
     @Override

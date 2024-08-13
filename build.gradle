@@ -24,27 +24,29 @@ dependencies {
     implementation 'org.slf4j:slf4j-api:2.0.13'
 
     // jda
-    implementation ('net.dv8tion:JDA:5.0.0')
+    implementation 'net.dv8tion:JDA:5.0.2'
 
-    // database
-    // note: these packages are unnecessary for users not using the MongoDatabaseDriver/SQLiteDatabaseDriver,
-    // unnecessarily increasing the size of colossus. is this a problem? if so, solution? TODO
-    implementation 'org.mongodb:mongodb-driver-sync:4.9.0'
-    implementation 'org.xerial:sqlite-jdbc:3.46.0.0'
-
-    // hibernate
+    // hibernate (database)
     implementation "org.hibernate.orm:hibernate-core:6.5.2.Final"
     implementation 'org.hibernate.orm:hibernate-hikaricp:6.5.2.Final'
     implementation 'com.zaxxer:HikariCP:5.1.0'
-    implementation 'com.h2database:h2:2.3.230'//todo remove?
+
+    // lombok
+    implementation 'org.projectlombok:lombok:1.18.34'
+    annotationProcessor 'org.projectlombok:lombok:1.18.34'
 
     // misc
     implementation 'com.google.code.gson:gson:2.10.1'
     implementation 'com.squareup.okhttp3:okhttp:4.12.0'
     implementation 'io.github.classgraph:classgraph:4.8.174'
 
-    implementation 'org.projectlombok:lombok:1.18.34'
-    annotationProcessor 'org.projectlombok:lombok:1.18.34'
+    // test
+    testImplementation 'org.hibernate.orm:hibernate-community-dialects:6.6.0.Final'
+    testImplementation 'com.h2database:h2:2.3.230'
+    testImplementation 'org.xerial:sqlite-jdbc:3.46.0.0'
+    testImplementation 'org.mongodb:mongodb-driver-sync:4.9.0'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.34'
+
 }
 
 publishing {

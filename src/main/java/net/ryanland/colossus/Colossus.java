@@ -1,5 +1,6 @@
 package net.ryanland.colossus;
 
+import lombok.Getter;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.SelfUser;
@@ -16,19 +17,14 @@ import net.ryanland.colossus.command.finalizers.Finalizer;
 import net.ryanland.colossus.command.inhibitors.Inhibitor;
 import net.ryanland.colossus.events.repliable.ButtonClickEvent;
 import net.ryanland.colossus.events.repliable.SelectMenuEvent;
-import net.ryanland.colossus.sys.file.config.Config;
-import net.ryanland.colossus.sys.file.config.ConfigSupplier;
-import net.ryanland.colossus.sys.file.local.LocalFile;
-import net.ryanland.colossus.sys.file.database.DatabaseDriver;
-import net.ryanland.colossus.sys.file.database.Provider;
-import net.ryanland.colossus.sys.file.database.Supply;
-import net.ryanland.colossus.sys.file.database.sql.SQLDatabaseDriver;
+import net.ryanland.colossus.sys.config.Config;
+import net.ryanland.colossus.sys.config.ConfigSupplier;
+import net.ryanland.colossus.sys.file.LocalFile;
 import net.ryanland.colossus.sys.interactions.select.BaseSelectMenu;
 import net.ryanland.colossus.sys.presetbuilder.PresetType;
 import org.slf4j.Logger;
 
 import java.nio.file.InvalidPathException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -46,29 +42,33 @@ public class Colossus {
 
     private static JDA jda;
     private static ConfigSupplier config;
+    @Getter
     private static Set<Category> categories;
     private static List<Command> commands;
     private static List<ContextCommand<?>> contextCommands;
     private static List<LocalFile> localFiles;
     private static long componentListenerExpirationTimeAmount;
     private static TimeUnit componentListenerExpirationTimeUnit;
-    private static DatabaseDriver databaseDriver;
-    private static HashMap<String, Provider<?, ?>> providers;
+    @Getter
     private static PresetType defaultPresetType;
+    @Getter
     private static PresetType errorPresetType;
+    @Getter
     private static PresetType successPresetType;
     private static LocalizationFunction localizationFunction;
+    @Getter
     private static List<Inhibitor> inhibitors;
+    @Getter
     private static List<Finalizer> finalizers;
 
     private final JDABuilder builder;
 
+    @Getter
     private static User botOwner;
 
     public Colossus(JDABuilder builder, ConfigSupplier config, Set<Category> categories, List<Command> commands,
                     List<ContextCommand<?>> contextCommands, List<LocalFile> localFiles, long buttonListenerExpirationTimeAmount,
-                    TimeUnit buttonListenerExpirationTimeUnit, DatabaseDriver databaseDriver,
-                    HashMap<String, Provider<?, ?>> providers, PresetType defaultPresetType, PresetType errorPresetType,
+                    TimeUnit buttonListenerExpirationTimeUnit, PresetType defaultPresetType, PresetType errorPresetType,
                     PresetType successPresetType, LocalizationFunction localizationFunction, List<Inhibitor> inhibitors,
                     List<Finalizer> finalizers) {
         this.builder = builder;
@@ -80,8 +80,6 @@ public class Colossus {
         Colossus.localFiles = localFiles;
         Colossus.componentListenerExpirationTimeAmount = buttonListenerExpirationTimeAmount;
         Colossus.componentListenerExpirationTimeUnit = buttonListenerExpirationTimeUnit;
-        Colossus.databaseDriver = databaseDriver;
-        Colossus.providers = providers;
         Colossus.defaultPresetType = defaultPresetType;
         Colossus.errorPresetType = errorPresetType;
         Colossus.successPresetType = successPresetType;
@@ -132,20 +130,7 @@ public class Colossus {
             jda.retrieveApplicationInfo().queue(appInfo -> botOwner = appInfo.getOwner());
             LOGGER.info("Upserting " + (commands.size() + contextCommands.size()) + " commands...");
             // Upsert the registered slash and context commands
-            try {
-                CommandHandler.upsertAll();
-            } catch (IllegalArgumentException e) {
-                if (getDatabaseDriver() instanceof SQLDatabaseDriver) {
-                    // default sql databases don't exist, create them
-                    getSQLDatabaseDriver().query("create table global ( _bot_id varchar(25) constraint global_pk primary key )");
-                    getSQLDatabaseDriver().query("create table guilds ( _guild_id varchar(25) constraint guilds_pk primary key )");
-                    getSQLDatabaseDriver().query("create table members ( _user_id varchar(25) not null, _guild_id varchar(25) not null, constraint members_pk primary key (_guild_id, _user_id) )");
-                    getSQLDatabaseDriver().query("create table users ( _user_id varchar(25) constraint users_pk primary key )");
-                    getSQLDatabaseDriver().query("create table cooldowns ( user_id varchar(25) not null, command_name varchar(32) not null, command_type tinyint not null, expires datetime not null, constraint cooldowns_pk primary key (user_id, command_name, command_type) )");
-                    getSQLDatabaseDriver().query("create table disabled_commands ( command_name varchar(32) not null, command_type tinyint not null, constraint disabled_commands_pk primary key (command_name, command_type) )");
-                    LOGGER.info("Default SQL tables not found, created them");
-                }
-            }
+            CommandHandler.upsertAll();
             LOGGER.info("All commands upserted!");
         }
 
@@ -163,20 +148,12 @@ public class Colossus {
         return jda.getSelfUser();
     }
 
-    public static User getBotOwner() {
-        return botOwner;
-    }
-
     /**
      * Returns the configured {@link ConfigSupplier}.
      * <p>If you're only looking to retrieve values from the config, use {@link Config} instead.
      */
     public static ConfigSupplier getConfig() {
         return config;
-    }
-
-    public static Set<Category> getCategories() {
-        return categories;
     }
 
     /**
@@ -226,67 +203,6 @@ public class Colossus {
     }
 
     /**
-     * Get the configured {@link DatabaseDriver}
-     * @see ColossusBuilder#setDatabaseDriver(DatabaseDriver)
-     * @see DatabaseDriver
-     * @see #getSQLDatabaseDriver()
-     */
-    public static DatabaseDriver getDatabaseDriver() {
-        if (databaseDriver == null) throw new IllegalStateException("A database driver has not been defined.");
-        return databaseDriver;
-    }
-
-    /**
-     * Casts the result of {@link #getDatabaseDriver()} to a {@link SQLDatabaseDriver}
-     * @see ColossusBuilder#setDatabaseDriver(DatabaseDriver)
-     * @see DatabaseDriver
-     * @see #getDatabaseDriver()
-     */
-    public static SQLDatabaseDriver getSQLDatabaseDriver() {
-        return (SQLDatabaseDriver) getDatabaseDriver();
-    }
-
-    /**
-     * Get the configured {@link Provider Providers}
-     * @see ColossusBuilder#registerProviders(Provider...)
-     * @see Provider
-     */
-    public static HashMap<String, Provider<?, ?>> getProviders() {
-        return providers;
-    }
-
-    /**
-     * Get one of the configured {@link Provider Providers} using its stock name
-     * @see ColossusBuilder#registerProviders(Provider...)
-     * @see Provider
-     */
-    @SuppressWarnings("unchecked")
-    public static <R extends Provider<S1, S2>, S1, S2> R getProvider(String stockName) {
-        return (R) providers.get(stockName);
-    }
-
-    /**
-     * Get the global {@link Supply} from the database
-     * @see Supply
-     * @see DatabaseDriver
-     */
-    public static Supply getGlobalSupply() {
-        return getDatabaseDriver().get("global").get(getSelfUser().getId());
-    }
-
-    public static PresetType getDefaultPresetType() {
-        return defaultPresetType;
-    }
-
-    public static PresetType getErrorPresetType() {
-        return errorPresetType;
-    }
-
-    public static PresetType getSuccessPresetType() {
-        return successPresetType;
-    }
-
-    /**
      * Get the configured {@link LocalizationFunction}
      * @see ColossusBuilder#setLocalizationFunction(LocalizationFunction)
      * @see #getLocalization(DiscordLocale, String)
@@ -300,11 +216,4 @@ public class Colossus {
         return getLocalizationFunction().apply(key).get(locale);
     }
 
-    public static List<Inhibitor> getInhibitors() {
-        return inhibitors;
-    }
-
-    public static List<Finalizer> getFinalizers() {
-        return finalizers;
-    }
 }

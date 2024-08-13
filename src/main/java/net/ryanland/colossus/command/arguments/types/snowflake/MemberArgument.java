@@ -7,7 +7,7 @@ import net.ryanland.colossus.command.arguments.ArgumentOptionData;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.ArgumentException;
 import net.ryanland.colossus.events.command.MessageCommandEvent;
 import net.ryanland.colossus.events.command.SlashCommandEvent;
-import net.ryanland.colossus.sys.entities.ColossusMember;
+import net.ryanland.colossus.sys.snowflake.ColossusMember;
 
 public class MemberArgument extends SnowflakeArgument<Member> {
 

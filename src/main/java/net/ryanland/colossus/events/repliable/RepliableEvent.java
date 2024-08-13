@@ -4,9 +4,12 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.interactions.modals.Modal;
 import net.ryanland.colossus.command.CommandException;
 import net.ryanland.colossus.command.executor.functional_interface.CommandConsumer;
-import net.ryanland.colossus.sys.entities.ColossusGuild;
-import net.ryanland.colossus.sys.entities.ColossusMember;
-import net.ryanland.colossus.sys.entities.ColossusUser;
+import net.ryanland.colossus.sys.database.entities.GuildEntity;
+import net.ryanland.colossus.sys.database.entities.MemberEntity;
+import net.ryanland.colossus.sys.database.entities.UserEntity;
+import net.ryanland.colossus.sys.snowflake.ColossusGuild;
+import net.ryanland.colossus.sys.snowflake.ColossusMember;
+import net.ryanland.colossus.sys.snowflake.ColossusUser;
 import net.ryanland.colossus.sys.interactions.menu.InteractionMenu;
 import net.ryanland.colossus.sys.presetbuilder.PresetBuilder;
 
@@ -23,6 +26,18 @@ public interface RepliableEvent {
     ColossusMember getMember();
 
     ColossusGuild getGuild();
+
+    default <R extends UserEntity> R getUserEntity() {
+        return getUser().getEntity();
+    }
+
+    default <R extends MemberEntity> R getMemberEntity() {
+        return getMember().getEntity();
+    }
+
+    default <R extends GuildEntity> R getGuildEntity() {
+        return getGuild().getEntity();
+    }
 
     /**
      * Reply to this event with a plain text message

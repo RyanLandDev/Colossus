@@ -1,7 +1,7 @@
 package net.ryanland.colossus.sys.util;
 
 import com.google.gson.JsonObject;
-import net.ryanland.colossus.sys.file.local.LocalFile;
+import net.ryanland.colossus.sys.file.LocalFile;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 

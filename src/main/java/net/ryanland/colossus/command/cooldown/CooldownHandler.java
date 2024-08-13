@@ -2,7 +2,7 @@ package net.ryanland.colossus.command.cooldown;
 
 import net.ryanland.colossus.command.BasicCommand;
 import net.ryanland.colossus.events.command.BasicCommandEvent;
-import net.ryanland.colossus.sys.entities.ColossusUser;
+import net.ryanland.colossus.sys.snowflake.ColossusUser;
 
 import java.util.Date;
 import java.util.List;

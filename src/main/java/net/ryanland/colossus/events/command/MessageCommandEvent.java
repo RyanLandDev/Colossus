@@ -14,9 +14,10 @@ import net.ryanland.colossus.command.executor.functional_interface.CommandConsum
 import net.ryanland.colossus.command.regular.SubCommandHolder;
 import net.ryanland.colossus.events.repliable.ModalSubmitEvent;
 import net.ryanland.colossus.events.repliable.RepliableEvent;
-import net.ryanland.colossus.sys.entities.ColossusGuild;
-import net.ryanland.colossus.sys.entities.ColossusMember;
-import net.ryanland.colossus.sys.entities.ColossusUser;
+import net.ryanland.colossus.sys.config.Config;
+import net.ryanland.colossus.sys.snowflake.ColossusGuild;
+import net.ryanland.colossus.sys.snowflake.ColossusMember;
+import net.ryanland.colossus.sys.snowflake.ColossusUser;
 import net.ryanland.colossus.sys.presetbuilder.PresetBuilder;
 
 public final class MessageCommandEvent extends CommandEvent {
@@ -90,7 +91,7 @@ public final class MessageCommandEvent extends CommandEvent {
         if (event.getMessage().getContentRaw() == null)
             throw new IllegalStateException("You must have the Message Content intent enabled to use this feature");
         try {
-            return event.getMessage().getContentRaw().split("\\s+")[0].substring(getGuildPrefix().length()).toLowerCase();
+            return event.getMessage().getContentRaw().split("\\s+")[0].substring(Config.getString("message_commands.prefix").length()).toLowerCase();
         } catch (IndexOutOfBoundsException e) {
             return null;
         }

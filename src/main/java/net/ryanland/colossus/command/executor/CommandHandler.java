@@ -26,7 +26,7 @@ import net.ryanland.colossus.command.regular.SubCommandHolder;
 import net.ryanland.colossus.events.command.CommandEvent;
 import net.ryanland.colossus.events.command.ContextCommandEvent;
 import net.ryanland.colossus.events.repliable.RepliableEvent;
-import net.ryanland.colossus.sys.file.config.Config;
+import net.ryanland.colossus.sys.config.Config;
 import net.ryanland.colossus.sys.presetbuilder.PresetBuilder;
 
 import java.util.ArrayList;

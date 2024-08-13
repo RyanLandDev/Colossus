@@ -23,8 +23,7 @@ import java.util.List;
 @CommandBuilder(
     name = "help",
     description = "Get a list of all commands or information about a specific one.",
-    guildOnly = false,
-    canBeDisabled = false
+    guildOnly = false
 )
 public final class DefaultHelpCommand extends DefaultCommand implements CombinedCommand {
 

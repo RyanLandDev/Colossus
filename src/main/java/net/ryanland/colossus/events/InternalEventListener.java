@@ -18,7 +18,7 @@ import net.ryanland.colossus.events.command.SlashCommandEvent;
 import net.ryanland.colossus.events.repliable.ButtonClickEvent;
 import net.ryanland.colossus.events.repliable.ModalSubmitEvent;
 import net.ryanland.colossus.events.repliable.SelectMenuEvent;
-import net.ryanland.colossus.sys.file.config.Config;
+import net.ryanland.colossus.sys.config.Config;
 import net.ryanland.colossus.sys.presetbuilder.PresetBuilder;
 import org.jetbrains.annotations.NotNull;
 

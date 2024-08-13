@@ -36,7 +36,7 @@ public non-sealed class MessageCommandArgumentParser extends ArgumentParser {
         String content = getEvent().getMessage().getContentRaw();
         Deque<String> queue = new ArrayDeque<>(List.of(
             content.replaceFirst("(^<@(!|)" + Colossus.getSelfUser().getId() + ">\\s*)|(^" +
-                    Pattern.quote(event.getGuildPrefix()) + ")", "")
+                    Pattern.quote(event.getUsedPrefix()) + ")", "")
                 .split("\\s+")));
         queue.remove();
         return queue;

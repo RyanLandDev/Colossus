@@ -2,7 +2,7 @@ package net.ryanland.colossus.command.permission;
 
 import net.ryanland.colossus.command.BasicCommand;
 import net.ryanland.colossus.events.command.BasicCommandEvent;
-import net.ryanland.colossus.sys.entities.ColossusUser;
+import net.ryanland.colossus.sys.snowflake.ColossusUser;
 
 /**
  * A permission requirement. This is used to check if a {@link ColossusUser} has permission to run a {@link BasicCommand}.

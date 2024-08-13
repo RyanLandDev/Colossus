@@ -4,7 +4,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.ryanland.colossus.Colossus;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.ArgumentException;
 import net.ryanland.colossus.events.command.CommandEvent;
-import net.ryanland.colossus.sys.entities.ColossusGuild;
+import net.ryanland.colossus.sys.snowflake.ColossusGuild;
 
 public class GuildArgument extends PureSnowflakeArgument<Guild> {
 

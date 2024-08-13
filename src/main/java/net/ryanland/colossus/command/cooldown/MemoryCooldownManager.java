@@ -1,7 +1,7 @@
 package net.ryanland.colossus.command.cooldown;
 
 import net.dv8tion.jda.api.entities.User;
-import net.ryanland.colossus.sys.entities.ColossusUser;
+import net.ryanland.colossus.sys.snowflake.ColossusUser;
 
 import java.util.ArrayList;
 import java.util.HashMap;

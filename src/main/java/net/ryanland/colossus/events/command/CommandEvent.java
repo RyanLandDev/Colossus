@@ -3,6 +3,7 @@ package net.ryanland.colossus.events.command;
 import net.ryanland.colossus.command.Command;
 import net.ryanland.colossus.command.arguments.ParsedArgumentMap;
 import net.ryanland.colossus.command.regular.SubCommandHolder;
+import net.ryanland.colossus.sys.config.Config;
 
 public abstract sealed class CommandEvent extends BasicCommandEvent permits SlashCommandEvent, MessageCommandEvent {
 
@@ -25,11 +26,7 @@ public abstract sealed class CommandEvent extends BasicCommandEvent permits Slas
 
     public String getUsedPrefix() {
         if (this instanceof SlashCommandEvent) return "/";
-        else return getGuildPrefix();
-    }
-
-    public String getGuildPrefix() {
-        return getGuild().getPrefix();
+        else return Config.getString("message_commands.prefix");
     }
 
     public abstract <T> T getArgument(String id);

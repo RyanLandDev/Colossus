@@ -9,9 +9,9 @@ import net.dv8tion.jda.api.interactions.Interaction;
 import net.dv8tion.jda.api.interactions.commands.context.ContextInteraction;
 import net.ryanland.colossus.command.ContextCommand;
 import net.ryanland.colossus.events.repliable.InteractionRepliableEvent;
-import net.ryanland.colossus.sys.entities.ColossusGuild;
-import net.ryanland.colossus.sys.entities.ColossusMember;
-import net.ryanland.colossus.sys.entities.ColossusUser;
+import net.ryanland.colossus.sys.snowflake.ColossusGuild;
+import net.ryanland.colossus.sys.snowflake.ColossusMember;
+import net.ryanland.colossus.sys.snowflake.ColossusUser;
 
 public final class ContextCommandEvent<T extends ISnowflake> extends BasicCommandEvent {
 

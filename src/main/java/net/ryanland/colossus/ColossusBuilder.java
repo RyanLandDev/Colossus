@@ -1,12 +1,13 @@
 package net.ryanland.colossus;
 
 import com.google.gson.*;
+import io.github.classgraph.ClassGraph;
+import io.github.classgraph.ScanResult;
 import net.dv8tion.jda.api.GatewayEncoding;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.entities.SelfUser;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
 import net.dv8tion.jda.api.interactions.commands.localization.LocalizationFunction;
 import net.dv8tion.jda.api.interactions.commands.localization.ResourceBundleLocalizationFunction;
@@ -17,12 +18,9 @@ import net.ryanland.colossus.command.Command;
 import net.ryanland.colossus.command.CommandException;
 import net.ryanland.colossus.command.ContextCommand;
 import net.ryanland.colossus.command.arguments.parsing.exceptions.MalformedArgumentException;
-import net.ryanland.colossus.command.executor.DisabledCommandHandler;
 import net.ryanland.colossus.command.finalizers.CooldownFinalizer;
 import net.ryanland.colossus.command.finalizers.Finalizer;
 import net.ryanland.colossus.command.impl.DefaultCommand;
-import net.ryanland.colossus.command.impl.DefaultDisableCommand;
-import net.ryanland.colossus.command.impl.DefaultEnableCommand;
 import net.ryanland.colossus.command.impl.DefaultHelpCommand;
 import net.ryanland.colossus.command.inhibitors.Inhibitor;
 import net.ryanland.colossus.command.inhibitors.impl.CooldownInhibitor;
@@ -32,14 +30,12 @@ import net.ryanland.colossus.command.inhibitors.impl.PermissionInhibitor;
 import net.ryanland.colossus.events.repliable.ButtonClickEvent;
 import net.ryanland.colossus.events.InternalEventListener;
 import net.ryanland.colossus.events.command.CommandEvent;
-import net.ryanland.colossus.sys.file.config.ConfigSupplier;
-import net.ryanland.colossus.sys.file.local.LocalFile;
-import net.ryanland.colossus.sys.file.config.JsonConfig;
-import net.ryanland.colossus.sys.file.database.DatabaseDriver;
-import net.ryanland.colossus.sys.file.database.Provider;
-import net.ryanland.colossus.sys.file.database.json.*;
-import net.ryanland.colossus.sys.file.database.mongo.*;
-import net.ryanland.colossus.sys.file.database.sql.*;
+import net.ryanland.colossus.sys.config.ConfigSupplier;
+import net.ryanland.colossus.command.cooldown.CooldownTable;
+import net.ryanland.colossus.sys.database.HibernateManager;
+import net.ryanland.colossus.sys.database.entities.ColossusEntity;
+import net.ryanland.colossus.sys.file.LocalFile;
+import net.ryanland.colossus.sys.config.JsonConfig;
 import net.ryanland.colossus.sys.presetbuilder.DefaultPresetType;
 import net.ryanland.colossus.sys.presetbuilder.PresetBuilder;
 import net.ryanland.colossus.sys.presetbuilder.PresetType;
@@ -94,17 +90,28 @@ public class ColossusBuilder {
     private final LinkedHashMap<String, Object> configEntries = CORE_CONFIG_ENTRIES;
     private final List<Inhibitor> inhibitors = new ArrayList<>();
     private final List<Finalizer> finalizers = new ArrayList<>();
-    private final HashMap<String, Provider<?, ?>> providers = new HashMap<>();
 
     private boolean disableHelpCommand = false;
-    private boolean disableCommandToggleCommands = false;
     private long buttonListenerExpirationTimeAmount = 2;
     private TimeUnit buttonListenerExpirationTimeUnit = TimeUnit.MINUTES;
-    private DatabaseDriver databaseDriver = null;
     private PresetType defaultPresetType = DefaultPresetType.DEFAULT;
     private PresetType errorPresetType = DefaultPresetType.ERROR;
     private PresetType successPresetType = DefaultPresetType.SUCCESS;
     private LocalizationFunction localizationFunction = s -> Map.of();
+
+    /**
+     * Helper class to build a new instance of {@link Colossus} using a JSON config.<br>
+     * You can use an alternate config system with the {@link #ColossusBuilder(ConfigSupplier)} constructor.
+     *
+     * <p>The config.json file will be automatically generated in the root directory of your project. It contains fields like your bot token.
+     *
+     * <p><strong>WARNING:</strong> It is recommended to {@code .gitignore} your config.json
+     * if your code is public to prevent your bot token getting in hands of the wrong people.
+     * @see Colossus
+     */
+    public ColossusBuilder() {
+        this(".");
+    }
 
     /**
      * Helper class to build a new instance of {@link Colossus} using a JSON config.<br>
@@ -200,7 +207,7 @@ public class ColossusBuilder {
 
     private static JsonPrimitive toPrimitive(Object value) {
         if (value == null) return null;
-        return (JsonPrimitive) JsonProvider.serializeElement(value);
+        return (JsonPrimitive) new GsonBuilder().create().toJsonTree(value);
     }
 
     /**
@@ -211,10 +218,9 @@ public class ColossusBuilder {
      */
     public Colossus build() {
         // register default commands
-        if (!disableHelpCommand || !disableCommandToggleCommands) {
+        if (!disableHelpCommand) {
             List<DefaultCommand> defaultCommands = new ArrayList<>();
             if (!disableHelpCommand) defaultCommands.add(new DefaultHelpCommand());
-            if (!disableCommandToggleCommands) defaultCommands.addAll(List.of(new DefaultDisableCommand(), new DefaultEnableCommand()));
             registerCategories(new Category("Default", "These are the default commands provided by Colossus. " +
                 "You can optionally disable them in your *ColossusBuilder*. If you want to give them a new category, " +
                 "run ```java\nCommandHandler.getCommand(\"COMMAND_NAME\").setCategory(YOUR_CATEGORY);``` " +
@@ -226,32 +232,75 @@ public class ColossusBuilder {
         inhibitors.addAll(0, List.of(CORE_INHIBITORS));
         finalizers.addAll(0, List.of(CORE_FINALIZERS));
 
-        // register core providers
-        if (databaseDriver instanceof JsonDatabaseDriver) {
-            registerCoreProviders(new JsonGlobalProvider(), new JsonGuildsProvider(), new JsonMembersProvider(), new JsonUsersProvider());
-        } else if (databaseDriver instanceof MongoDatabaseDriver) {
-            registerCoreProviders(new MongoGlobalProvider(), new MongoGuildsProvider(), new MongoMembersProvider(), new MongoUsersProvider());
-        } else if (databaseDriver instanceof SQLDatabaseDriver) {
-            registerCoreProviders(new SQLGlobalProvider(), new SQLGlobalProvider.DisabledCommandsProvider(),
-                new SQLGuildsProvider(), new SQLMembersProvider(), new SQLUsersProvider(), new SQLUsersProvider.CooldownsProvider());
-        }
-
         if (configDirectory != null) {
             config.addValues(configEntries);
             config.read();
         }
 
         return new Colossus(jdaBuilder, config, categories, commands, contextCommands, localFiles,
-            buttonListenerExpirationTimeAmount, buttonListenerExpirationTimeUnit, databaseDriver, providers,
+            buttonListenerExpirationTimeAmount, buttonListenerExpirationTimeUnit,
             defaultPresetType, errorPresetType, successPresetType, localizationFunction, inhibitors, finalizers);
     }
 
-    private void registerCoreProviders(Provider<?, ?>... providers) {
-        for (Provider<?, ?> provider : providers) {
-            if (!this.providers.containsKey(provider.getStockName())) {
-                registerProviders(provider);
-            }
+    /**
+     * Scans the provided package for commands and entities, registering them automatically.
+     * <p>For example, if you would provide a base package like {@code "dev.ryanland.mybot"},
+     * you will no longer need to register any command or entity manually.
+     * @return The builder
+     */
+    public ColossusBuilder scanPackage(String _package) {
+        // Register entities
+        try (ScanResult scan = new ClassGraph()
+            .enableClassInfo()
+            .acceptPackages(_package)
+            .scan()) {
+            scan.getSubclasses(ColossusEntity.class).forEach(info -> {
+                HibernateManager.registerEntity((Class<ColossusEntity>) info.loadClass());
+            });
         }
+        // Register commands TODO
+
+
+
+        return this;
+    }
+
+    /**
+     * Initializes Hibernate (database) with the given properties. See the Hibernate documentation for more info.
+     * @param properties The properties to initialize Hibernate with
+     *                   <p>Recommended:
+     *                   <li>{@code hibernate.hikari.jdbcUrl} (<strong>Required</strong>)
+     *                   <li>{@code hibernate.hikari.dataSource.username}
+     *                   <li>{@code hibernate.hikari.dataSource.password}
+     *                   <li>{@code hibernate.dataSource.driverClassName}
+     *                   <li>{@code hibernate.dialect}
+     *                   <li>{@code hibernate.hbm2ddl.auto}
+     * @return The builder
+     * @see HibernateManager
+     */
+    public ColossusBuilder initHibernate(Map<String, String> properties) {
+        HibernateManager.init(properties);
+        return this;
+    }
+
+    /**
+     * Enables the option for database cooldowns in commands.
+     *
+     * <p>To use database cooldowns in a command, add the following code to your command:
+     * <pre>
+     * {@code @Override
+     * public CooldownManager getCooldownManager() {
+     *     return DatabaseCooldownManager.getInstance();
+     * }}
+     * </pre>
+     *
+     * <p>Note: This requires a database. See {@link #initHibernate(Map)}. Hibernate must be initialized <i>after</i> enabling this.
+     * @return The builder
+     */
+    public ColossusBuilder enableDatabaseCooldowns() {
+        if (HibernateManager.isInitialized()) throw new IllegalStateException("Hibernate has already been initialized. Enable database cooldowns before initializing Hibernate.");
+        HibernateManager.registerEntity(CooldownTable.class);
+        return this;
     }
 
     /**
@@ -299,20 +348,6 @@ public class ColossusBuilder {
      */
     public ColossusBuilder disableHelpCommand() {
         disableHelpCommand = true;
-        return this;
-    }
-
-    /**
-     * Disables the default disable and enable commands, optionally allowing you to create your own.<br>
-     * These commands are enabled by default.
-     * <p>Note: A {@link SelfUser} (global) type must be present in the defined {@link DatabaseDriver}.
-     * @return The builder
-     * @see DefaultDisableCommand
-     * @see DefaultEnableCommand
-     * @see DisabledCommandHandler
-     */
-    public ColossusBuilder disableCommandToggleCommands() {
-        disableCommandToggleCommands = true;
         return this;
     }
 
@@ -378,31 +413,6 @@ public class ColossusBuilder {
     public ColossusBuilder setDefaultComponentListenerExpirationTime(long timeAmount, TimeUnit timeUnit) {
         buttonListenerExpirationTimeAmount = timeAmount;
         buttonListenerExpirationTimeUnit = timeUnit;
-        return this;
-    }
-
-    /**
-     * Sets the {@link DatabaseDriver} used for this bot.<br>
-     * This will affect the way database operations are made.
-     * @param driver The driver to set to
-     * @return The builder
-     * @see DatabaseDriver
-     */
-    public ColossusBuilder setDatabaseDriver(DatabaseDriver driver) {
-        databaseDriver = driver;
-        return this;
-    }
-
-    /**
-     * Register {@link Provider Providers}
-     * @param providers The providers to register
-     * @return The builder
-     * @see Provider
-     */
-    public ColossusBuilder registerProviders(Provider<?, ?>... providers) {
-        for (Provider<?, ?> provider : providers) {
-            this.providers.put(provider.getStockName(), provider);
-        }
         return this;
     }
 

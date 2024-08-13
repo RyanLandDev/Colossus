@@ -12,9 +12,9 @@ import net.dv8tion.jda.api.requests.restaction.WebhookMessageEditAction;
 import net.dv8tion.jda.api.requests.restaction.interactions.MessageEditCallbackAction;
 import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
 import net.ryanland.colossus.command.executor.functional_interface.CommandConsumer;
-import net.ryanland.colossus.sys.entities.ColossusGuild;
-import net.ryanland.colossus.sys.entities.ColossusMember;
-import net.ryanland.colossus.sys.entities.ColossusUser;
+import net.ryanland.colossus.sys.snowflake.ColossusGuild;
+import net.ryanland.colossus.sys.snowflake.ColossusMember;
+import net.ryanland.colossus.sys.snowflake.ColossusUser;
 import net.ryanland.colossus.sys.presetbuilder.PresetBuilder;
 import net.ryanland.colossus.sys.util.ExecutorUtil;
 

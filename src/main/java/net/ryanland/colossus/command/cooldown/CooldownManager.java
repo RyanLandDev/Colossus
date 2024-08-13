@@ -1,6 +1,6 @@
 package net.ryanland.colossus.command.cooldown;
 
-import net.ryanland.colossus.sys.entities.ColossusUser;
+import net.ryanland.colossus.sys.snowflake.ColossusUser;
 
 import java.util.List;
 

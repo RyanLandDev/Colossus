@@ -17,5 +17,5 @@ public @interface CommandBuilder {
 
     boolean guildOnly() default true;
 
-    boolean canBeDisabled() default true;
+    boolean disabled() default false;
 }

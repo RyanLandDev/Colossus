@@ -16,9 +16,9 @@ import net.ryanland.colossus.command.Command;
 import net.ryanland.colossus.command.arguments.ParsedArgumentMap;
 import net.ryanland.colossus.command.regular.SubCommandHolder;
 import net.ryanland.colossus.events.repliable.InteractionRepliableEvent;
-import net.ryanland.colossus.sys.entities.ColossusGuild;
-import net.ryanland.colossus.sys.entities.ColossusMember;
-import net.ryanland.colossus.sys.entities.ColossusUser;
+import net.ryanland.colossus.sys.snowflake.ColossusGuild;
+import net.ryanland.colossus.sys.snowflake.ColossusMember;
+import net.ryanland.colossus.sys.snowflake.ColossusUser;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.OffsetDateTime;
