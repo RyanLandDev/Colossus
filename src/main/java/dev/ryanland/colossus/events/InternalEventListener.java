@@ -1,15 +1,5 @@
 package dev.ryanland.colossus.events;
 
-import dev.ryanland.colossus.sys.presetbuilder.PresetBuilder;
-import net.dv8tion.jda.api.entities.ISnowflake;
-import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
-import net.dv8tion.jda.api.events.interaction.command.*;
-import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
-import net.dv8tion.jda.api.events.interaction.component.EntitySelectInteractionEvent;
-import net.dv8tion.jda.api.events.interaction.component.GenericSelectMenuInteractionEvent;
-import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import dev.ryanland.colossus.Colossus;
 import dev.ryanland.colossus.command.CommandException;
 import dev.ryanland.colossus.command.executor.CommandHandler;
@@ -20,6 +10,16 @@ import dev.ryanland.colossus.events.repliable.ButtonClickEvent;
 import dev.ryanland.colossus.events.repliable.ModalSubmitEvent;
 import dev.ryanland.colossus.events.repliable.SelectMenuEvent;
 import dev.ryanland.colossus.sys.config.Config;
+import dev.ryanland.colossus.sys.presetbuilder.PresetBuilder;
+import net.dv8tion.jda.api.entities.ISnowflake;
+import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.command.*;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.EntitySelectInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.GenericSelectMenuInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
 public class InternalEventListener extends ListenerAdapter {

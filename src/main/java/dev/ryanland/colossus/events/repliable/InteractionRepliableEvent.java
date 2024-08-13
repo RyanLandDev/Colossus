@@ -1,6 +1,11 @@
 package dev.ryanland.colossus.events.repliable;
 
+import dev.ryanland.colossus.Colossus;
+import dev.ryanland.colossus.command.executor.functional_interface.CommandConsumer;
 import dev.ryanland.colossus.sys.presetbuilder.PresetBuilder;
+import dev.ryanland.colossus.sys.snowflake.ColossusGuild;
+import dev.ryanland.colossus.sys.snowflake.ColossusMember;
+import dev.ryanland.colossus.sys.snowflake.ColossusUser;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.interactions.callbacks.IModalCallback;
@@ -8,11 +13,6 @@ import net.dv8tion.jda.api.interactions.callbacks.IReplyCallback;
 import net.dv8tion.jda.api.interactions.modals.Modal;
 import net.dv8tion.jda.api.requests.restaction.WebhookMessageCreateAction;
 import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
-import dev.ryanland.colossus.Colossus;
-import dev.ryanland.colossus.command.executor.functional_interface.CommandConsumer;
-import dev.ryanland.colossus.sys.snowflake.ColossusGuild;
-import dev.ryanland.colossus.sys.snowflake.ColossusMember;
-import dev.ryanland.colossus.sys.snowflake.ColossusUser;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;

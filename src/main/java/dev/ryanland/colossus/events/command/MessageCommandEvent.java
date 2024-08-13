@@ -1,13 +1,17 @@
 package dev.ryanland.colossus.events.command;
 
+import dev.ryanland.colossus.Colossus;
 import dev.ryanland.colossus.command.Command;
 import dev.ryanland.colossus.command.arguments.ParsedArgumentMap;
 import dev.ryanland.colossus.command.executor.functional_interface.CommandConsumer;
 import dev.ryanland.colossus.command.regular.SubCommandHolder;
 import dev.ryanland.colossus.events.repliable.ModalSubmitEvent;
+import dev.ryanland.colossus.events.repliable.RepliableEvent;
 import dev.ryanland.colossus.sys.config.Config;
 import dev.ryanland.colossus.sys.presetbuilder.PresetBuilder;
 import dev.ryanland.colossus.sys.snowflake.ColossusGuild;
+import dev.ryanland.colossus.sys.snowflake.ColossusMember;
+import dev.ryanland.colossus.sys.snowflake.ColossusUser;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -15,10 +19,6 @@ import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
 import net.dv8tion.jda.api.interactions.modals.Modal;
-import dev.ryanland.colossus.Colossus;
-import dev.ryanland.colossus.events.repliable.RepliableEvent;
-import dev.ryanland.colossus.sys.snowflake.ColossusMember;
-import dev.ryanland.colossus.sys.snowflake.ColossusUser;
 
 public final class MessageCommandEvent extends CommandEvent {
 

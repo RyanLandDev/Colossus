@@ -1,12 +1,12 @@
 package dev.ryanland.colossus.sys.snowflake;
 
+import dev.ryanland.colossus.sys.database.HibernateManager;
 import dev.ryanland.colossus.sys.database.entities.UserEntity;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.channel.concrete.PrivateChannel;
 import net.dv8tion.jda.api.requests.restaction.CacheRestAction;
-import dev.ryanland.colossus.sys.database.HibernateManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

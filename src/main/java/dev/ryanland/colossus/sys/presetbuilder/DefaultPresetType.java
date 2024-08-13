@@ -1,8 +1,8 @@
 package dev.ryanland.colossus.sys.presetbuilder;
 
+import dev.ryanland.colossus.Colossus;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.Role;
-import dev.ryanland.colossus.Colossus;
 import org.jetbrains.annotations.Nullable;
 
 import java.time.OffsetDateTime;

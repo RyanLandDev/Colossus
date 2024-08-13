@@ -1,5 +1,6 @@
 package dev.ryanland.colossus.sys.snowflake;
 
+import dev.ryanland.colossus.sys.database.HibernateManager;
 import dev.ryanland.colossus.sys.database.entities.MemberEntity;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -9,7 +10,6 @@ import net.dv8tion.jda.api.entities.channel.attribute.IPermissionContainer;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 import net.dv8tion.jda.api.entities.channel.unions.DefaultGuildChannelUnion;
 import net.dv8tion.jda.api.entities.emoji.RichCustomEmoji;
-import dev.ryanland.colossus.sys.database.HibernateManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

@@ -1,8 +1,8 @@
 package dev.ryanland.colossus.command.regular;
 
-import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 import dev.ryanland.colossus.ColossusBuilder;
 import dev.ryanland.colossus.command.Command;
+import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 
 /**
  * Interface for subcommands.<br>

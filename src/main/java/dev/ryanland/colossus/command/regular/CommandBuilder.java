@@ -13,6 +13,8 @@ public @interface CommandBuilder {
 
     String description();
 
+    String category() default "Uncategorized";
+
     float cooldown() default 2;
 
     boolean guildOnly() default true;

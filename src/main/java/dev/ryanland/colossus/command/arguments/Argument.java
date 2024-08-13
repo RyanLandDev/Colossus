@@ -2,12 +2,12 @@ package dev.ryanland.colossus.command.arguments;
 
 import dev.ryanland.colossus.command.arguments.parsing.exceptions.ArgumentException;
 import dev.ryanland.colossus.command.arguments.parsing.exceptions.InterruptedArgumentException;
-import net.dv8tion.jda.api.interactions.commands.Command;
-import net.dv8tion.jda.api.interactions.commands.OptionMapping;
-import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import dev.ryanland.colossus.events.command.CommandEvent;
 import dev.ryanland.colossus.events.command.MessageCommandEvent;
 import dev.ryanland.colossus.events.command.SlashCommandEvent;
+import net.dv8tion.jda.api.interactions.commands.Command;
+import net.dv8tion.jda.api.interactions.commands.OptionMapping;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;

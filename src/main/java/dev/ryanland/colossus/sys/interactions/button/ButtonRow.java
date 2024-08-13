@@ -1,9 +1,9 @@
 package dev.ryanland.colossus.sys.interactions.button;
 
+import dev.ryanland.colossus.events.repliable.ButtonClickEvent;
 import dev.ryanland.colossus.sys.interactions.ComponentRow;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
-import dev.ryanland.colossus.events.repliable.ButtonClickEvent;
 
 import java.util.ArrayList;
 import java.util.Collections;

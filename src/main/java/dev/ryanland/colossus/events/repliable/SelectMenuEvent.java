@@ -1,13 +1,13 @@
 package dev.ryanland.colossus.events.repliable;
 
+import dev.ryanland.colossus.Colossus;
+import dev.ryanland.colossus.ColossusBuilder;
 import dev.ryanland.colossus.command.CommandException;
 import dev.ryanland.colossus.command.executor.functional_interface.CommandConsumer;
 import dev.ryanland.colossus.sys.interactions.select.BaseSelectMenu;
+import dev.ryanland.colossus.sys.util.ExecutorUtil;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.component.GenericSelectMenuInteractionEvent;
-import dev.ryanland.colossus.Colossus;
-import dev.ryanland.colossus.ColossusBuilder;
-import dev.ryanland.colossus.sys.util.ExecutorUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;

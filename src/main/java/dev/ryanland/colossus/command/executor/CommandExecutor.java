@@ -1,5 +1,6 @@
 package dev.ryanland.colossus.command.executor;
 
+import dev.ryanland.colossus.Colossus;
 import dev.ryanland.colossus.command.Command;
 import dev.ryanland.colossus.command.CommandException;
 import dev.ryanland.colossus.command.ContextCommand;
@@ -20,7 +21,6 @@ import dev.ryanland.colossus.events.command.MessageCommandEvent;
 import dev.ryanland.colossus.events.command.SlashCommandEvent;
 import dev.ryanland.colossus.sys.presetbuilder.PresetBuilder;
 import net.dv8tion.jda.api.entities.ISnowflake;
-import dev.ryanland.colossus.Colossus;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Deque;

@@ -1,15 +1,15 @@
 package dev.ryanland.colossus.command.arguments.types.snowflake;
 
+import dev.ryanland.colossus.Colossus;
+import dev.ryanland.colossus.command.arguments.ArgumentOptionData;
 import dev.ryanland.colossus.command.arguments.parsing.exceptions.ArgumentException;
 import dev.ryanland.colossus.command.arguments.parsing.exceptions.MalformedArgumentException;
+import dev.ryanland.colossus.events.command.MessageCommandEvent;
+import dev.ryanland.colossus.events.command.SlashCommandEvent;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
-import dev.ryanland.colossus.Colossus;
-import dev.ryanland.colossus.command.arguments.ArgumentOptionData;
-import dev.ryanland.colossus.events.command.MessageCommandEvent;
-import dev.ryanland.colossus.events.command.SlashCommandEvent;
 
 import java.util.Arrays;
 import java.util.List;

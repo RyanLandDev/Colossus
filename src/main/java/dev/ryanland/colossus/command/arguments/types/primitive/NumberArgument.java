@@ -2,10 +2,10 @@ package dev.ryanland.colossus.command.arguments.types.primitive;
 
 import dev.ryanland.colossus.command.arguments.parsing.exceptions.ArgumentException;
 import dev.ryanland.colossus.command.arguments.parsing.exceptions.MalformedArgumentException;
-import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import dev.ryanland.colossus.command.arguments.types.SingleArgument;
 import dev.ryanland.colossus.events.command.MessageCommandEvent;
 import dev.ryanland.colossus.events.command.SlashCommandEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
 public abstract class NumberArgument<T> extends SingleArgument<T> {
 

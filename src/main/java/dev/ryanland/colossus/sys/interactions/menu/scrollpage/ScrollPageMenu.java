@@ -1,6 +1,8 @@
 package dev.ryanland.colossus.sys.interactions.menu.scrollpage;
 
+import dev.ryanland.colossus.Colossus;
 import dev.ryanland.colossus.command.CommandException;
+import dev.ryanland.colossus.events.repliable.RepliableEvent;
 import dev.ryanland.colossus.sys.interactions.ComponentRow;
 import dev.ryanland.colossus.sys.interactions.button.BaseButton;
 import dev.ryanland.colossus.sys.interactions.button.ButtonRow;
@@ -11,8 +13,6 @@ import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.interactions.components.text.TextInput;
 import net.dv8tion.jda.api.interactions.components.text.TextInputStyle;
 import net.dv8tion.jda.api.interactions.modals.Modal;
-import dev.ryanland.colossus.Colossus;
-import dev.ryanland.colossus.events.repliable.RepliableEvent;
 
 import java.util.ArrayList;
 import java.util.List;

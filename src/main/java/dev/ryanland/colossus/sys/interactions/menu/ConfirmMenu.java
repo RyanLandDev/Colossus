@@ -2,11 +2,11 @@ package dev.ryanland.colossus.sys.interactions.menu;
 
 import dev.ryanland.colossus.command.executor.functional_interface.CommandConsumer;
 import dev.ryanland.colossus.events.repliable.ButtonClickEvent;
+import dev.ryanland.colossus.events.repliable.RepliableEvent;
 import dev.ryanland.colossus.sys.interactions.button.BaseButton;
 import dev.ryanland.colossus.sys.presetbuilder.PresetBuilder;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
-import dev.ryanland.colossus.events.repliable.RepliableEvent;
 
 /**
  * Creates an {@link InteractionMenu} that presents the user with an option to either go through with an action or cancel it.

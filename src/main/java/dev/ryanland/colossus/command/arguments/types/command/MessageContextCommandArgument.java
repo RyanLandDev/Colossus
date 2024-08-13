@@ -1,13 +1,13 @@
 package dev.ryanland.colossus.command.arguments.types.command;
 
+import dev.ryanland.colossus.command.ContextCommand;
+import dev.ryanland.colossus.command.arguments.ArgumentOptionData;
 import dev.ryanland.colossus.command.arguments.parsing.exceptions.ArgumentException;
 import dev.ryanland.colossus.command.arguments.parsing.exceptions.MalformedArgumentException;
 import dev.ryanland.colossus.command.arguments.types.primitive.ArgumentStringResolver;
 import dev.ryanland.colossus.command.executor.CommandHandler;
-import net.dv8tion.jda.api.entities.Message;
-import dev.ryanland.colossus.command.ContextCommand;
-import dev.ryanland.colossus.command.arguments.ArgumentOptionData;
 import dev.ryanland.colossus.events.command.CommandEvent;
+import net.dv8tion.jda.api.entities.Message;
 
 public class MessageContextCommandArgument extends ArgumentStringResolver<ContextCommand<Message>> {
 

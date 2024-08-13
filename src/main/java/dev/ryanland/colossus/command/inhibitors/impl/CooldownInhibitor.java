@@ -1,10 +1,10 @@
 package dev.ryanland.colossus.command.inhibitors.impl;
 
-import dev.ryanland.colossus.command.inhibitors.Inhibitor;
-import dev.ryanland.colossus.sys.presetbuilder.PresetBuilder;
 import dev.ryanland.colossus.Colossus;
 import dev.ryanland.colossus.command.cooldown.CooldownHandler;
+import dev.ryanland.colossus.command.inhibitors.Inhibitor;
 import dev.ryanland.colossus.events.command.BasicCommandEvent;
+import dev.ryanland.colossus.sys.presetbuilder.PresetBuilder;
 import dev.ryanland.colossus.sys.util.DateUtil;
 
 import java.util.Date;

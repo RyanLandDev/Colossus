@@ -1,5 +1,9 @@
 package dev.ryanland.colossus.command.impl;
 
+import dev.ryanland.colossus.Colossus;
+import dev.ryanland.colossus.command.Category;
+import dev.ryanland.colossus.command.Command;
+import dev.ryanland.colossus.command.CommandException;
 import dev.ryanland.colossus.command.arguments.ArgumentSet;
 import dev.ryanland.colossus.command.arguments.types.command.CommandArgument;
 import dev.ryanland.colossus.command.executor.CommandHandler;
@@ -9,20 +13,17 @@ import dev.ryanland.colossus.command.regular.CommandBuilder;
 import dev.ryanland.colossus.command.regular.SubCommand;
 import dev.ryanland.colossus.command.regular.SubCommandHolder;
 import dev.ryanland.colossus.events.command.BasicCommandEvent;
-import dev.ryanland.colossus.sys.presetbuilder.PresetBuilder;
-import dev.ryanland.colossus.Colossus;
-import dev.ryanland.colossus.command.Category;
-import dev.ryanland.colossus.command.Command;
-import dev.ryanland.colossus.command.CommandException;
 import dev.ryanland.colossus.events.command.CommandEvent;
 import dev.ryanland.colossus.sys.interactions.menu.tab.TabMenuBuilder;
 import dev.ryanland.colossus.sys.interactions.menu.tab.TabMenuPage;
+import dev.ryanland.colossus.sys.presetbuilder.PresetBuilder;
 
 import java.util.List;
 
 @CommandBuilder(
     name = "help",
     description = "Get a list of all commands or information about a specific one.",
+    category = "Default",
     guildOnly = false
 )
 public final class DefaultHelpCommand extends DefaultCommand implements CombinedCommand {

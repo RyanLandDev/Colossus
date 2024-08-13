@@ -1,12 +1,12 @@
 package dev.ryanland.colossus.sys.interactions.menu.tab;
 
+import dev.ryanland.colossus.events.repliable.RepliableEvent;
 import dev.ryanland.colossus.sys.interactions.button.BaseButton;
+import dev.ryanland.colossus.sys.interactions.menu.InteractionMenu;
 import dev.ryanland.colossus.sys.presetbuilder.PresetBuilder;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle;
-import dev.ryanland.colossus.events.repliable.RepliableEvent;
-import dev.ryanland.colossus.sys.interactions.menu.InteractionMenu;
 
 import java.util.ArrayList;
 import java.util.List;

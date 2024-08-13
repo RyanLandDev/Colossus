@@ -1,11 +1,11 @@
 package dev.ryanland.colossus.sys.interactions.button;
 
-import dev.ryanland.colossus.events.repliable.ButtonClickEvent;
-import dev.ryanland.colossus.sys.presetbuilder.PresetBuilder;
-import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import dev.ryanland.colossus.Colossus;
 import dev.ryanland.colossus.command.executor.functional_interface.CommandConsumer;
 import dev.ryanland.colossus.command.executor.functional_interface.CommandPredicate;
+import dev.ryanland.colossus.events.repliable.ButtonClickEvent;
+import dev.ryanland.colossus.sys.presetbuilder.PresetBuilder;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
 import java.util.List;
 

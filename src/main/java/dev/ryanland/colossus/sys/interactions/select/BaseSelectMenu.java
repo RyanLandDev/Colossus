@@ -1,14 +1,14 @@
 package dev.ryanland.colossus.sys.interactions.select;
 
+import dev.ryanland.colossus.Colossus;
 import dev.ryanland.colossus.command.executor.functional_interface.CommandConsumer;
 import dev.ryanland.colossus.command.executor.functional_interface.CommandPredicate;
+import dev.ryanland.colossus.events.repliable.SelectMenuEvent;
 import dev.ryanland.colossus.sys.interactions.ComponentRow;
 import dev.ryanland.colossus.sys.presetbuilder.PresetBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.selections.SelectMenu;
-import dev.ryanland.colossus.Colossus;
-import dev.ryanland.colossus.events.repliable.SelectMenuEvent;
 
 import java.util.Collections;
 import java.util.List;

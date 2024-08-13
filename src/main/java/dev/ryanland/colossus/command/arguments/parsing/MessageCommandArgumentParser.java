@@ -1,17 +1,17 @@
 package dev.ryanland.colossus.command.arguments.parsing;
 
-import dev.ryanland.colossus.command.arguments.parsing.exceptions.ArgumentException;
-import dev.ryanland.colossus.command.arguments.parsing.exceptions.MalformedArgumentException;
-import dev.ryanland.colossus.command.arguments.parsing.exceptions.MissingArgumentException;
-import dev.ryanland.colossus.sys.presetbuilder.PresetBuilder;
 import dev.ryanland.colossus.Colossus;
 import dev.ryanland.colossus.command.Command;
 import dev.ryanland.colossus.command.arguments.Argument;
 import dev.ryanland.colossus.command.arguments.ArgumentSet;
 import dev.ryanland.colossus.command.arguments.ParsedArgumentMap;
+import dev.ryanland.colossus.command.arguments.parsing.exceptions.ArgumentException;
+import dev.ryanland.colossus.command.arguments.parsing.exceptions.MalformedArgumentException;
+import dev.ryanland.colossus.command.arguments.parsing.exceptions.MissingArgumentException;
 import dev.ryanland.colossus.command.regular.SubCommand;
 import dev.ryanland.colossus.events.command.CommandEvent;
 import dev.ryanland.colossus.events.command.MessageCommandEvent;
+import dev.ryanland.colossus.sys.presetbuilder.PresetBuilder;
 
 import java.util.ArrayDeque;
 import java.util.Deque;

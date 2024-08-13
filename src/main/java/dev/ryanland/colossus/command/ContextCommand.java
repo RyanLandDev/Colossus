@@ -6,10 +6,10 @@ import dev.ryanland.colossus.command.cooldown.CooldownManager;
 import dev.ryanland.colossus.command.cooldown.MemoryCooldownManager;
 import dev.ryanland.colossus.command.executor.CommandHandler;
 import dev.ryanland.colossus.command.permission.PermissionHolder;
+import dev.ryanland.colossus.events.command.ContextCommandEvent;
 import net.dv8tion.jda.api.entities.ISnowflake;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
-import dev.ryanland.colossus.events.command.ContextCommandEvent;
 
 import java.lang.reflect.ParameterizedType;
 

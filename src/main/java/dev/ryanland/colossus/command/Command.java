@@ -1,5 +1,6 @@
 package dev.ryanland.colossus.command;
 
+import dev.ryanland.colossus.Colossus;
 import dev.ryanland.colossus.command.arguments.Argument;
 import dev.ryanland.colossus.command.arguments.ArgumentSet;
 import dev.ryanland.colossus.command.cooldown.CooldownManager;
@@ -14,20 +15,19 @@ import java.util.List;
 
 public sealed abstract class Command extends BasicCommand permits BaseCommand {
 
-    private Category category;
     private List<SubCommand> subcommands;
 
     private CommandBuilder getInfo() {
         return getClass().getAnnotation(CommandBuilder.class);
     }
 
-    public final Command setCategory(Category category) {
-        this.category = category;
-        return this;
-    }
-
     public final Category getCategory() {
-        return category;
+        try {
+            return Colossus.getCategories().stream()
+                .filter(category -> category.getName().equalsIgnoreCase(getInfo().category())).toList().get(0);
+        } catch (IndexOutOfBoundsException e) {
+            throw new IllegalStateException("The category " + getInfo().category() + " does not exist.");
+        }
     }
 
     public final List<SubCommand> getSubCommands() {

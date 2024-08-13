@@ -1,10 +1,10 @@
 package dev.ryanland.colossus.command.cooldown;
 
-import lombok.Getter;
 import dev.ryanland.colossus.ColossusBuilder;
 import dev.ryanland.colossus.command.CommandType;
 import dev.ryanland.colossus.sys.database.HibernateManager;
 import dev.ryanland.colossus.sys.snowflake.ColossusUser;
+import lombok.Getter;
 import org.hibernate.Session;
 
 import java.util.ArrayList;

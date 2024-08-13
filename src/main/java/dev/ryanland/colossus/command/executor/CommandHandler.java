@@ -1,16 +1,5 @@
 package dev.ryanland.colossus.command.executor;
 
-import dev.ryanland.colossus.sys.presetbuilder.PresetBuilder;
-import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.ISnowflake;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
-import net.dv8tion.jda.api.interactions.commands.build.CommandData;
-import net.dv8tion.jda.api.interactions.commands.build.Commands;
-import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
-import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
 import dev.ryanland.colossus.Colossus;
 import dev.ryanland.colossus.command.BasicCommand;
 import dev.ryanland.colossus.command.Command;
@@ -28,6 +17,17 @@ import dev.ryanland.colossus.events.command.CommandEvent;
 import dev.ryanland.colossus.events.command.ContextCommandEvent;
 import dev.ryanland.colossus.events.repliable.RepliableEvent;
 import dev.ryanland.colossus.sys.config.Config;
+import dev.ryanland.colossus.sys.presetbuilder.PresetBuilder;
+import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.ISnowflake;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+import net.dv8tion.jda.api.interactions.commands.build.Commands;
+import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
+import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -1,8 +1,8 @@
 package dev.ryanland.colossus.command.permission;
 
-import net.dv8tion.jda.api.Permission;
 import dev.ryanland.colossus.command.permission.impl.JDAPermissionRequirement;
 import dev.ryanland.colossus.command.permission.impl.PermissionHolderRequirement;
+import net.dv8tion.jda.api.Permission;
 
 import java.util.ArrayList;
 import java.util.List;

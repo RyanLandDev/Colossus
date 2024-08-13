@@ -2,9 +2,9 @@ package dev.ryanland.colossus.command.arguments.types.snowflake;
 
 import dev.ryanland.colossus.command.arguments.parsing.exceptions.ArgumentException;
 import dev.ryanland.colossus.command.arguments.parsing.exceptions.MalformedArgumentException;
-import net.dv8tion.jda.api.entities.ISnowflake;
 import dev.ryanland.colossus.command.arguments.types.SingleArgument;
 import dev.ryanland.colossus.events.command.MessageCommandEvent;
+import net.dv8tion.jda.api.entities.ISnowflake;
 
 public abstract class SnowflakeArgument<T extends ISnowflake> extends SingleArgument<T> {
 

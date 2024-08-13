@@ -1,9 +1,9 @@
 package dev.ryanland.colossus.sys.interactions.menu.selectrow;
 
 import dev.ryanland.colossus.command.executor.functional_interface.CommandFunction;
+import dev.ryanland.colossus.events.repliable.RepliableEvent;
 import dev.ryanland.colossus.sys.presetbuilder.PresetBuilder;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
-import dev.ryanland.colossus.events.repliable.RepliableEvent;
 
 public class SelectRowOption {
 

@@ -1,20 +1,20 @@
 package dev.ryanland.colossus.command.arguments.types.command;
 
+import dev.ryanland.colossus.Colossus;
+import dev.ryanland.colossus.command.ContextCommand;
+import dev.ryanland.colossus.command.arguments.ArgumentOptionData;
 import dev.ryanland.colossus.command.arguments.parsing.exceptions.ArgumentException;
 import dev.ryanland.colossus.command.arguments.parsing.exceptions.MalformedArgumentException;
 import dev.ryanland.colossus.command.arguments.types.primitive.FutureArgumentStringResolver;
 import dev.ryanland.colossus.command.executor.CommandHandler;
+import dev.ryanland.colossus.events.command.CommandEvent;
+import dev.ryanland.colossus.events.command.SlashCommandEvent;
 import dev.ryanland.colossus.sys.interactions.button.BaseButton;
 import dev.ryanland.colossus.sys.presetbuilder.PresetBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
-import dev.ryanland.colossus.Colossus;
-import dev.ryanland.colossus.command.ContextCommand;
-import dev.ryanland.colossus.command.arguments.ArgumentOptionData;
-import dev.ryanland.colossus.events.command.CommandEvent;
-import dev.ryanland.colossus.events.command.SlashCommandEvent;
 
 import java.util.concurrent.CompletableFuture;
 

@@ -1,11 +1,11 @@
 package dev.ryanland.colossus.command.arguments.types;
 
+import dev.ryanland.colossus.command.arguments.ArgumentOptionData;
 import dev.ryanland.colossus.command.arguments.parsing.exceptions.ArgumentException;
 import dev.ryanland.colossus.command.arguments.parsing.exceptions.MalformedArgumentException;
 import dev.ryanland.colossus.command.arguments.types.primitive.ArgumentStringResolver;
-import net.dv8tion.jda.api.interactions.commands.Command;
-import dev.ryanland.colossus.command.arguments.ArgumentOptionData;
 import dev.ryanland.colossus.events.command.CommandEvent;
+import net.dv8tion.jda.api.interactions.commands.Command;
 
 import java.util.EnumSet;
 import java.util.List;

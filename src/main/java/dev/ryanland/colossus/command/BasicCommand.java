@@ -1,5 +1,7 @@
 package dev.ryanland.colossus.command;
 
+import dev.ryanland.colossus.Colossus;
+import dev.ryanland.colossus.ColossusBuilder;
 import dev.ryanland.colossus.command.cooldown.CooldownManager;
 import dev.ryanland.colossus.command.permission.PermissionHolder;
 import net.dv8tion.jda.api.Permission;
@@ -7,8 +9,6 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.localization.LocalizationFunction;
 import net.dv8tion.jda.api.interactions.commands.localization.ResourceBundleLocalizationFunction;
-import dev.ryanland.colossus.Colossus;
-import dev.ryanland.colossus.ColossusBuilder;
 
 public abstract sealed class BasicCommand permits Command, ContextCommand {
 

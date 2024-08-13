@@ -1,13 +1,13 @@
 package dev.ryanland.colossus.command.arguments.types.primitive;
 
-import dev.ryanland.colossus.command.arguments.parsing.exceptions.ArgumentException;
-import dev.ryanland.colossus.command.arguments.parsing.exceptions.MalformedArgumentException;
-import net.dv8tion.jda.api.interactions.commands.OptionMapping;
-import net.dv8tion.jda.api.interactions.commands.OptionType;
 import dev.ryanland.colossus.command.arguments.Argument;
 import dev.ryanland.colossus.command.arguments.ArgumentOptionData;
+import dev.ryanland.colossus.command.arguments.parsing.exceptions.ArgumentException;
+import dev.ryanland.colossus.command.arguments.parsing.exceptions.MalformedArgumentException;
 import dev.ryanland.colossus.events.command.MessageCommandEvent;
 import dev.ryanland.colossus.events.command.SlashCommandEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionMapping;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
 
 import java.util.ArrayList;
 import java.util.Deque;

@@ -1,11 +1,17 @@
 package dev.ryanland.colossus.sys.database.entities;
 
-import jakarta.persistence.*;
-import lombok.*;
 import dev.ryanland.colossus.events.repliable.RepliableEvent;
-import dev.ryanland.colossus.sys.database.entities.MemberEntity.MemberEntityId;
 import dev.ryanland.colossus.sys.database.annotations.DefaultTable;
+import dev.ryanland.colossus.sys.database.entities.MemberEntity.MemberEntityId;
 import dev.ryanland.colossus.sys.snowflake.ColossusMember;
+import jakarta.persistence.Column;
+import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
+import jakarta.persistence.MappedSuperclass;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * <p>You can create a subclass of this class to create a member table, following Hibernate's documentation.

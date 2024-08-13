@@ -1,7 +1,7 @@
 package dev.ryanland.colossus.command.cooldown;
 
-import dev.ryanland.colossus.events.command.BasicCommandEvent;
 import dev.ryanland.colossus.command.BasicCommand;
+import dev.ryanland.colossus.events.command.BasicCommandEvent;
 import dev.ryanland.colossus.sys.snowflake.ColossusUser;
 
 import java.util.Date;

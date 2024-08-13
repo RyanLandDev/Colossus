@@ -1,9 +1,9 @@
 package dev.ryanland.colossus.events;
 
+import dev.ryanland.colossus.Colossus;
 import net.dv8tion.jda.api.events.Event;
 import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.hooks.EventListener;
-import dev.ryanland.colossus.Colossus;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.BiConsumer;

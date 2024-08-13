@@ -1,7 +1,7 @@
 package dev.ryanland.colossus.sys.interactions.menu.tab;
 
-import dev.ryanland.colossus.sys.presetbuilder.PresetBuilder;
 import dev.ryanland.colossus.sys.interactions.menu.InteractionMenuBuilder;
+import dev.ryanland.colossus.sys.presetbuilder.PresetBuilder;
 
 import java.util.ArrayList;
 import java.util.Comparator;

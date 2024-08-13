@@ -5,6 +5,8 @@ import dev.ryanland.colossus.command.arguments.ParsedArgumentMap;
 import dev.ryanland.colossus.command.regular.SubCommandHolder;
 import dev.ryanland.colossus.events.repliable.InteractionRepliableEvent;
 import dev.ryanland.colossus.sys.snowflake.ColossusGuild;
+import dev.ryanland.colossus.sys.snowflake.ColossusMember;
+import dev.ryanland.colossus.sys.snowflake.ColossusUser;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
@@ -17,8 +19,6 @@ import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
-import dev.ryanland.colossus.sys.snowflake.ColossusMember;
-import dev.ryanland.colossus.sys.snowflake.ColossusUser;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.OffsetDateTime;

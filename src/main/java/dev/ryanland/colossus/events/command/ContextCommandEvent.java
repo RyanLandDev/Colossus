@@ -3,6 +3,8 @@ package dev.ryanland.colossus.events.command;
 import dev.ryanland.colossus.command.ContextCommand;
 import dev.ryanland.colossus.events.repliable.InteractionRepliableEvent;
 import dev.ryanland.colossus.sys.snowflake.ColossusGuild;
+import dev.ryanland.colossus.sys.snowflake.ColossusMember;
+import dev.ryanland.colossus.sys.snowflake.ColossusUser;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.ISnowflake;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
@@ -10,8 +12,6 @@ import net.dv8tion.jda.api.events.interaction.command.GenericContextInteractionE
 import net.dv8tion.jda.api.interactions.DiscordLocale;
 import net.dv8tion.jda.api.interactions.Interaction;
 import net.dv8tion.jda.api.interactions.commands.context.ContextInteraction;
-import dev.ryanland.colossus.sys.snowflake.ColossusMember;
-import dev.ryanland.colossus.sys.snowflake.ColossusUser;
 
 public final class ContextCommandEvent<T extends ISnowflake> extends BasicCommandEvent {
 

@@ -1,8 +1,8 @@
 package dev.ryanland.colossus.command.regular;
 
-import net.dv8tion.jda.api.interactions.commands.build.SubcommandGroupData;
 import dev.ryanland.colossus.ColossusBuilder;
 import dev.ryanland.colossus.command.Command;
+import net.dv8tion.jda.api.interactions.commands.build.SubcommandGroupData;
 
 import java.util.ArrayList;
 import java.util.List;

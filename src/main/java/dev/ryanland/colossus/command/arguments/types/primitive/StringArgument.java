@@ -1,10 +1,10 @@
 package dev.ryanland.colossus.command.arguments.types.primitive;
 
+import dev.ryanland.colossus.command.arguments.ArgumentOptionData;
 import dev.ryanland.colossus.command.arguments.parsing.exceptions.ArgumentException;
 import dev.ryanland.colossus.command.arguments.parsing.exceptions.MalformedArgumentException;
-import net.dv8tion.jda.api.interactions.commands.OptionType;
-import dev.ryanland.colossus.command.arguments.ArgumentOptionData;
 import dev.ryanland.colossus.events.command.CommandEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
 
 public class StringArgument extends ArgumentStringResolver<String> {
 

@@ -1,10 +1,10 @@
 package dev.ryanland.colossus.command.context;
 
+import dev.ryanland.colossus.command.CommandType;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.context.ContextInteraction;
-import dev.ryanland.colossus.command.CommandType;
 
 public enum ContextCommandType {
     USER("User", CommandType.CONTEXT_USER, Command.Type.USER, ContextInteraction.ContextTarget.USER, User.class),

@@ -1,10 +1,10 @@
 package dev.ryanland.colossus.command.arguments.types.snowflake;
 
-import dev.ryanland.colossus.command.arguments.parsing.exceptions.ArgumentException;
-import net.dv8tion.jda.api.entities.Guild;
 import dev.ryanland.colossus.Colossus;
+import dev.ryanland.colossus.command.arguments.parsing.exceptions.ArgumentException;
 import dev.ryanland.colossus.events.command.CommandEvent;
 import dev.ryanland.colossus.sys.snowflake.ColossusGuild;
+import net.dv8tion.jda.api.entities.Guild;
 
 public class GuildArgument extends PureSnowflakeArgument<Guild> {
 

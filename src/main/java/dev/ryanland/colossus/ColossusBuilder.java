@@ -1,15 +1,13 @@
 package dev.ryanland.colossus;
 
-import com.google.gson.*;
-import dev.ryanland.colossus.command.Category;
-import dev.ryanland.colossus.command.Command;
-import dev.ryanland.colossus.command.CommandException;
-import dev.ryanland.colossus.command.ContextCommand;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
+import dev.ryanland.colossus.command.*;
 import dev.ryanland.colossus.command.arguments.parsing.exceptions.MalformedArgumentException;
 import dev.ryanland.colossus.command.cooldown.CooldownTable;
 import dev.ryanland.colossus.command.finalizers.CooldownFinalizer;
 import dev.ryanland.colossus.command.finalizers.Finalizer;
-import dev.ryanland.colossus.command.impl.DefaultCommand;
 import dev.ryanland.colossus.command.impl.DefaultHelpCommand;
 import dev.ryanland.colossus.command.inhibitors.Inhibitor;
 import dev.ryanland.colossus.command.inhibitors.impl.CooldownInhibitor;
@@ -20,6 +18,7 @@ import dev.ryanland.colossus.events.InternalEventListener;
 import dev.ryanland.colossus.events.command.CommandEvent;
 import dev.ryanland.colossus.events.repliable.ButtonClickEvent;
 import dev.ryanland.colossus.sys.config.ConfigSupplier;
+import dev.ryanland.colossus.sys.config.JsonConfig;
 import dev.ryanland.colossus.sys.database.HibernateManager;
 import dev.ryanland.colossus.sys.database.entities.ColossusEntity;
 import dev.ryanland.colossus.sys.file.LocalFile;
@@ -27,7 +26,9 @@ import dev.ryanland.colossus.sys.presetbuilder.DefaultPresetType;
 import dev.ryanland.colossus.sys.presetbuilder.PresetBuilder;
 import dev.ryanland.colossus.sys.presetbuilder.PresetType;
 import io.github.classgraph.ClassGraph;
+import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ScanResult;
+import lombok.SneakyThrows;
 import net.dv8tion.jda.api.GatewayEncoding;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -38,7 +39,6 @@ import net.dv8tion.jda.api.interactions.commands.localization.LocalizationFuncti
 import net.dv8tion.jda.api.interactions.commands.localization.ResourceBundleLocalizationFunction;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
-import dev.ryanland.colossus.sys.config.JsonConfig;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -217,15 +217,15 @@ public class ColossusBuilder {
      * @see Colossus
      */
     public Colossus build() {
-        // register default commands
-        if (!disableHelpCommand) {
-            List<DefaultCommand> defaultCommands = new ArrayList<>();
-            if (!disableHelpCommand) defaultCommands.add(new DefaultHelpCommand());
+        // register default commands + categories
+        if (!disableHelpCommand || false) {
+            if (!disableHelpCommand) commands.add(new DefaultHelpCommand());
             registerCategories(new Category("Default", "These are the default commands provided by Colossus. " +
                 "You can optionally disable them in your *ColossusBuilder*. If you want to give them a new category, " +
                 "run ```java\nCommandHandler.getCommand(\"COMMAND_NAME\").setCategory(YOUR_CATEGORY);``` " +
                 "**after** initializing your bot.",
-                "⚠", defaultCommands.toArray(Command[]::new)));
+                "⚠"),
+                new Category("Uncategorized", "These commands do not have a category.", "📁"));
         }
 
         // add core inhibitors and finalizers
@@ -248,19 +248,21 @@ public class ColossusBuilder {
      * you will no longer need to register any command or entity manually.
      * @return The builder
      */
+    @SneakyThrows
     public ColossusBuilder scanPackage(String _package) {
-        // Register entities
         try (ScanResult scan = new ClassGraph()
             .enableClassInfo()
             .acceptPackages(_package)
             .scan()) {
+            // Register entities
             scan.getSubclasses(ColossusEntity.class).forEach(info -> {
                 HibernateManager.registerEntity((Class<ColossusEntity>) info.loadClass());
             });
+            // Register commands
+            for (ClassInfo info : scan.getSubclasses(BaseCommand.class)) {
+                commands.add((BaseCommand) info.loadClass().getDeclaredConstructor().newInstance());
+            }
         }
-        // Register commands TODO
-
-
 
         return this;
     }
@@ -316,17 +318,14 @@ public class ColossusBuilder {
     }
 
     /**
-     * Register categories with commands
+     * Register categories
      * @param categories The categories to register
      * @return The builder
      * @see Category
      * @see Command
      */
     public ColossusBuilder registerCategories(Category... categories) {
-        for (Category category : categories) {
-            this.commands.addAll(category.getAllCommands());
-            this.categories.add(category);
-        }
+        this.categories.addAll(Arrays.asList(categories));
         return this;
     }
 

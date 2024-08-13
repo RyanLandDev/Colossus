@@ -1,10 +1,10 @@
 package dev.ryanland.colossus.command.info;
 
+import dev.ryanland.colossus.command.Command;
 import dev.ryanland.colossus.command.arguments.Argument;
 import dev.ryanland.colossus.command.arguments.ArgumentSet;
 import dev.ryanland.colossus.command.regular.SubCommand;
 import dev.ryanland.colossus.command.regular.SubCommandHolder;
-import dev.ryanland.colossus.command.Command;
 import dev.ryanland.colossus.events.command.CommandEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

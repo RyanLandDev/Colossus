@@ -1,14 +1,14 @@
 package dev.ryanland.colossus.sys.database.entities;
 
+import dev.ryanland.colossus.events.repliable.RepliableEvent;
 import dev.ryanland.colossus.sys.database.annotations.DefaultTable;
+import dev.ryanland.colossus.sys.snowflake.ColossusUser;
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
-import dev.ryanland.colossus.events.repliable.RepliableEvent;
-import dev.ryanland.colossus.sys.snowflake.ColossusUser;
 
 /**
  * <p>You can create a subclass of this class to create a user table, following Hibernate's documentation.

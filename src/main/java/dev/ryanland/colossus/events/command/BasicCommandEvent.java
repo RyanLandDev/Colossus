@@ -1,5 +1,10 @@
 package dev.ryanland.colossus.events.command;
 
+import dev.ryanland.colossus.Colossus;
+import dev.ryanland.colossus.command.BasicCommand;
+import dev.ryanland.colossus.command.executor.functional_interface.CommandConsumer;
+import dev.ryanland.colossus.events.repliable.ModalSubmitEvent;
+import dev.ryanland.colossus.events.repliable.RepliableEvent;
 import dev.ryanland.colossus.sys.presetbuilder.PresetBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -7,11 +12,6 @@ import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.events.Event;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
 import net.dv8tion.jda.api.interactions.modals.Modal;
-import dev.ryanland.colossus.Colossus;
-import dev.ryanland.colossus.command.BasicCommand;
-import dev.ryanland.colossus.command.executor.functional_interface.CommandConsumer;
-import dev.ryanland.colossus.events.repliable.ModalSubmitEvent;
-import dev.ryanland.colossus.events.repliable.RepliableEvent;
 
 public sealed abstract class BasicCommandEvent implements RepliableEvent permits CommandEvent, ContextCommandEvent {
 

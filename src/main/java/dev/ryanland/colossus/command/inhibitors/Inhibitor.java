@@ -1,8 +1,8 @@
 package dev.ryanland.colossus.command.inhibitors;
 
 import dev.ryanland.colossus.ColossusBuilder;
-import dev.ryanland.colossus.sys.presetbuilder.PresetBuilder;
 import dev.ryanland.colossus.events.command.BasicCommandEvent;
+import dev.ryanland.colossus.sys.presetbuilder.PresetBuilder;
 
 /**
  * Inhibitors are run before a command is executed.<br>
