@@ -5,9 +5,9 @@ plugins {
     id 'maven-publish'
 }
 
-group 'net.ryanland'
+group 'dev.ryanland'
 version '1.0.0'
-mainClassName = 'net.ryanland.colossus.Colossus'
+mainClassName = 'dev.ryanland.colossus.Colossus'
 
 repositories {
     mavenCentral()
@@ -52,7 +52,7 @@ dependencies {
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            groupId = 'net.ryanland'
+            groupId = 'dev.ryanland'
             artifactId = 'Colossus'
             version = version
 
