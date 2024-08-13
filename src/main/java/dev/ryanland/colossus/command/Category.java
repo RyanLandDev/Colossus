@@ -1,5 +1,6 @@
 package dev.ryanland.colossus.command;
 
+import dev.ryanland.colossus.Colossus;
 import dev.ryanland.colossus.ColossusBuilder;
 import dev.ryanland.colossus.command.impl.DefaultHelpCommand;
 import dev.ryanland.colossus.sys.util.Node;
@@ -41,5 +42,14 @@ public class Category extends Node<Category> {
 
     public String getEmoji() {
         return emoji;
+    }
+
+    public static Category of(String name) {
+        try {
+            return Colossus.getCategories().stream()
+                .filter(category -> category.getName().equalsIgnoreCase(name)).toList().get(0);
+        } catch (IndexOutOfBoundsException e) {
+            throw new IllegalStateException("The category " + name + " does not exist.");
+        }
     }
 }

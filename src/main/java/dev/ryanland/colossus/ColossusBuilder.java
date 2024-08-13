@@ -222,7 +222,7 @@ public class ColossusBuilder {
             if (!disableHelpCommand) commands.add(new DefaultHelpCommand());
             registerCategories(new Category("Default", "These are the default commands provided by Colossus. " +
                 "You can optionally disable them in your *ColossusBuilder*. If you want to give them a new category, " +
-                "run ```java\nCommandHandler.getCommand(\"COMMAND_NAME\").setCategory(YOUR_CATEGORY);``` " +
+                "run ```java\nCommandHandler.getCommand(\"COMMAND_NAME\").setOverrideCategory(YOUR_CATEGORY);``` " +
                 "**after** initializing your bot.",
                 "⚠"),
                 new Category("Uncategorized", "These commands do not have a category.", "📁"));

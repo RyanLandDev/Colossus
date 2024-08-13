@@ -1,6 +1,5 @@
 package dev.ryanland.colossus.command;
 
-import dev.ryanland.colossus.Colossus;
 import dev.ryanland.colossus.command.arguments.Argument;
 import dev.ryanland.colossus.command.arguments.ArgumentSet;
 import dev.ryanland.colossus.command.cooldown.CooldownManager;
@@ -9,12 +8,15 @@ import dev.ryanland.colossus.command.executor.CommandHandler;
 import dev.ryanland.colossus.command.regular.CommandBuilder;
 import dev.ryanland.colossus.command.regular.SubCommand;
 import dev.ryanland.colossus.command.regular.SubCommandHolder;
+import lombok.Setter;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 import java.util.List;
 
 public sealed abstract class Command extends BasicCommand permits BaseCommand {
 
+    @Setter
+    private String overrideCategory;
     private List<SubCommand> subcommands;
 
     private CommandBuilder getInfo() {
@@ -22,12 +24,7 @@ public sealed abstract class Command extends BasicCommand permits BaseCommand {
     }
 
     public final Category getCategory() {
-        try {
-            return Colossus.getCategories().stream()
-                .filter(category -> category.getName().equalsIgnoreCase(getInfo().category())).toList().get(0);
-        } catch (IndexOutOfBoundsException e) {
-            throw new IllegalStateException("The category " + getInfo().category() + " does not exist.");
-        }
+        return Category.of(overrideCategory == null ? getInfo().category() : overrideCategory);
     }
 
     public final List<SubCommand> getSubCommands() {
