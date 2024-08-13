@@ -38,7 +38,6 @@ See the [wiki](https://github.com/RyanLandDev/Colossus/wiki) for various guides 
     * **Inhibitors** - custom conditions that should be checked before any command is executed
       * Colossus also uses inhibitors internally for checks like cooldowns and permissions
     * **Finalizers** - custom code that is run after a command was successfully executed without exceptions
-    * **Disabled command handler** - handles the enabling/disabling of commands and offers a default disable/enable command (can be removed)
     * **Command localization** - add localizations to slash commands
     * **Help command** - provides a default extensive help command, can be disabled
 * User/message **context commands**
@@ -85,23 +84,17 @@ See the [wiki](https://github.com/RyanLandDev/Colossus/wiki) for various guides 
     // ...
     String channelId = Config.getString("tickets.log_channel");
     ```
-* **Database driver system** to easily perform create, read, update and delete actions to a database
-    * Either create your own or use the pre-made `SQLiteDatabaseDriver`, `JsonDatabaseDriver` or `MongoDatabaseDriver`
-    * Automatically takes care of **caching**, see the `DatabaseDriver` javadoc for specifics
-    * **Update and read** database values easily using a `Supply` and Colossus entities
+* **Database system** to easily perform create, read, update and delete actions to a database
+    * Uses Hibernate as base
+    * Create your own `UserEntity`, `MemberEntity` or `GuildEntity` to store data mapped to snowflakes
+    * **Update and read** database values easily using Colossus entities, automatically integrated
       ```java
-      event.getUser().modifyValue("coins", coins -> coins * 10); // multiply coins by 10
-      event.getUser().increaseValue("coins", 10); // add 10 coins
+      // Coins is a custom property here
+      event.getUserEntity().getCoins();
+      event.getUserEntity().setCoins(10);
+      event.getUserEntity().save();
       ```
-    * Includes **helper methods** for easily performing SQL queries
-    * **Automatically creates SQL tables and columns** if they do not exist yet, creating a new data value takes seconds using `ValueProvider`
-      ```java
-      ColossusBuilder builder = new ColossusBuilder(".")
-          .setDatabaseDriver(new SQLiteDatabaseDriver("db.sqlite")
-              // registers a coins property for every user
-              .registerValueProvider("users", "coins", "integer not null default 0", [serializer], [deserializer])
-          );
-      ```
+    * All other features that Hibernate provides
 * `LocalFile` - extended File class, with useful methods such as `getContent()` or `parseJson()`, also comes with a helpful `LocalFileBuilder`
 * An **event waiter** to await events with ease
     * **Conditions**; the waiter will only proceed if the condition is met
