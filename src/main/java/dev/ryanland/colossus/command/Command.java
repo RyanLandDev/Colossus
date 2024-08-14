@@ -17,14 +17,16 @@ public sealed abstract class Command extends BasicCommand permits BaseCommand {
 
     @Setter
     private String overrideCategory;
+    @Setter
+    private Category category;
     private List<SubCommand> subcommands;
 
-    private CommandBuilder getInfo() {
+    public CommandBuilder getInfo() {
         return getClass().getAnnotation(CommandBuilder.class);
     }
 
     public final Category getCategory() {
-        return Category.of(overrideCategory == null ? getInfo().category() : overrideCategory);
+        return overrideCategory == null ? category : Category.of(overrideCategory);
     }
 
     public final List<SubCommand> getSubCommands() {

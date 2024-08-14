@@ -1,10 +1,7 @@
 package dev.ryanland.colossus.command.executor;
 
 import dev.ryanland.colossus.Colossus;
-import dev.ryanland.colossus.command.BasicCommand;
-import dev.ryanland.colossus.command.Command;
-import dev.ryanland.colossus.command.CommandException;
-import dev.ryanland.colossus.command.ContextCommand;
+import dev.ryanland.colossus.command.*;
 import dev.ryanland.colossus.command.arguments.Argument;
 import dev.ryanland.colossus.command.arguments.ArgumentOptionData;
 import dev.ryanland.colossus.command.context.ContextCommandBuilder;
@@ -57,8 +54,8 @@ public class CommandHandler {
             if (!command.getClass().isAnnotationPresent(CommandBuilder.class))
                 commandError(command, "Commands must implement the CommandBuilder annotation.");
             // Check if the command's data is not null
-            if (command.getName() == null || command.getDescription() == null || command.getCategory() == null)
-                commandError(command, "Commands must have at least a name, description and category.");
+            if (command.getName() == null || command.getDescription() == null)
+                commandError(command, "Commands must have at least a name and description.");
             // Check if the command('s name) has already been registered
             if (COMMAND_MAP.containsKey(command.getName()))
                 commandError(command, "A command with this name has already been registered.");
@@ -73,6 +70,14 @@ public class CommandHandler {
             // Add data
             COMMANDS.add(command);
             COMMAND_MAP.put(command.getName(), command);
+
+            // Set category
+            command.setCategory(Category.of(command.getInfo().category()));
+            if (command instanceof SubCommandHolder) {
+                ((SubCommandHolder) command).getRealSubCommands().forEach(subCommand -> {
+                    ((Command) subCommand).setCategory(Category.of(command.getInfo().category()));
+                });
+            }
         }
     }
 
