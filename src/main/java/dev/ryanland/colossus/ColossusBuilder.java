@@ -14,6 +14,7 @@ import dev.ryanland.colossus.command.inhibitors.impl.CooldownInhibitor;
 import dev.ryanland.colossus.command.inhibitors.impl.DisabledInhibitor;
 import dev.ryanland.colossus.command.inhibitors.impl.GuildOnlyInhibitor;
 import dev.ryanland.colossus.command.inhibitors.impl.PermissionInhibitor;
+import dev.ryanland.colossus.command.regular.SubCommand;
 import dev.ryanland.colossus.events.InternalEventListener;
 import dev.ryanland.colossus.events.command.CommandEvent;
 import dev.ryanland.colossus.events.repliable.ButtonClickEvent;
@@ -260,6 +261,7 @@ public class ColossusBuilder {
             });
             // Register commands
             for (ClassInfo info : scan.getSubclasses(BaseCommand.class)) {
+                if (info.implementsInterface(SubCommand.class)) continue;
                 commands.add((BaseCommand) info.loadClass().getDeclaredConstructor().newInstance());
             }
         }
