@@ -67,6 +67,15 @@ public class ColossusBuilder {
 
     private static final LinkedHashMap<String, Object> CORE_CONFIG_ENTRIES = new LinkedHashMap<>();
 
+    private static final List<Category> CORE_CATEGORIES = List.of(
+        new Category("Default", "These are the default commands provided by Colossus. " +
+                "You can optionally disable them in your *ColossusBuilder*. If you want to give them a new category, " +
+                "run ```java\nCommandHandler.getCommand(\"COMMAND_NAME\").setOverrideCategory(YOUR_CATEGORY);``` " +
+                "**after** initializing your bot.",
+                "⚠"),
+        new Category("Uncategorized", "These commands do not have a category.", "📁")
+    );
+
     static {
         CORE_CONFIG_ENTRIES.put("token", "");
 
@@ -142,6 +151,8 @@ public class ColossusBuilder {
         // Prepare the builder
         jdaBuilder = JDABuilder.createDefault(config.getString("token"))
             .addEventListeners(CORE_EVENTS);
+
+        categories.addAll(CORE_CATEGORIES);
     }
 
     /**
@@ -160,6 +171,8 @@ public class ColossusBuilder {
         // Prepare the builder
         jdaBuilder = JDABuilder.createDefault(config.getString("token"))
                 .addEventListeners(CORE_EVENTS);
+
+        categories.addAll(CORE_CATEGORIES);
     }
 
     /**
@@ -204,6 +217,8 @@ public class ColossusBuilder {
         config.addValues(values);
         jdaBuilder = JDABuilder.createDefault(config.getString("token"))
             .addEventListeners(CORE_EVENTS);
+
+        categories.addAll(CORE_CATEGORIES);
     }
 
     private static JsonPrimitive toPrimitive(Object value) {
@@ -218,16 +233,8 @@ public class ColossusBuilder {
      * @see Colossus
      */
     public Colossus build() {
-        // register default commands + categories
-        if (!disableHelpCommand || false) {
-            if (!disableHelpCommand) commands.add(new DefaultHelpCommand());
-            registerCategories(new Category("Default", "These are the default commands provided by Colossus. " +
-                "You can optionally disable them in your *ColossusBuilder*. If you want to give them a new category, " +
-                "run ```java\nCommandHandler.getCommand(\"COMMAND_NAME\").setOverrideCategory(YOUR_CATEGORY);``` " +
-                "**after** initializing your bot.",
-                "⚠"),
-                new Category("Uncategorized", "These commands do not have a category.", "📁"));
-        }
+        // register default commands
+        if (!disableHelpCommand) commands.add(new DefaultHelpCommand());
 
         // add core inhibitors and finalizers
         inhibitors.addAll(0, List.of(CORE_INHIBITORS));
