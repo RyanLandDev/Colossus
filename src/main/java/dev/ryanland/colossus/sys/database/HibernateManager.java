@@ -112,7 +112,7 @@ public class HibernateManager {
     public static <R extends MemberEntity> R getMember(String userId, String guildId) {
         if (defaultMemberTable == null) throw new IllegalStateException("A default member table has not been configured. Annotate the table class with @DefaultTable.");
 
-        Session session = sessionFactory.getCurrentSession();
+        Session session = sessionFactory.openSession();
         session.beginTransaction();
 
         MemberEntity member = session.get(defaultMemberTable, new MemberEntity.MemberEntityId(userId, guildId));
@@ -141,7 +141,7 @@ public class HibernateManager {
     public static <R extends GuildEntity> R getGuild(String guildId) {
         if (defaultGuildTable == null) throw new IllegalStateException("A default guild table has not been configured. Annotate the table class with @DefaultTable.");
 
-        Session session = sessionFactory.getCurrentSession();
+        Session session = sessionFactory.openSession();
         session.beginTransaction();
 
         GuildEntity guild = session.get(defaultGuildTable, guildId);
