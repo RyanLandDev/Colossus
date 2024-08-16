@@ -36,8 +36,7 @@ public class MemberEntity extends ColossusEntity {
     @Column(name = "_guild_id")
     private String guildId;
 
-    @NoArgsConstructor
-    @AllArgsConstructor
+    @NoArgsConstructor @AllArgsConstructor @EqualsAndHashCode
     public static class MemberEntityId {
         private String userId;
         private String guildId;

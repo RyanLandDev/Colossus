@@ -3,9 +3,11 @@ package dev.ryanland.colossus.command.cooldown;
 import dev.ryanland.colossus.sys.database.entities.UserEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.Date;
 
 @Entity
@@ -25,8 +27,8 @@ public class CooldownTable extends UserEntity {
 
     private Date expires;
 
-    @NoArgsConstructor
-    public class CooldownTableId {
+    @NoArgsConstructor @EqualsAndHashCode
+    public static class CooldownTableId implements Serializable {
         private String userId;
         private String commandName;
         private int commandType;
