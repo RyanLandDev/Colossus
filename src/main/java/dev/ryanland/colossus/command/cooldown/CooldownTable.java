@@ -25,6 +25,11 @@ public class CooldownTable extends UserEntity {
 
     private Date expires;
 
-    public record CooldownTableId(String userId, String commandName, int commandType) {}
+    @NoArgsConstructor
+    public class CooldownTableId {
+        private String userId;
+        private String commandName;
+        private int commandType;
+    }
 
 }
