@@ -8,10 +8,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
 import jakarta.persistence.MappedSuperclass;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 /**
  * <p>You can create a subclass of this class to create a member table, following Hibernate's documentation.
@@ -39,6 +36,7 @@ public class MemberEntity extends ColossusEntity {
     @Column(name = "_guild_id")
     private String guildId;
 
+    @NoArgsConstructor
     @AllArgsConstructor
     public static class MemberEntityId {
         private String userId;

@@ -45,6 +45,7 @@ dependencies {
     testImplementation 'com.h2database:h2:2.3.230'
     testImplementation 'org.xerial:sqlite-jdbc:3.46.0.0'
     testImplementation 'org.mongodb:mongodb-driver-sync:4.9.0'
+    testImplementation "org.postgresql:postgresql:42.7.3"
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.34'
 
 }
