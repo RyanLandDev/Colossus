@@ -7,6 +7,7 @@ See the [wiki](https://github.com/RyanLandDev/Colossus/wiki) for various guides 
 ## Features
 
 * Slash and text (prefixed) commands
+    * Automatically registered using classpath scanning
     * May be generic, which means a command can be a slash and text command simultaneously while only writing the code for it once
     * You could add more features of your own using OOP
     * Extensive **argument system**
@@ -20,9 +21,9 @@ See the [wiki](https://github.com/RyanLandDev/Colossus/wiki) for various guides 
       ```java
       @Override
       public void run(SlashCommandEvent event) throws CommandException {
-          if (Colossus.getSQLDatabaseDriver().queryIsZero("SELECT COUNT(*) FROM tickets WHERE channel = ?", event.getChannel().getId())) {
+          if (event.getUserEntity().isStaff()) {
               // This will send the user an ephemeral error embed with the provided description
-              throw new CommandException("This is not a ticket channel.");
+              throw new CommandException("You are not allowed to close a ticket.");
           }
 
           event.reply("Ticket closed.", true);
