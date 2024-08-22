@@ -17,7 +17,7 @@ public class JsonConfig implements ConfigSupplier {
 
     public JsonConfig(String filePath) {
         this.filePath = filePath;
-        if (!filePath.endsWith(".json")) throw new UnsupportedOperationException("Path must lead to a .json file");
+        if (filePath != null && !filePath.endsWith(".json")) throw new UnsupportedOperationException("Path must lead to a .json file");
     }
 
     @Override
