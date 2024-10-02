@@ -114,7 +114,12 @@ public class CommandHandler {
         boolean global = Config.getBoolean("slash_commands.global");
         String guildId = Config.getString("slash_commands.guild_id");
         if (guildId.isEmpty() && !global) throw new NullPointerException("The slash_commands.guild_id config property may not be empty");
-        Guild privateGuild = Colossus.getJDA().getGuildById(guildId);
+        Guild privateGuild;
+        if (guildId == null || guildId.isEmpty()) {
+            privateGuild = null;
+        } else {
+            privateGuild = Colossus.getJDA().getGuildById(guildId);
+        }
 
         if (!global && privateGuild == null) {
             Colossus.LOGGER.error("The bot is not a member of the test guild defined in the configuration, or the ID is invalid.\n" +
