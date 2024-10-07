@@ -118,7 +118,7 @@ public class Colossus {
             jda = builder.build();
         } catch (InvalidTokenException e) {
             Colossus.LOGGER.error("The token in your configuration is invalid.");
-            System.exit(0);
+            return;
         }
         try {
             jda.awaitReady();

@@ -124,7 +124,7 @@ public class CommandHandler {
         if (!global && privateGuild == null) {
             Colossus.LOGGER.error("The bot is not a member of the test guild defined in the configuration, or the ID is invalid.\n" +
                 "Invite the bot to your server using this link: " + Colossus.getJDA().getInviteUrl(Permission.ADMINISTRATOR));
-            System.exit(0);
+            return;
         }
 
         // set updater
