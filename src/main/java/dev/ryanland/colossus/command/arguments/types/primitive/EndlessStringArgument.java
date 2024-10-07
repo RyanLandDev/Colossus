@@ -52,9 +52,9 @@ public class EndlessStringArgument extends Argument<String> {
     }
 
     @Override
-    public CompletableFuture<String> resolveSlashCommandArgument(Deque<OptionMapping> args, SlashCommandEvent event) throws ArgumentException {
+    public CompletableFuture<String> resolveSlashCommandArgument(OptionMapping option, SlashCommandEvent event) throws ArgumentException {
         CompletableFuture<String> future = new CompletableFuture<>();
-        future.complete(check(args.pop().getAsString()));
+        future.complete(check(option.getAsString()));
         return future;
     }
 

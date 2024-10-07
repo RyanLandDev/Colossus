@@ -10,9 +10,9 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 public abstract class NumberArgument<T> extends SingleArgument<T> {
 
     @Override
-    public T resolveSlashCommandArgument(OptionMapping arg, SlashCommandEvent event) throws ArgumentException {
+    public T resolveSlashCommandArg(OptionMapping arg, SlashCommandEvent event) throws ArgumentException {
         try {
-            return resolveSlashCommandArgument(event, arg);
+            return resolveSlashCommandArg(event, arg);
         } catch (NumberFormatException e) {
             throw new MalformedArgumentException("Invalid number provided.");
         }
@@ -27,7 +27,7 @@ public abstract class NumberArgument<T> extends SingleArgument<T> {
         }
     }
 
-    public abstract T resolveSlashCommandArgument(SlashCommandEvent event, OptionMapping arg) throws ArgumentException;
+    public abstract T resolveSlashCommandArg(SlashCommandEvent event, OptionMapping arg) throws ArgumentException;
 
     public abstract T resolveMessageCommandArgument(MessageCommandEvent event, String arg) throws ArgumentException;
 }

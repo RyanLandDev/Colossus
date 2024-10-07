@@ -17,7 +17,7 @@ public class MemberArgument extends SnowflakeArgument<Member> {
     }
 
     @Override
-    public ColossusMember resolveSlashCommandArgument(OptionMapping arg, SlashCommandEvent event) throws ArgumentException {
+    public ColossusMember resolveSlashCommandArg(OptionMapping arg, SlashCommandEvent event) throws ArgumentException {
         Member member = arg.getAsMember();
         if (member == null)
             throw new ArgumentException("The provided user must be a member of this server.");

@@ -18,7 +18,7 @@ public class UserArgument extends SnowflakeArgument<User> {
     }
 
     @Override
-    public ColossusUser resolveSlashCommandArgument(OptionMapping arg, SlashCommandEvent event) throws ArgumentException {
+    public ColossusUser resolveSlashCommandArg(OptionMapping arg, SlashCommandEvent event) throws ArgumentException {
         return new ColossusUser(arg.getAsUser());
     }
 

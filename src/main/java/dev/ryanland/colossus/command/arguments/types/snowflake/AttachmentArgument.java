@@ -28,9 +28,9 @@ public class AttachmentArgument extends Argument<Message.Attachment> {
     }
 
     @Override
-    public CompletableFuture<Message.Attachment> resolveSlashCommandArgument(Deque<OptionMapping> args, SlashCommandEvent event) throws ArgumentException {
+    public CompletableFuture<Message.Attachment> resolveSlashCommandArgument(OptionMapping option, SlashCommandEvent event) throws ArgumentException {
         CompletableFuture<Message.Attachment> future = new CompletableFuture<>();
-        future.complete(args.pop().getAsAttachment());
+        future.complete(option.getAsAttachment());
         return future;
     }
 

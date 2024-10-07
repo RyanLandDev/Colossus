@@ -12,11 +12,6 @@ import java.util.concurrent.CompletableFuture;
 public abstract class FutureSingleArgument<T> extends Argument<T> {
 
     @Override
-    public CompletableFuture<T> resolveSlashCommandArgument(Deque<OptionMapping> args, SlashCommandEvent event) throws ArgumentException {
-        return resolveSlashCommandArgument(args.pop(), event);
-    }
-
-    @Override
     public CompletableFuture<T> resolveMessageCommandArgument(Deque<String> args, MessageCommandEvent event) throws ArgumentException {
         return resolveMessageCommandArgument(args.pop(), event);
     }

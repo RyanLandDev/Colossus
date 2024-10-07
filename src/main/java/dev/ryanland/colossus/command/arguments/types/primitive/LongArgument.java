@@ -47,7 +47,7 @@ public class LongArgument extends NumberArgument<Long> {
     }
 
     @Override
-    public Long resolveSlashCommandArgument(SlashCommandEvent event, OptionMapping arg) throws ArgumentException {
+    public Long resolveSlashCommandArg(SlashCommandEvent event, OptionMapping arg) throws ArgumentException {
         return arg.getAsLong();
     }
 

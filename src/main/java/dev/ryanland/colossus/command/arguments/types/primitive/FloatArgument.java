@@ -47,7 +47,7 @@ public class FloatArgument extends NumberArgument<Float> {
     }
 
     @Override
-    public Float resolveSlashCommandArgument(SlashCommandEvent event, OptionMapping arg) throws ArgumentException {
+    public Float resolveSlashCommandArg(SlashCommandEvent event, OptionMapping arg) throws ArgumentException {
         return (float) arg.getAsDouble();
     }
 

@@ -41,7 +41,6 @@ public non-sealed class SlashCommandArgumentParser extends ArgumentParser {
 
     @Override
     public boolean parseArguments() {
-        Deque<OptionMapping> queue = new ArrayDeque<>(getEvent().getOptions());
         ParsedArgumentMap parsedArgs = new ParsedArgumentMap();
 
         Command command = event.getCommand();
@@ -54,10 +53,12 @@ public non-sealed class SlashCommandArgumentParser extends ArgumentParser {
         for (Argument<?> arg : arguments.values()) {
             try {
                 Object parsedArg;
-                if (queue.peek() == null && arg.isOptional())
+                OptionMapping option = getEvent().getOption(arg.getName());
+                if (option == null && arg.isOptional()) {
                     parsedArg = arg.getOptionalValue(event);
-                else
-                    parsedArg = arg.resolveSlashCommandArgument(getEvent(), queue);
+                } else {
+                    parsedArg = arg.resolveSlashCommandArgument(getEvent(), option);
+                }
 
                 parsedArgs.put(arg.getName(), parsedArg);
 

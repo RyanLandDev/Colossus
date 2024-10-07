@@ -17,7 +17,7 @@ public abstract class ArgumentStringResolver<T> extends SingleArgument<T> {
     }
 
     @Override
-    public final T resolveSlashCommandArgument(OptionMapping arg, SlashCommandEvent event) throws ArgumentException {
+    public final T resolveSlashCommandArg(OptionMapping arg, SlashCommandEvent event) throws ArgumentException {
         return resolve(arg.getAsString(), event);
     }
 

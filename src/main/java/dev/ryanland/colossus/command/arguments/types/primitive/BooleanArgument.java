@@ -16,7 +16,7 @@ public class BooleanArgument extends SingleArgument<Boolean> {
     }
 
     @Override
-    public Boolean resolveSlashCommandArgument(OptionMapping arg, SlashCommandEvent event) throws ArgumentException {
+    public Boolean resolveSlashCommandArg(OptionMapping arg, SlashCommandEvent event) throws ArgumentException {
         return arg.getAsBoolean();
     }
 

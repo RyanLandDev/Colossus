@@ -132,13 +132,13 @@ public abstract class Argument<T> {
         return false;
     }
 
-    public abstract CompletableFuture<T> resolveSlashCommandArgument(Deque<OptionMapping> args, SlashCommandEvent event) throws ArgumentException;
+    public abstract CompletableFuture<T> resolveSlashCommandArgument(OptionMapping option, SlashCommandEvent event) throws ArgumentException;
 
     public abstract CompletableFuture<T> resolveMessageCommandArgument(Deque<String> args, MessageCommandEvent event) throws ArgumentException;
 
-    public final T resolveSlashCommandArgument(SlashCommandEvent event, Deque<OptionMapping> args) throws ArgumentException {
+    public final T resolveSlashCommandArgument(SlashCommandEvent event, OptionMapping option) throws ArgumentException {
         try {
-            return resolveSlashCommandArgument(args, event).get();
+            return resolveSlashCommandArgument(option, event).get();
         } catch (InterruptedException | ExecutionException e) {
             throw new InterruptedArgumentException();
         }

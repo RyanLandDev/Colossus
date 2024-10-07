@@ -16,7 +16,7 @@ public class RoleArgument extends SnowflakeArgument<Role> {
     }
 
     @Override
-    public Role resolveSlashCommandArgument(OptionMapping arg, SlashCommandEvent event) throws ArgumentException {
+    public Role resolveSlashCommandArg(OptionMapping arg, SlashCommandEvent event) throws ArgumentException {
         return arg.getAsRole();
     }
 

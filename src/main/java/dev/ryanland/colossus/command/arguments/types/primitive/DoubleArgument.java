@@ -47,7 +47,7 @@ public class DoubleArgument extends NumberArgument<Double> {
     }
     
     @Override
-    public Double resolveSlashCommandArgument(SlashCommandEvent event, OptionMapping arg) throws ArgumentException {
+    public Double resolveSlashCommandArg(SlashCommandEvent event, OptionMapping arg) throws ArgumentException {
         return arg.getAsDouble();
     }
 

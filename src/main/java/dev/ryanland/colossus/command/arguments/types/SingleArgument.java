@@ -12,9 +12,9 @@ import java.util.concurrent.CompletableFuture;
 public abstract class SingleArgument<T> extends Argument<T> {
 
     @Override
-    public final CompletableFuture<T> resolveSlashCommandArgument(Deque<OptionMapping> args, SlashCommandEvent event) throws ArgumentException {
+    public CompletableFuture<T> resolveSlashCommandArgument(OptionMapping option, SlashCommandEvent event) throws ArgumentException {
         CompletableFuture<T> future = new CompletableFuture<>();
-        future.complete(resolveSlashCommandArgument(args.pop(), event));
+        future.complete(resolveSlashCommandArg(option, event));
         return future;
     }
 
@@ -25,7 +25,7 @@ public abstract class SingleArgument<T> extends Argument<T> {
         return future;
     }
 
-    public abstract T resolveSlashCommandArgument(OptionMapping arg, SlashCommandEvent event) throws ArgumentException;
+    public abstract T resolveSlashCommandArg(OptionMapping option, SlashCommandEvent event) throws ArgumentException;
 
     public abstract T resolveMessageCommandArgument(String arg, MessageCommandEvent event) throws ArgumentException;
 }
