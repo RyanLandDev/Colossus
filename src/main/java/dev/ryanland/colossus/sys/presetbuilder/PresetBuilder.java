@@ -43,11 +43,11 @@ public class PresetBuilder {
     }
 
     public PresetBuilder(PresetType type) {
-        this(type, null);
+        this(type, type.getDescription());
     }
 
     public PresetBuilder(PresetType type, String description) {
-        this(type, null, description);
+        this(type, type.getTitle(), description);
     }
 
     public PresetBuilder(String description) {
