@@ -6,6 +6,10 @@ import dev.ryanland.colossus.sys.interactions.button.BaseButton;
 import dev.ryanland.colossus.sys.interactions.button.ButtonLayout;
 import dev.ryanland.colossus.sys.interactions.button.ButtonRow;
 import dev.ryanland.colossus.sys.util.InteractionUtil;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -19,6 +23,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+@Getter @Setter @Accessors(chain = true)
 public class PresetBuilder {
 
     private String content;
@@ -76,141 +81,6 @@ public class PresetBuilder {
         this.componentRows = new ArrayList<>();
     }
 
-    public String getContent() {
-        return content;
-    }
-
-    public PresetBuilder setContent(String content) {
-        this.content = content;
-        return this;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public PresetBuilder setTitle(String title) {
-        this.title = title;
-        return this;
-    }
-
-    public String getTitleUrl() {
-        return titleUrl;
-    }
-
-    public PresetBuilder setTitleUrl(String titleUrl) {
-        this.titleUrl = titleUrl;
-        return this;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public PresetBuilder setDescription(String description) {
-        this.description = description;
-        return this;
-    }
-
-    public OffsetDateTime getTimestamp() {
-        return timestamp;
-    }
-
-    public PresetBuilder setTimestamp(OffsetDateTime timestamp) {
-        this.timestamp = timestamp;
-        return this;
-    }
-
-    public Integer getColor() {
-        return color;
-    }
-
-    public PresetBuilder setColor(Integer color) {
-        this.color = color;
-        return this;
-    }
-
-    public String getThumbnail() {
-        return thumbnail;
-    }
-
-    public PresetBuilder setThumbnail(String thumbnail) {
-        this.thumbnail = thumbnail;
-        return this;
-    }
-
-    public String getAuthorName() {
-        return authorName;
-    }
-
-    public PresetBuilder setAuthorName(String authorName) {
-        this.authorName = authorName;
-        return this;
-    }
-
-    public String getAuthorUrl() {
-        return authorUrl;
-    }
-
-    public PresetBuilder setAuthorUrl(String authorUrl) {
-        this.authorUrl = authorUrl;
-        return this;
-    }
-
-    public String getAuthorIconUrl() {
-        return authorIconUrl;
-    }
-
-    public PresetBuilder setAuthorIconUrl(String authorIconUrl) {
-        this.authorIconUrl = authorIconUrl;
-        return this;
-    }
-
-    public String getFooterText() {
-        return footerText;
-    }
-
-    public PresetBuilder setFooterText(String footerText) {
-        this.footerText = footerText;
-        return this;
-    }
-
-    public String getFooterIconUrl() {
-        return footerIconUrl;
-    }
-
-    public PresetBuilder setFooterIconUrl(String footerIconUrl) {
-        this.footerIconUrl = footerIconUrl;
-        return this;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public PresetBuilder setImage(String image) {
-        this.image = image;
-        return this;
-    }
-
-    public List<MessageEmbed.Field> getFields() {
-        return fields;
-    }
-
-    public PresetBuilder setFields(List<MessageEmbed.Field> fields) {
-        this.fields = fields;
-        return this;
-    }
-
-    public boolean isEphemeral() {
-        return ephemeral;
-    }
-
-    public PresetBuilder setEphemeral(boolean ephemeral) {
-        this.ephemeral = ephemeral;
-        return this;
-    }
-
     /**
      * Sets the embed thumbnail to the bot's profile picture.
      * @return The builder
@@ -239,10 +109,6 @@ public class PresetBuilder {
         return this;
     }
 
-    public List<ComponentRow> getComponentRows() {
-        return componentRows;
-    }
-
     /**
      * Gets the {@link ActionRow} representatives of the added {@link ComponentRow}s
      */
@@ -257,11 +123,6 @@ public class PresetBuilder {
 
     public PresetBuilder addComponentRows(ComponentRow... componentRows) {
         this.componentRows.addAll(List.of(componentRows));
-        return this;
-    }
-
-    public PresetBuilder setComponentRows(List<ComponentRow> componentRows) {
-        this.componentRows = componentRows;
         return this;
     }
 

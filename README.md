@@ -42,30 +42,38 @@ See the [wiki](https://github.com/RyanLandDev/Colossus/wiki) for various guides 
     * **Command localization** - add localizations to slash commands
     * **Help command** - provides a default extensive help command, can be disabled
 * User/message **context commands**
-* Custom **interactions/components system**
-    * **Automatic event handling** - provide a condition and consumer beforehand
-    * **Buttons**
-      ```java
-      BaseButton button = BaseButton.user(userId,
-          Button.primary("click", "Click me!"),
-          clickEvent -> clickEvent.reply("Clicked!"));
-      presetBuilder.addButtons(button);
-      event.reply(presetBuilder);
-      ```
-    * **Select Menus**
-      ```java
-      SelectMenu menu = //... jda select menu
-      BaseSelectMenu selectMenu = BaseSelectMenu.user(userId, menu,
-          submitEvent -> submitEvent.reply("Submitted!"));
-      presetBuilder.addComponentRows(selectMenu);
-      event.reply(presetBuilder);
-      ```
-    * **Modals**
-      ```java
-      Modal modal = // ... jda modal
-      event.reply(modal,
-          submitEvent -> submitEvent.reply("Submitted!"));
-      ```
+  * Custom **interactions/components system**
+      * **Automatic event handling** - provide a condition and consumer beforehand
+      * **Buttons**
+        ```java
+        BaseButton button = BaseButton.user(userId,
+            Button.primary("click", "Click me!"),
+            clickEvent -> clickEvent.reply("Clicked!"));
+        presetBuilder.addButtons(button);
+        event.reply(presetBuilder);
+        ```
+      * **Static Buttons** - for static buttons without consumers
+          ```java
+        @ButtonListener("button_id") // this method can live anywhere, it is registered automatically
+        private static void listen(ButtonClickEvent event) {
+            event.reply("Clicked!", true);
+            // ... do stuff
+        }
+          ```
+      * **Select Menus**
+        ```java
+        SelectMenu menu = //... jda select menu
+        BaseSelectMenu selectMenu = BaseSelectMenu.user(userId, menu,
+            submitEvent -> submitEvent.reply("Submitted!"));
+        presetBuilder.addComponentRows(selectMenu);
+        event.reply(presetBuilder);
+        ```
+      * **Modals**
+        ```java
+        Modal modal = // ... jda modal
+        event.reply(modal,
+            submitEvent -> submitEvent.reply("Submitted!"));
+        ```
 * Custom **interaction menus**; you can either create your own or use one of the pre-made ones:
     * `ConfirmMenu` - a menu to either cancel or confirm an action
     * `TabMenu` - a menu to browse custom defined pages and (nested) subpages using tabs. The default help command uses this menu

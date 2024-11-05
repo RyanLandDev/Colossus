@@ -3,6 +3,7 @@ package dev.ryanland.colossus.events;
 import dev.ryanland.colossus.Colossus;
 import dev.ryanland.colossus.command.CommandException;
 import dev.ryanland.colossus.command.executor.CommandHandler;
+import dev.ryanland.colossus.command.executor.functional_interface.CommandConsumer;
 import dev.ryanland.colossus.events.command.ContextCommandEvent;
 import dev.ryanland.colossus.events.command.MessageCommandEvent;
 import dev.ryanland.colossus.events.command.SlashCommandEvent;
@@ -21,6 +22,11 @@ import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionE
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.function.Consumer;
 
 public class InternalEventListener extends ListenerAdapter {
 
@@ -47,11 +53,34 @@ public class InternalEventListener extends ListenerAdapter {
         }
     }
 
+    private static final Map<String, CommandConsumer<ButtonClickEvent>> STATIC_BUTTON_LISTENERS = new HashMap<>();
+    private static final Map<String, CommandConsumer<ButtonClickEvent>> STATIC_STARTSWITH_BUTTON_LISTENERS = new HashMap<>();
+
+    public static void registerStaticButtonListener(String buttonId, CommandConsumer<ButtonClickEvent> listener) {
+        STATIC_BUTTON_LISTENERS.put(buttonId, listener);
+    }
+
+    public static void registerStaticStartsWithButtonListener(String buttonId, CommandConsumer<ButtonClickEvent> listener) {
+        STATIC_STARTSWITH_BUTTON_LISTENERS.put(buttonId, listener);
+    }
+
     // Click button
     @Override
     public void onButtonInteraction(@NotNull ButtonInteractionEvent event) {
+        String buttonId = event.getButton().getId();
         try {
-            new ButtonClickEvent(event).handle();
+            if (STATIC_BUTTON_LISTENERS.containsKey(buttonId)) {
+                STATIC_BUTTON_LISTENERS.get(buttonId).accept(new ButtonClickEvent(event));
+            } else {
+                for (Entry<String, CommandConsumer<ButtonClickEvent>> entries : STATIC_STARTSWITH_BUTTON_LISTENERS.entrySet()) {
+                    if (buttonId.startsWith(entries.getKey())) {
+                        entries.getValue().accept(new ButtonClickEvent(event));
+                        return;
+                    }
+                }
+
+                new ButtonClickEvent(event).handle();
+            }
         } catch (CommandException e) {
             event.deferReply().addEmbeds(
                 new PresetBuilder(Colossus.getErrorPresetType(), e.getMessage()).embed()

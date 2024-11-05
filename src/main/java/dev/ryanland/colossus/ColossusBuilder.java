@@ -6,6 +6,7 @@ import com.google.gson.JsonPrimitive;
 import dev.ryanland.colossus.command.*;
 import dev.ryanland.colossus.command.arguments.parsing.exceptions.MalformedArgumentException;
 import dev.ryanland.colossus.command.cooldown.CooldownTable;
+import dev.ryanland.colossus.command.executor.functional_interface.CommandConsumer;
 import dev.ryanland.colossus.command.finalizers.CooldownFinalizer;
 import dev.ryanland.colossus.command.finalizers.Finalizer;
 import dev.ryanland.colossus.command.impl.DefaultHelpCommand;
@@ -16,6 +17,7 @@ import dev.ryanland.colossus.command.inhibitors.impl.GuildOnlyInhibitor;
 import dev.ryanland.colossus.command.inhibitors.impl.PermissionInhibitor;
 import dev.ryanland.colossus.command.regular.SubCommand;
 import dev.ryanland.colossus.events.InternalEventListener;
+import dev.ryanland.colossus.events.annotations.ButtonListener;
 import dev.ryanland.colossus.events.command.CommandEvent;
 import dev.ryanland.colossus.events.repliable.ButtonClickEvent;
 import dev.ryanland.colossus.sys.config.ConfigSupplier;
@@ -41,6 +43,9 @@ import net.dv8tion.jda.api.interactions.commands.localization.ResourceBundleLoca
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
@@ -270,6 +275,37 @@ public class ColossusBuilder {
             for (ClassInfo info : scan.getSubclasses(BaseCommand.class)) {
                 if (info.implementsInterface(SubCommand.class)) continue;
                 commands.add((BaseCommand) info.loadClass().getDeclaredConstructor().newInstance());
+            }
+            // Register @ButtonListener methods
+            for (ClassInfo info : scan.getAllClasses()) {
+                Class<?> clazz = info.loadClass();
+                for (Method method : clazz.getDeclaredMethods()) {
+                    if (method.isAnnotationPresent(ButtonListener.class)) {
+                        if (!Arrays.equals(method.getParameterTypes(), new Class[]{ButtonClickEvent.class})) {
+                            throw new IllegalArgumentException("Button listener method "+clazz.getName()+"#"+method.getName()+" must have one ButtonClickEvent parameter");
+                        }
+                        if (!Modifier.isStatic(method.getModifiers())) {
+                            throw new IllegalArgumentException("Button listener method "+clazz.getName()+"#"+method.getName()+" must be static");
+                        }
+
+                        ButtonListener annotation = method.getAnnotation(ButtonListener.class);
+
+                        CommandConsumer<ButtonClickEvent> consumer = event -> {
+                            try {
+                                method.setAccessible(true);
+                                method.invoke(null, event);
+                            } catch (IllegalAccessException | InvocationTargetException e) {
+                                throw new IllegalArgumentException("Failed to invoke button listener method " + clazz.getName() + "#" + method.getName(), e);
+                            }
+                        };
+
+                        if (annotation.startsWith().isEmpty()) {
+                            InternalEventListener.registerStaticButtonListener(annotation.value(), consumer);
+                        } else {
+                            InternalEventListener.registerStaticStartsWithButtonListener(annotation.startsWith(), consumer);
+                        }
+                    }
+                }
             }
         }
 

@@ -84,25 +84,26 @@ public class HibernateManager {
     public static <R extends UserEntity> R getUser(String userId) {
         if (defaultUserTable == null) throw new IllegalStateException("A default user table has not been configured. Annotate the table class with @DefaultTable.");
 
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
+        try (Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
 
-        UserEntity user = session.get(defaultUserTable, userId);
+            UserEntity user = session.get(defaultUserTable, userId);
 
-        // doesn't exist yet, so create a new record
-        if (user == null) {
-            try {
-                user = defaultUserTable.getDeclaredConstructor().newInstance();
-                user.setUserId(userId);
-                session.persist(user);
-            } catch (NoSuchMethodException e) {
-                throw new IllegalStateException("The default user table must have a no-args constructor.");
+            // doesn't exist yet, so create a new record
+            if (user == null) {
+                try {
+                    user = defaultUserTable.getDeclaredConstructor().newInstance();
+                    user.setUserId(userId);
+                    session.persist(user);
+                } catch (NoSuchMethodException e) {
+                    throw new IllegalStateException("The default user table must have a no-args constructor.");
+                }
             }
+
+            session.getTransaction().commit();
+
+            return (R) user;
         }
-
-        session.getTransaction().commit();
-
-        return (R) user;
     }
 
     /**
@@ -112,26 +113,27 @@ public class HibernateManager {
     public static <R extends MemberEntity> R getMember(String userId, String guildId) {
         if (defaultMemberTable == null) throw new IllegalStateException("A default member table has not been configured. Annotate the table class with @DefaultTable.");
 
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
+        try (Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
 
-        MemberEntity member = session.get(defaultMemberTable, new MemberEntity.MemberEntityId(userId, guildId));
+            MemberEntity member = session.get(defaultMemberTable, new MemberEntity.MemberEntityId(userId, guildId));
 
-        // doesn't exist yet, so create a new record
-        if (member == null) {
-            try {
-                member = defaultMemberTable.getDeclaredConstructor().newInstance();
-                member.setUserId(userId);
-                member.setGuildId(guildId);
-                session.persist(member);
-            } catch (NoSuchMethodException e) {
-                throw new IllegalStateException("The default member table must have a no-args constructor.");
+            // doesn't exist yet, so create a new record
+            if (member == null) {
+                try {
+                    member = defaultMemberTable.getDeclaredConstructor().newInstance();
+                    member.setUserId(userId);
+                    member.setGuildId(guildId);
+                    session.persist(member);
+                } catch (NoSuchMethodException e) {
+                    throw new IllegalStateException("The default member table must have a no-args constructor.");
+                }
             }
+
+            session.getTransaction().commit();
+
+            return (R) member;
         }
-
-        session.getTransaction().commit();
-
-        return (R) member;
     }
 
     /**
@@ -141,25 +143,26 @@ public class HibernateManager {
     public static <R extends GuildEntity> R getGuild(String guildId) {
         if (defaultGuildTable == null) throw new IllegalStateException("A default guild table has not been configured. Annotate the table class with @DefaultTable.");
 
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
+        try (Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
 
-        GuildEntity guild = session.get(defaultGuildTable, guildId);
+            GuildEntity guild = session.get(defaultGuildTable, guildId);
 
-        // doesn't exist yet, so create a new record
-        if (guild == null) {
-            try {
-                guild = defaultGuildTable.getDeclaredConstructor().newInstance();
-                guild.setGuildId(guildId);
-                session.persist(guild);
-            } catch (NoSuchMethodException e) {
-                throw new IllegalStateException("The default guild table must have a no-args constructor.");
+            // doesn't exist yet, so create a new record
+            if (guild == null) {
+                try {
+                    guild = defaultGuildTable.getDeclaredConstructor().newInstance();
+                    guild.setGuildId(guildId);
+                    session.persist(guild);
+                } catch (NoSuchMethodException e) {
+                    throw new IllegalStateException("The default guild table must have a no-args constructor.");
+                }
             }
+
+            session.getTransaction().commit();
+
+            return (R) guild;
         }
-
-        session.getTransaction().commit();
-
-        return (R) guild;
     }
 
     /**
