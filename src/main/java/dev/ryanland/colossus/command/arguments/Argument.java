@@ -6,13 +6,12 @@ import dev.ryanland.colossus.events.command.CommandEvent;
 import dev.ryanland.colossus.events.command.MessageCommandEvent;
 import dev.ryanland.colossus.events.command.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.Command;
+import net.dv8tion.jda.api.interactions.commands.Command.Choice;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collection;
-import java.util.Deque;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Function;
@@ -23,6 +22,7 @@ public abstract class Argument<T> {
     private String description;
     private boolean optional = false;
     private Function<CommandEvent, CompletableFuture<T>> optionalFunction = event -> null;
+    private List<Choice> choices = new ArrayList<>();
 
     public final Argument<T> name(String name) {
         this.name = name;
@@ -58,6 +58,7 @@ public abstract class Argument<T> {
             throw new IllegalStateException(getClass().getName() + " - Arguments must have at least a name and description.");
         }
         return getArgumentOptionData()
+            .addChoices(choices)
             .setName(getName())
             .setDescription(getDescription())
             .setRequired(!isOptional());
@@ -94,37 +95,37 @@ public abstract class Argument<T> {
     public abstract ArgumentOptionData getArgumentOptionData();
 
     public Argument<T> addChoice(@NotNull String name, double value) {
-        getArgumentOptionData().addChoice(name, value);
+        choices.add(new Choice(name, value));
         return this;
     }
 
     public Argument<T> addChoice(@NotNull String name, long value) {
-        getArgumentOptionData().addChoice(name, value);
+        choices.add(new Choice(name, value));
         return this;
     }
 
     public Argument<T> addChoice(@NotNull String name, @NotNull String value) {
-        getArgumentOptionData().addChoice(name, value);
+        choices.add(new Choice(name, value));
         return this;
     }
 
     public Argument<T> addChoices(String... choices) {
-        getArgumentOptionData().addChoices(choices);
+        addChoices(Arrays.asList(choices));
         return this;
     }
 
     public Argument<T> addChoices(List<String> choices) {
-        getArgumentOptionData().addChoices(choices);
+        addChoices(choices.stream().map(choice -> new Choice(choice, choice)).toList());
         return this;
     }
 
     public Argument<T> addChoices(@NotNull Command.Choice... choices) {
-        getArgumentOptionData().addChoices(choices);
+        addChoices(Arrays.asList(choices));
         return this;
     }
 
     public Argument<T> addChoices(@NotNull Collection<? extends Command.Choice> choices) {
-        getArgumentOptionData().addChoices(choices);
+        this.choices.addAll(choices);
         return this;
     }
 
