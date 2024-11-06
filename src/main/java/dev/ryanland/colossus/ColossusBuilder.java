@@ -37,6 +37,7 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
 import net.dv8tion.jda.api.interactions.commands.localization.LocalizationFunction;
 import net.dv8tion.jda.api.interactions.commands.localization.ResourceBundleLocalizationFunction;
@@ -256,9 +257,9 @@ public class ColossusBuilder {
     }
 
     /**
-     * Scans the provided package for commands and entities, registering them automatically.
+     * Scans the provided package for commands, entities, {@link ButtonListener @ButtonListener} methods and {@link ListenerAdapter} subclasses, registering them automatically.
      * <p>For example, if you would provide a base package like {@code "dev.ryanland.mybot"},
-     * you will no longer need to register any command or entity manually.
+     * you will no longer need to register any command, entity, {@link ButtonListener @ButtonListener} method or {@link ListenerAdapter} subclass manually.
      * @return The builder
      */
     @SneakyThrows
@@ -307,6 +308,15 @@ public class ColossusBuilder {
                     }
                 }
             }
+            // Register ListenerAdapters
+            scan.getSubclasses(ListenerAdapter.class).forEach(info -> {
+                try {
+                    ListenerAdapter listener = (ListenerAdapter) info.loadClass().getDeclaredConstructor().newInstance();
+                    jdaBuilder.addEventListeners(listener);
+                } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+                    throw new IllegalArgumentException("Failed to instantiate ListenerAdapter " + info.getName(), e);
+                }
+            });
         }
 
         return this;
@@ -637,6 +647,7 @@ public class ColossusBuilder {
      *
      * @param listeners The listener(s) to add to the list.
      * @return The builder
+     * @deprecated {@link net.dv8tion.jda.api.hooks.ListenerAdapter ListenerAdapters} are registered automatically using {@link #scanPackage(String)}
      */
     public ColossusBuilder addEventListeners(Object... listeners) {
         return setJDABuilder(builder -> builder.addEventListeners(listeners));
