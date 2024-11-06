@@ -40,4 +40,10 @@ public interface PresetType {
 
     boolean isEphemeral();
 
+    /**
+     * Create a new {@link PresetBuilder} with this preset type.
+     */
+    default PresetBuilder create() {
+        return new PresetBuilder(this);
+    }
 }

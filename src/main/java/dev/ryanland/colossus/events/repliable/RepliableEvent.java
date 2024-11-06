@@ -1,5 +1,6 @@
 package dev.ryanland.colossus.events.repliable;
 
+import dev.ryanland.colossus.Colossus;
 import dev.ryanland.colossus.command.CommandException;
 import dev.ryanland.colossus.command.executor.functional_interface.CommandConsumer;
 import dev.ryanland.colossus.sys.database.entities.GuildEntity;
@@ -67,13 +68,47 @@ public interface RepliableEvent {
 
     /**
      * Reply to this event with a {@link PresetBuilder}<br>
-     * Note: When overriding this method, do not forget to add a button listener!
+     * Note: When overriding this method, do not forget to add component row listeners!
      * @see PresetBuilder#setEphemeral(boolean)
      * @see ButtonClickEvent#addListener(Long, List)
      * @see ButtonClickEvent#addListener(Long, List, Runnable)
      * @see ButtonClickEvent#addListener(Long, List, Runnable, long, TimeUnit)
      */
     void reply(PresetBuilder message);
+
+    /**
+     * Reply to this event with a {@link PresetBuilder} using the configured success preset type, with a custom description<br>
+     * @param description The description of the {@link PresetBuilder}
+     */
+    default void replySuccess(String description) {
+        reply(new PresetBuilder(Colossus.getSuccessPresetType(), description));
+    }
+
+    /**
+     * Reply to this event with a {@link PresetBuilder} using the configured success preset type, with a custom title and description<br>
+     * @param title The title of the {@link PresetBuilder}
+     * @param description The description of the {@link PresetBuilder}
+     */
+    default void replySuccess(String title, String description) {
+        reply(new PresetBuilder(Colossus.getSuccessPresetType(), title, description));
+    }
+
+    /**
+     * Reply to this event with a {@link PresetBuilder} using the configured error preset type, with a custom description<br>
+     * @param description The description of the {@link PresetBuilder}
+     */
+    default void replyError(String description) {
+        reply(new PresetBuilder(Colossus.getErrorPresetType(), description));
+    }
+
+    /**
+     * Reply to this event with a {@link PresetBuilder} using the configured error preset type, with a custom title and description<br>
+     * @param title The title of the {@link PresetBuilder}
+     * @param description The description of the {@link PresetBuilder}
+     */
+    default void replyError(String title, String description) {
+        reply(new PresetBuilder(Colossus.getErrorPresetType(), title, description));
+    }
 
     /**
      * Reply to this event with a {@link Modal}<br>
