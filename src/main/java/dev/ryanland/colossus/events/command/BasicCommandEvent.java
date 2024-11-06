@@ -32,6 +32,7 @@ public sealed abstract class BasicCommandEvent implements RepliableEvent permits
 
     public abstract String getName();
 
+    @Override
     public abstract MessageChannel getChannel();
 
     public abstract boolean isFromGuild();

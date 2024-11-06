@@ -12,6 +12,7 @@ import dev.ryanland.colossus.sys.snowflake.ColossusGuild;
 import dev.ryanland.colossus.sys.snowflake.ColossusMember;
 import dev.ryanland.colossus.sys.snowflake.ColossusUser;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.channel.Channel;
 import net.dv8tion.jda.api.interactions.modals.Modal;
 
 import java.util.List;
@@ -27,6 +28,8 @@ public interface RepliableEvent {
     ColossusMember getMember();
 
     ColossusGuild getGuild();
+
+    Channel getChannel();
 
     default <R extends UserEntity> R getUserEntity() {
         return getUser().getEntity();

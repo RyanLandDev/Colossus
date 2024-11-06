@@ -15,13 +15,13 @@ See the [wiki](https://github.com/RyanLandDev/Colossus/wiki) for various guides 
         * Automatic **exception handling**
         * Possibility to create **custom arguments**
         * **Optional arguments** with custom fallback functions
-        * **Multi-step arguments** using `CompleteableFuture<T>`
+        * **Multi-step arguments** using `CompletableFuture<T>`
         * Supports all Discord option features, such as autocomplete
     * Automatic **exception handling**; throwing a `CommandException` in the middle of your command execution code will automatically send an error message, same for regular exceptions
       ```java
       @Override
       public void run(SlashCommandEvent event) throws CommandException {
-          if (event.getUserEntity().isStaff()) {
+          if (!event.getUserEntity().isStaff()) {
               // This will send the user an ephemeral error embed with the provided description
               throw new CommandException("You are not allowed to close a ticket.");
           }

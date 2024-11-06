@@ -6,7 +6,6 @@ import dev.ryanland.colossus.sys.interactions.button.BaseButton;
 import dev.ryanland.colossus.sys.interactions.button.ButtonLayout;
 import dev.ryanland.colossus.sys.interactions.button.ButtonRow;
 import dev.ryanland.colossus.sys.util.InteractionUtil;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;

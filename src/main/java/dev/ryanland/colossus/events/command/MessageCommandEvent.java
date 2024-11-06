@@ -16,6 +16,7 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
+import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
 import net.dv8tion.jda.api.interactions.modals.Modal;
@@ -44,6 +45,11 @@ public final class MessageCommandEvent extends CommandEvent {
             @Override
             public ColossusGuild getGuild() {
                 return new ColossusGuild(event.getGuild());
+            }
+
+            @Override
+            public MessageChannelUnion getChannel() {
+                return event.getChannel();
             }
 
             @Override

@@ -8,6 +8,7 @@ import dev.ryanland.colossus.sys.snowflake.ColossusMember;
 import dev.ryanland.colossus.sys.snowflake.ColossusUser;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.channel.Channel;
 import net.dv8tion.jda.api.interactions.callbacks.IModalCallback;
 import net.dv8tion.jda.api.interactions.callbacks.IReplyCallback;
 import net.dv8tion.jda.api.interactions.modals.Modal;
@@ -34,6 +35,11 @@ public interface InteractionRepliableEvent extends RepliableEvent {
     @Override
     default ColossusGuild getGuild() {
         return new ColossusGuild(getEvent().getGuild());
+    }
+
+    @Override
+    default Channel getChannel() {
+        return getEvent().getChannel();
     }
 
     /**

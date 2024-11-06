@@ -24,7 +24,7 @@ dependencies {
     implementation 'org.slf4j:slf4j-api:2.0.13'
 
     // jda
-    implementation 'net.dv8tion:JDA:5.0.2'
+    implementation 'net.dv8tion:JDA:5.2.0'
 
     // hibernate (database)
     implementation "org.hibernate.orm:hibernate-core:6.5.2.Final"

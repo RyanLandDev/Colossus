@@ -6,6 +6,7 @@ import dev.ryanland.colossus.command.CommandException;
 import dev.ryanland.colossus.sys.interactions.button.BaseButton;
 import dev.ryanland.colossus.sys.interactions.button.ButtonRow;
 import dev.ryanland.colossus.sys.util.ExecutorUtil;
+import lombok.Getter;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 
@@ -14,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+@Getter
 public class ButtonClickEvent implements EditableRepliableEvent {
 
     private static final HashMap<Long, List<ButtonIdentifier>> MESSAGE_BUTTONS = new HashMap<>();
@@ -96,15 +98,6 @@ public class ButtonClickEvent implements EditableRepliableEvent {
     public void handle() throws CommandException {
         if (button == null) return;
         if (button.onClick() != null) button.onClick().accept(this);
-    }
-
-    public BaseButton getButton() {
-        return button;
-    }
-
-    @Override
-    public ButtonInteractionEvent getEvent() {
-        return event;
     }
 
     @Override
