@@ -37,6 +37,7 @@ public class ModalSubmitEvent implements EditableRepliableEvent {
     public void handle() throws CommandException {
         CommandConsumer<ModalSubmitEvent> action = MODAL_ACTIONS.remove(modalIdentifier);
         if (action == null) return;
+        event.deferEdit().queue();
         action.accept(this);
     }
 
