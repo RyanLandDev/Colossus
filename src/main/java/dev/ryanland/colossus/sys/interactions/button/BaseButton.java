@@ -11,17 +11,17 @@ import java.util.List;
 
 /**
  * A Colossus Button. Also see the static methods within this record for helper constructors.
- * @param button The JDA Button object
+ * @param button The JDA {@link Button} object
  * @param onClick What to do when this button is clicked, with the click event given
  */
 public record BaseButton(Button button, CommandConsumer<ButtonClickEvent> onClick) {
 
+    /**
+     * Creates a simple button with no functionality.
+     * @param button The JDA {@link Button} object
+     */
     public BaseButton(Button button) {
         this(button, event -> {});
-    }
-
-    public BaseButton of(Button button) {
-        return new BaseButton(button);
     }
 
     /**
