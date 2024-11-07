@@ -105,5 +105,9 @@ public class ButtonClickEvent implements EditableRepliableEvent {
         return getEvent().getMessage();
     }
 
+    public String getButtonId() {
+        return event.getButton().getId();
+    }
+
     private record ButtonIdentifier(Long msgId, String buttonId) {}
 }
