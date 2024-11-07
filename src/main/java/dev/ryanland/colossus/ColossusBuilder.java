@@ -20,11 +20,13 @@ import dev.ryanland.colossus.events.InternalEventListener;
 import dev.ryanland.colossus.events.annotations.ButtonListener;
 import dev.ryanland.colossus.events.command.CommandEvent;
 import dev.ryanland.colossus.events.repliable.ButtonClickEvent;
+import dev.ryanland.colossus.events.repliable.SelectMenuEvent;
 import dev.ryanland.colossus.sys.config.ConfigSupplier;
 import dev.ryanland.colossus.sys.config.JsonConfig;
 import dev.ryanland.colossus.sys.database.HibernateManager;
 import dev.ryanland.colossus.sys.database.entities.ColossusEntity;
 import dev.ryanland.colossus.sys.file.LocalFile;
+import dev.ryanland.colossus.sys.interactions.select.BaseSelectMenu;
 import dev.ryanland.colossus.sys.presetbuilder.DefaultPresetType;
 import dev.ryanland.colossus.sys.presetbuilder.PresetBuilder;
 import dev.ryanland.colossus.sys.presetbuilder.PresetType;
@@ -108,8 +110,8 @@ public class ColossusBuilder {
     private final List<Finalizer> finalizers = new ArrayList<>();
 
     private boolean disableHelpCommand = false;
-    private long buttonListenerExpirationTimeAmount = 2;
-    private TimeUnit buttonListenerExpirationTimeUnit = TimeUnit.MINUTES;
+    private long componentListenerExpirationTimeAmount = 24;
+    private TimeUnit componentListenerExpirationTimeUnit = TimeUnit.HOURS;
     private PresetType defaultPresetType = DefaultPresetType.DEFAULT;
     private PresetType errorPresetType = DefaultPresetType.ERROR;
     private PresetType successPresetType = DefaultPresetType.SUCCESS;
@@ -252,7 +254,7 @@ public class ColossusBuilder {
         }
 
         return new Colossus(jdaBuilder, config, categories, commands, contextCommands, localFiles,
-            buttonListenerExpirationTimeAmount, buttonListenerExpirationTimeUnit,
+            componentListenerExpirationTimeAmount, componentListenerExpirationTimeUnit,
             defaultPresetType, errorPresetType, successPresetType, localizationFunction, inhibitors, finalizers);
     }
 
@@ -458,15 +460,15 @@ public class ColossusBuilder {
     /**
      * Modify the default amount of time to wait before a button listener should expire.<br>
      * Expiring means removing the buttons from the message and stopping listeners.<br>
-     * This value is only used in the {@link ButtonClickEvent#addListener(Long, List, Runnable)} method.<br>
-     * By default, this value is set to <strong>2 minutes</strong>.
+     * This value is only used in the {@link ButtonClickEvent#addListener(Long, List, Runnable)} and {@link SelectMenuEvent#addListener(Long, BaseSelectMenu, Runnable)} methods.<br>
+     * By default, this value is set to <strong>24 hours</strong>.
      * @return This {@link ColossusBuilder}
      * @see ButtonClickEvent
      * @see ButtonClickEvent#addListener(Long, List, Runnable)
      */
     public ColossusBuilder setDefaultComponentListenerExpirationTime(long timeAmount, TimeUnit timeUnit) {
-        buttonListenerExpirationTimeAmount = timeAmount;
-        buttonListenerExpirationTimeUnit = timeUnit;
+        componentListenerExpirationTimeAmount = timeAmount;
+        componentListenerExpirationTimeUnit = timeUnit;
         return this;
     }
 
