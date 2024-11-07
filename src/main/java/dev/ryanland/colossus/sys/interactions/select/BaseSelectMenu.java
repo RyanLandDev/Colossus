@@ -31,6 +31,16 @@ public class BaseSelectMenu extends ComponentRow {
     }
 
     /**
+     * A Colossus Select Menu without predefined functionality. See {@link #BaseSelectMenu(SelectMenu, CommandConsumer)} for a version with functionality.<br>
+     * Also see the static methods within this record for helper constructors.
+     * @param selectMenu The JDA {@link SelectMenu} object
+     * @see #BaseSelectMenu(SelectMenu, CommandConsumer)
+     */
+    public BaseSelectMenu(SelectMenu selectMenu) {
+        this(selectMenu, event -> {});
+    }
+
+    /**
      * Create a select menu which only works if the provided predicate is true, and do something if false
      */
     public static BaseSelectMenu predicate(CommandPredicate<SelectMenuEvent> predicate,

@@ -6,6 +6,7 @@ import dev.ryanland.colossus.command.CommandException;
 import dev.ryanland.colossus.command.executor.functional_interface.CommandConsumer;
 import dev.ryanland.colossus.sys.interactions.select.BaseSelectMenu;
 import dev.ryanland.colossus.sys.util.ExecutorUtil;
+import lombok.Getter;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.component.GenericSelectMenuInteractionEvent;
 
@@ -79,6 +80,7 @@ public class SelectMenuEvent implements EditableRepliableEvent {
     }
 
     public final GenericSelectMenuInteractionEvent<?, ?> event;
+    @Getter
     public final SelectMenuIdentifier selectMenuIdentifier;
 
     public SelectMenuEvent(GenericSelectMenuInteractionEvent<?, ?> event) {
@@ -90,8 +92,11 @@ public class SelectMenuEvent implements EditableRepliableEvent {
      * Handle this event; execute it
      */
     public void handle() throws CommandException {
-        CommandConsumer<SelectMenuEvent> action = SELECT_MENUS.get(selectMenuIdentifier).getOnSubmit();
+        BaseSelectMenu selectMenu = SELECT_MENUS.get(selectMenuIdentifier);
+        if (selectMenu == null) return;
+        CommandConsumer<SelectMenuEvent> action = selectMenu.getOnSubmit();
         if (action == null) return;
+        event.deferEdit().queue();
         action.accept(this);
     }
 
@@ -103,10 +108,6 @@ public class SelectMenuEvent implements EditableRepliableEvent {
     @Override
     public Message getMessage() {
         return getEvent().getMessage();
-    }
-
-    public SelectMenuIdentifier getSelectMenuIdentifier() {
-        return selectMenuIdentifier;
     }
 
     public <T> List<T> getValues() {
