@@ -13,6 +13,8 @@ public class SelectRowMenuBuilder implements InteractionMenuBuilder<SelectRowMen
     private List<SelectRowOption> options = new ArrayList<>();
     private String placeholder = null;
 
+    public SelectRowMenuBuilder() {}
+
     public SelectRowMenuBuilder(PresetBuilder startMessage, SelectRowOption... options) {
         this.startMessage = startMessage;
         this.options.addAll(List.of(options));
