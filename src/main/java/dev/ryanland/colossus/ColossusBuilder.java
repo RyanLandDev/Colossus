@@ -302,10 +302,10 @@ public class ColossusBuilder {
                             }
                         };
 
-                        if (annotation.startsWith().isEmpty()) {
-                            InternalEventListener.registerStaticButtonListener(annotation.value(), consumer);
+                        if (annotation.startsWith()) {
+                            InternalEventListener.registerStaticStartsWithButtonListener(annotation.value(), consumer);
                         } else {
-                            InternalEventListener.registerStaticStartsWithButtonListener(annotation.startsWith(), consumer);
+                            InternalEventListener.registerStaticButtonListener(annotation.value(), consumer);
                         }
                     }
                 }

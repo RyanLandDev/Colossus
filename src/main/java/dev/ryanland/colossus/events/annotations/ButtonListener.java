@@ -28,9 +28,11 @@ public @interface ButtonListener {
     String value();
 
     /**
-     * What the button ID of the button that should be listened to should start with.
-     * <p><strong>Example: </strong> {@code closeticket-} will listen to {@code closeticket-1}, {@code closeticket-2}, etc.
-     * <p>The {@link #value()} will be ignored if this is set (and not empty).
+     * Whether the button that should be listened to <i>exactly matches</i> or <i>starts with</i> the ID provided in {@link #value()}.
+     *
+     * <p>{@code false} = exactly matches<br>
+     * {@code true} = starts with
+     * <p><strong>Example: </strong> {@code closeticket-} will listen to {@code closeticket-1}, {@code closeticket-2}, etc. if this value is {@code true}.
      */
-    String startsWith() default "";
+    boolean startsWith() default false;
 }

@@ -314,7 +314,12 @@ public record ColossusGuild(Guild guild) implements Guild {
         return guild().getCommunityUpdatesChannel();
     }
 
-    
+    @Override
+    public TextChannel getSafetyAlertsChannel() {
+        return guild().getSafetyAlertsChannel();
+    }
+
+
     @Nullable
     @Override
     public Member getOwner() {
