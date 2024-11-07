@@ -4,10 +4,7 @@ import dev.ryanland.colossus.ColossusBuilder;
 import dev.ryanland.colossus.sys.interactions.button.BaseButton;
 import dev.ryanland.colossus.sys.presetbuilder.PresetBuilder;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 /**
  * Indicates that a method is a static button listener. This method will be called automatically when a specific button is clicked.

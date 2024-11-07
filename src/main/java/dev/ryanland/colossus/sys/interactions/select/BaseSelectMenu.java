@@ -35,10 +35,10 @@ public class BaseSelectMenu extends ComponentRow {
      */
     public static BaseSelectMenu predicate(CommandPredicate<SelectMenuEvent> predicate,
                                            CommandConsumer<SelectMenuEvent> ifFalse, SelectMenu selectMenu,
-                                           CommandConsumer<SelectMenuEvent> onClick) {
+                                           CommandConsumer<SelectMenuEvent> onSubmit) {
         return new BaseSelectMenu(selectMenu, event -> {
             if (!predicate.test(event)) ifFalse.accept(event);
-            else if (onClick != null) onClick.accept(event);
+            else if (onSubmit != null) onSubmit.accept(event);
         });
     }
 
@@ -46,20 +46,20 @@ public class BaseSelectMenu extends ComponentRow {
      * Create a select menu which only one user can use
      */
     public static BaseSelectMenu user(Long userId, SelectMenu selectMenu,
-                                      CommandConsumer<SelectMenuEvent> onClick) {
-        return group(new Long[]{ userId }, selectMenu, onClick);
+                                      CommandConsumer<SelectMenuEvent> onSubmit) {
+        return group(new Long[]{ userId }, selectMenu, onSubmit);
     }
 
     /**
      * Create a select menu which only a specific group of users can use
      */
     public static BaseSelectMenu group(Long[] userIds, SelectMenu selectMenu,
-                                       CommandConsumer<SelectMenuEvent> onClick) {
+                                       CommandConsumer<SelectMenuEvent> onSubmit) {
         return predicate(event -> List.of(userIds).contains(event.getUser().getIdLong()),
             event -> event.reply(new PresetBuilder(Colossus.getErrorPresetType())
                 .setTitle("Not Allowed")
                 .setDescription("You're not allowed to use this button.")
-            ), selectMenu, onClick);
+            ), selectMenu, onSubmit);
     }
 
     @Override

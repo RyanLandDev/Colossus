@@ -99,6 +99,17 @@ public class InternalEventListener extends ListenerAdapter {
         }
     }
 
+    private static final Map<String, CommandConsumer<SelectMenuEvent>> STATIC_SELECTMENU_LISTENERS = new HashMap<>();
+    private static final Map<String, CommandConsumer<SelectMenuEvent>> STATIC_STARTSWITH_SELECTMENU_LISTENERS = new HashMap<>();
+
+    public static void registerStaticSelectMenuListener(String selectMenuId, CommandConsumer<SelectMenuEvent> listener) {
+        STATIC_SELECTMENU_LISTENERS.put(selectMenuId, listener);
+    }
+
+    public static void registerStaticStartsWithSelectMenuListener(String selectMenuId, CommandConsumer<SelectMenuEvent> listener) {
+        STATIC_STARTSWITH_SELECTMENU_LISTENERS.put(selectMenuId, listener);
+    }
+
     // Submit string select menu
     @Override
     public void onStringSelectInteraction(@NotNull StringSelectInteractionEvent event) {
@@ -112,8 +123,20 @@ public class InternalEventListener extends ListenerAdapter {
     }
 
     private void onSelectInteraction(GenericSelectMenuInteractionEvent<?, ?> event) {
+        String selectMenuId = event.getComponentId();
         try {
-            new SelectMenuEvent(event).handle();
+            if (STATIC_SELECTMENU_LISTENERS.containsKey(selectMenuId)) {
+                STATIC_SELECTMENU_LISTENERS.get(selectMenuId).accept(new SelectMenuEvent(event));
+            } else {
+                for (Entry<String, CommandConsumer<SelectMenuEvent>> entries : STATIC_STARTSWITH_SELECTMENU_LISTENERS.entrySet()) {
+                    if (selectMenuId.startsWith(entries.getKey())) {
+                        entries.getValue().accept(new SelectMenuEvent(event));
+                        return;
+                    }
+                }
+
+                new SelectMenuEvent(event).handle();
+            }
         } catch (CommandException e) {
             event.deferReply().addEmbeds(
                 new PresetBuilder(Colossus.getErrorPresetType(), e.getMessage()).embed()

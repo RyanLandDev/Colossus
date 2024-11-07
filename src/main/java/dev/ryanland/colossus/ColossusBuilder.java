@@ -18,6 +18,7 @@ import dev.ryanland.colossus.command.inhibitors.impl.PermissionInhibitor;
 import dev.ryanland.colossus.command.regular.SubCommand;
 import dev.ryanland.colossus.events.InternalEventListener;
 import dev.ryanland.colossus.events.annotations.ButtonListener;
+import dev.ryanland.colossus.events.annotations.SelectMenuListener;
 import dev.ryanland.colossus.events.command.CommandEvent;
 import dev.ryanland.colossus.events.repliable.ButtonClickEvent;
 import dev.ryanland.colossus.events.repliable.SelectMenuEvent;
@@ -259,9 +260,9 @@ public class ColossusBuilder {
     }
 
     /**
-     * Scans the provided package for commands, entities, {@link ButtonListener @ButtonListener} methods and {@link ListenerAdapter} subclasses, registering them automatically.
+     * Scans the provided package for commands, entities, {@link ButtonListener @ButtonListener} and {@link SelectMenuListener} methods and {@link ListenerAdapter} subclasses, registering them automatically.
      * <p>For example, if you would provide a base package like {@code "dev.ryanland.mybot"},
-     * you will no longer need to register any command, entity, {@link ButtonListener @ButtonListener} method or {@link ListenerAdapter} subclass manually.
+     * you will no longer need to register any command, entity, {@link ButtonListener @ButtonListener} method, {@link SelectMenuListener @SelectMenuListener} method or {@link ListenerAdapter} subclass manually.
      * @return The builder
      */
     @SneakyThrows
@@ -279,10 +280,11 @@ public class ColossusBuilder {
                 if (info.implementsInterface(SubCommand.class)) continue;
                 commands.add((BaseCommand) info.loadClass().getDeclaredConstructor().newInstance());
             }
-            // Register @ButtonListener methods
+            // Register @ButtonListener and @SelectMenuListener methods
             for (ClassInfo info : scan.getAllClasses()) {
                 Class<?> clazz = info.loadClass();
                 for (Method method : clazz.getDeclaredMethods()) {
+                    // @ButtonListener
                     if (method.isAnnotationPresent(ButtonListener.class)) {
                         if (!Arrays.equals(method.getParameterTypes(), new Class[]{ButtonClickEvent.class})) {
                             throw new IllegalArgumentException("Button listener method "+clazz.getName()+"#"+method.getName()+" must have one ButtonClickEvent parameter");
@@ -306,6 +308,32 @@ public class ColossusBuilder {
                             InternalEventListener.registerStaticStartsWithButtonListener(annotation.value(), consumer);
                         } else {
                             InternalEventListener.registerStaticButtonListener(annotation.value(), consumer);
+                        }
+                    }
+                    // @SelectMenuListener
+                    if (method.isAnnotationPresent(SelectMenuListener.class)) {
+                        if (!Arrays.equals(method.getParameterTypes(), new Class[]{SelectMenuEvent.class})) {
+                            throw new IllegalArgumentException("Select menu listener method "+clazz.getName()+"#"+method.getName()+" must have one SelectMenuEvent parameter");
+                        }
+                        if (!Modifier.isStatic(method.getModifiers())) {
+                            throw new IllegalArgumentException("Select menu listener method "+clazz.getName()+"#"+method.getName()+" must be static");
+                        }
+
+                        SelectMenuListener annotation = method.getAnnotation(SelectMenuListener.class);
+
+                        CommandConsumer<SelectMenuEvent> consumer = event -> {
+                            try {
+                                method.setAccessible(true);
+                                method.invoke(null, event);
+                            } catch (IllegalAccessException | InvocationTargetException e) {
+                                throw new IllegalArgumentException("Failed to invoke select menu listener method " + clazz.getName() + "#" + method.getName(), e);
+                            }
+                        };
+
+                        if (annotation.startsWith()) {
+                            InternalEventListener.registerStaticStartsWithSelectMenuListener(annotation.value(), consumer);
+                        } else {
+                            InternalEventListener.registerStaticSelectMenuListener(annotation.value(), consumer);
                         }
                     }
                 }
