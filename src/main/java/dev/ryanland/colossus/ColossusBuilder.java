@@ -88,9 +88,6 @@ public class ColossusBuilder {
     static {
         CORE_CONFIG_ENTRIES.put("token", "");
 
-        CORE_CONFIG_ENTRIES.put("sharding.enabled", false);
-        CORE_CONFIG_ENTRIES.put("sharding.shard_total", 1);
-
         CORE_CONFIG_ENTRIES.put("slash_commands.enabled", true);
         CORE_CONFIG_ENTRIES.put("slash_commands.global", false);
         CORE_CONFIG_ENTRIES.put("slash_commands.guild_id", "");
@@ -102,6 +99,8 @@ public class ColossusBuilder {
     private JDABuilder jdaBuilder;
     private ConfigSupplier config;
     private String configDirectory;
+    private boolean shardingEnabled = false;
+    private int shardTotal = -1;
     private final Set<Category> categories = new LinkedHashSet<>();
     private final List<Command> commands = new ArrayList<>();
     private final List<ContextCommand<?>> contextCommands = new ArrayList<>();
@@ -254,7 +253,7 @@ public class ColossusBuilder {
             config.read();
         }
 
-        return new Colossus(jdaBuilder, config, categories, commands, contextCommands, localFiles,
+        return new Colossus(jdaBuilder, config, shardingEnabled, shardTotal, categories, commands, contextCommands, localFiles,
             componentListenerExpirationTimeAmount, componentListenerExpirationTimeUnit,
             defaultPresetType, errorPresetType, successPresetType, localizationFunction, inhibitors, finalizers);
     }
@@ -371,6 +370,18 @@ public class ColossusBuilder {
     }
 
     /**
+     * Enables sharding with the given total amount of shards. Initialize the bot with {@link Colossus#initialize(int)}.
+     * @param shardTotal The total amount of shards
+     * @return The builder
+     * @see Colossus#initialize(int)
+     */
+    public ColossusBuilder enableSharding(int shardTotal) {
+        shardingEnabled = true;
+        this.shardTotal = shardTotal;
+        return this;
+    }
+
+    /**
      * Enables the option for database cooldowns in commands.
      *
      * <p>To use database cooldowns in a command, add the following code to your command:
@@ -387,6 +398,16 @@ public class ColossusBuilder {
     public ColossusBuilder enableDatabaseCooldowns() {
         if (HibernateManager.isInitialized()) throw new IllegalStateException("Hibernate has already been initialized. Enable database cooldowns before initializing Hibernate.");
         HibernateManager.registerEntity(CooldownTable.class);
+        return this;
+    }
+
+    /**
+     * Simply removes the {@code message_commands} section from the default config, resulting in default behavior (message commands disabled).
+     * @return The builder
+     */
+    public ColossusBuilder disableMessageCommands() {
+        CORE_CONFIG_ENTRIES.remove("message_commands.enabled");
+        CORE_CONFIG_ENTRIES.remove("message_commands.prefix");
         return this;
     }
 

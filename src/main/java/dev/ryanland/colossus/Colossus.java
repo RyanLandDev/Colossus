@@ -42,6 +42,8 @@ public class Colossus {
 
     private static JDA jda;
     private static ConfigSupplier config;
+    private static boolean shardingEnabled;
+    private static int shardTotal;
     @Getter
     private static Set<Category> categories;
     private static List<Command> commands;
@@ -66,20 +68,22 @@ public class Colossus {
     @Getter
     private static User botOwner;
 
-    public Colossus(JDABuilder builder, ConfigSupplier config, Set<Category> categories, List<Command> commands,
-                    List<ContextCommand<?>> contextCommands, List<LocalFile> localFiles, long buttonListenerExpirationTimeAmount,
-                    TimeUnit buttonListenerExpirationTimeUnit, PresetType defaultPresetType, PresetType errorPresetType,
-                    PresetType successPresetType, LocalizationFunction localizationFunction, List<Inhibitor> inhibitors,
-                    List<Finalizer> finalizers) {
+    public Colossus(JDABuilder builder, ConfigSupplier config, boolean shardingEnabled, int shardTotal, Set<Category> categories,
+                    List<Command> commands, List<ContextCommand<?>> contextCommands, List<LocalFile> localFiles,
+                    long componentListenerExpirationTimeAmount, TimeUnit componentListenerExpirationTimeUnit,
+                    PresetType defaultPresetType, PresetType errorPresetType, PresetType successPresetType,
+                    LocalizationFunction localizationFunction, List<Inhibitor> inhibitors, List<Finalizer> finalizers) {
         this.builder = builder;
 
         Colossus.config = config;
+        Colossus.shardingEnabled = shardingEnabled;
+        Colossus.shardTotal = shardTotal;
         Colossus.categories = categories;
         Colossus.commands = commands;
         Colossus.contextCommands = contextCommands;
         Colossus.localFiles = localFiles;
-        Colossus.componentListenerExpirationTimeAmount = buttonListenerExpirationTimeAmount;
-        Colossus.componentListenerExpirationTimeUnit = buttonListenerExpirationTimeUnit;
+        Colossus.componentListenerExpirationTimeAmount = componentListenerExpirationTimeAmount;
+        Colossus.componentListenerExpirationTimeUnit = componentListenerExpirationTimeUnit;
         Colossus.defaultPresetType = defaultPresetType;
         Colossus.errorPresetType = errorPresetType;
         Colossus.successPresetType = successPresetType;
@@ -100,7 +104,7 @@ public class Colossus {
      */
     public void initialize(int shard) {
         // check if sharding is disabled
-        if (!Objects.requireNonNullElse(config.getBoolean("sharding.enabled"), false)) shard = -1;
+        if (!shardingEnabled) shard = -1;
 
         if (shard == -1) LOGGER.info("Initializing...");
         else LOGGER.info("Initializing shard #" + shard + "...");
@@ -114,7 +118,7 @@ public class Colossus {
 
         // Build the bot
         try {
-            if (shard != -1) builder.useSharding(shard, config.getInt("sharding.shard_total"));
+            if (shard != -1) builder.useSharding(shard, shardTotal);
             jda = builder.build();
         } catch (InvalidTokenException e) {
             Colossus.LOGGER.error("The token in your configuration is invalid.");
