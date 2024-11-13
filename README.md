@@ -124,9 +124,17 @@ See the [wiki](https://github.com/RyanLandDev/Colossus/wiki) for various guides 
            false, 5, TimeUnit.MINUTES, () -> cmdEvent.reply("I got all cookies!"));
        ```
 * `RepliableEvent` interface implemented by all Colossus events to easily reply to events with strings, messages, embeds, PresetBuilders, modals or InteractionMenus. Some examples can be seen throughout this feature list
-* `WebUtil` utility class for easily retrieving data from web APIs
+* `WebUtil` utility class for easily making asynchronous web API requests using CompletableFuture. It requires the Gson library for JSON handling.
   ```java
-  WebUtil.requestJson("https://some-random-api.ml/facts/dog").get("fact").getAsString();
+  CompletableFuture<JsonObject> request = WebUtil.getJson("https://some-random-api.ml/facts/dog");
+
+  request.thenAccept(jsonObject -> {
+      String fact = jsonObject.get("fact").getAsString();
+      System.out.println("Dog Fact: " + fact);
+  }).exceptionally(ex -> {
+      ex.printStackTrace();
+      return null;
+   });
   ```
 * `ExecutorUtil` utility class for scheduling and cancelling tasks
 
