@@ -92,4 +92,12 @@ public interface ConfigSupplier {
     default <R> List<R> getList(String key) {
         return (List<R>) values.get(key);
     }
+
+    /**
+     * Removes the configuration entry associated with this key.
+     * @param key The key to remove
+     */
+    default void remove(String key) {
+        values.remove(key);
+    }
 }

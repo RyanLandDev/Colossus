@@ -406,8 +406,8 @@ public class ColossusBuilder {
      * @return The builder
      */
     public ColossusBuilder disableMessageCommands() {
-        CORE_CONFIG_ENTRIES.remove("message_commands.enabled");
-        CORE_CONFIG_ENTRIES.remove("message_commands.prefix");
+        config.remove("message_commands.enabled");
+        config.remove("message_commands.prefix");
         return this;
     }
 
