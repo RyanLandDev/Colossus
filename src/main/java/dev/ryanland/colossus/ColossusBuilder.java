@@ -91,9 +91,6 @@ public class ColossusBuilder {
         CORE_CONFIG_ENTRIES.put("slash_commands.enabled", true);
         CORE_CONFIG_ENTRIES.put("slash_commands.global", false);
         CORE_CONFIG_ENTRIES.put("slash_commands.guild_id", "");
-
-        CORE_CONFIG_ENTRIES.put("message_commands.enabled", false);
-        CORE_CONFIG_ENTRIES.put("message_commands.prefix", "!");
     }
 
     private JDABuilder jdaBuilder;
@@ -402,12 +399,12 @@ public class ColossusBuilder {
     }
 
     /**
-     * Simply removes the {@code message_commands} section from the default config, resulting in default behavior (message commands disabled).
+     * Adds message command options to the configuration.
      * @return The builder
      */
-    public ColossusBuilder disableMessageCommands() {
-        config.remove("message_commands.enabled");
-        config.remove("message_commands.prefix");
+    public ColossusBuilder enableMessageCommands() {
+        config.addValue("message_commands.enabled", true);
+        config.addValue("message_commands.prefix", "!");
         return this;
     }
 

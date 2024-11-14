@@ -46,8 +46,9 @@ public class InternalEventListener extends ListenerAdapter {
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         if (!event.getAuthor().isBot()) {
-            if (!Config.getBoolean("message_commands.enabled") ||
-                Config.getString("message_commands.prefix") == null) return;
+            if (Config.getBoolean("message_commands.enabled") != null &&
+                (!Config.getBoolean("message_commands.enabled") ||
+                Config.getString("message_commands.prefix") == null)) return;
             new Thread(() -> CommandHandler.run(new MessageCommandEvent(event))).start();
         }
     }
