@@ -26,7 +26,9 @@ public class MemberArgument extends SnowflakeArgument<Member> {
 
     @Override
     public ColossusMember resolveMessageCommandArgument(MessageCommandEvent event, String id) throws ArgumentException {
-        return new ColossusMember(event.getGuild().getMemberById(id));
+        Member member = event.getGuild().getMemberById(id);
+        if (member == null) throw new IllegalArgumentException();
+        return new ColossusMember(member);
     }
 
 }
