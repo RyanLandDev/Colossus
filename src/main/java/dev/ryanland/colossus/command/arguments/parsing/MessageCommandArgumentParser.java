@@ -70,7 +70,7 @@ public non-sealed class MessageCommandArgumentParser extends ArgumentParser {
             try {
                 Object parsedArg;
                 if (queue.peek() == null && arg.isOptional())
-                    parsedArg = arg.getOptionalFunction().apply(event);
+                    parsedArg = arg.getOptionalValue(event);
                 else if (queue.peek() == null && !arg.ignoreMissingException())
                     throw new MissingArgumentException();
                 else
