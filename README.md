@@ -54,10 +54,9 @@ See the [wiki](https://github.com/RyanLandDev/Colossus/wiki) for various guides 
         ```
       * **Static Buttons** - for static buttons without consumers
           ```java
-        @ButtonListener("button_id") // this method can live anywhere, it is registered automatically
-        private static void listen(ButtonClickEvent event) {
-            event.reply("Clicked!", true);
-            // ... do stuff
+        @ButtonListener("close") // this method can live anywhere, it is registered automatically
+        private static void onCloseButtonClick(ButtonClickEvent event) {
+            event.reply("Ticket closed", true);
         }
           ```
       * **Select Menus**
@@ -68,6 +67,13 @@ See the [wiki](https://github.com/RyanLandDev/Colossus/wiki) for various guides 
         presetBuilder.addComponentRows(selectMenu);
         event.reply(presetBuilder);
         ```
+      * **Static Select Menus** - for static select menus without consumers
+          ```java
+        @SelectMenuListener("food") // this method can live anywhere, it is registered automatically
+        private static void onFoodPicked(SelectMenuEvent event) {
+            event.reply("You selected "+event.getValue(), true);
+        }
+          ```
       * **Modals**
         ```java
         Modal modal = // ... jda modal
