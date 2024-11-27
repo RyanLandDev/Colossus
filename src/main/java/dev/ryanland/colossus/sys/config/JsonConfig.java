@@ -22,7 +22,7 @@ public class JsonConfig implements ConfigSupplier {
 
     @Override
     public void read() {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 
         // Get the config file (+ create it if it doesn't exist yet)
         LocalFile configFile = new LocalFileBuilder()
