@@ -96,7 +96,6 @@ public class SelectMenuEvent implements EditableRepliableEvent {
         if (selectMenu == null) return;
         CommandConsumer<SelectMenuEvent> action = selectMenu.getOnSubmit();
         if (action == null) return;
-        event.deferEdit().queue();
         action.accept(this);
     }
 
