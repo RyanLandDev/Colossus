@@ -256,7 +256,7 @@ public class ColossusBuilder {
     }
 
     /**
-     * Scans the provided package for commands, entities, {@link ButtonListener @ButtonListener} and {@link SelectMenuListener} methods and {@link ListenerAdapter} subclasses, registering them automatically.
+     * Scans the provided package for commands, entities, {@link ButtonListener @ButtonListener} and {@link SelectMenuListener @SelectMenuListener} methods and {@link ListenerAdapter} subclasses, registering them automatically.
      * <p>For example, if you would provide a base package like {@code "dev.ryanland.mybot"},
      * you will no longer need to register any command, entity, {@link ButtonListener @ButtonListener} method, {@link SelectMenuListener @SelectMenuListener} method or {@link ListenerAdapter} subclass manually.
      * @return The builder
