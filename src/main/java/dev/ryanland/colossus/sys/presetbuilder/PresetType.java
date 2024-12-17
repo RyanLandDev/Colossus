@@ -12,33 +12,61 @@ import java.time.OffsetDateTime;
  */
 public interface PresetType {
 
-    @Nullable String getContent();
+    default @Nullable String getContent() {
+        return null;
+    }
 
-    @Nullable String getTitle();
+    default @Nullable String getTitle() {
+        return null;
+    }
 
-    @Nullable String getDescription();
+    default @Nullable String getDescription() {
+        return null;
+    }
 
-    @Nullable OffsetDateTime getTimestamp();
+    default @Nullable OffsetDateTime getTimestamp() {
+        return null;
+    }
 
-    @Nullable Integer getColor();
+    default @Nullable Integer getColor() {
+        return null;
+    }
 
-    @Nullable String getThumbnail();
+    default @Nullable String getThumbnail() {
+        return null;
+    }
 
-    @Nullable String getAuthorName();
+    default @Nullable String getAuthorName() {
+        return null;
+    }
 
-    @Nullable String getAuthorUrl();
+    default @Nullable String getAuthorUrl() {
+        return null;
+    }
 
-    @Nullable String getAuthorIconUrl();
+    default @Nullable String getAuthorIconUrl() {
+        return null;
+    }
 
-    @Nullable String getFooterText();
+    default @Nullable String getFooterText() {
+        return null;
+    }
 
-    @Nullable String getFooterIconUrl();
+    default @Nullable String getFooterIconUrl() {
+        return null;
+    }
 
-    @Nullable String getImage();
+    default @Nullable String getImage() {
+        return null;
+    }
 
-    @Nullable MessageEmbed.Field[] getFields();
+    default @Nullable MessageEmbed.Field[] getFields() {
+        return new MessageEmbed.Field[]{};
+    }
 
-    boolean isEphemeral();
+    default boolean isEphemeral() {
+        return false;
+    }
 
     /**
      * Create a new {@link PresetBuilder} with this preset type.
