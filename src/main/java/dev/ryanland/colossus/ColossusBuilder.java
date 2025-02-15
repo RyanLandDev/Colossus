@@ -45,6 +45,7 @@ import net.dv8tion.jda.api.interactions.DiscordLocale;
 import net.dv8tion.jda.api.interactions.commands.localization.LocalizationFunction;
 import net.dv8tion.jda.api.interactions.commands.localization.ResourceBundleLocalizationFunction;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
 import java.lang.reflect.InvocationTargetException;
@@ -682,6 +683,15 @@ public class ColossusBuilder {
      */
     public ColossusBuilder enableCache(CacheFlag... flags) {
         return setJDABuilder(builder -> builder.enableCache(List.of(flags)));
+    }
+
+    /**
+     * Set specific member cache policy.
+     * @param memberCachePolicy The {@link MemberCachePolicy MemberCachePolicy} to set
+     * @return The builder
+     */
+    public ColossusBuilder setMemberCachePolicy(MemberCachePolicy memberCachePolicy) {
+        return setJDABuilder(builder -> builder.setMemberCachePolicy(memberCachePolicy));
     }
 
     /**
